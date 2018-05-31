@@ -1,0 +1,4 @@
+-main RunScript
+-cp ..
+-lib lime
+-neko ../run.n

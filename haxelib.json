@@ -1,0 +1,10 @@
+{
+	"name": "hxp",
+	"url": "https://github.com/openfl/hxp",
+	"license": "MIT",
+	"tags": [],
+	"description": "Cross-platform build tools for desktop, mobile, web and consoles",
+	"version": "1.0.0",
+	"releasenote": "Initial release",
+	"contributors": [ "singmajesty" ]
+}
