@@ -8,7 +8,7 @@ import haxe.Serializer;
 import haxe.Unserializer;
 import haxe.io.Path;
 import haxe.rtti.Meta;
-import lime.system.CFFI;
+// import lime.system.CFFI;
 import hxp.helpers.*;
 import hxp.platforms.*;
 import hxp.project.*;
@@ -17,7 +17,7 @@ import sys.io.Process;
 import sys.FileSystem;
 import utils.publish.*;
 import utils.CreateTemplate;
-import utils.JavaExternGenerator;
+// import utils.JavaExternGenerator;
 import utils.PlatformSetup;
 
 @:access(hxp.project.HXProject)
@@ -481,145 +481,145 @@ class CommandLineTools {
 	}
 	
 	
-	#if (neko && (haxe_210 || haxe3))
-	public static function __init__ ():Void {
+	// #if (neko && (haxe_210 || haxe3))
+	// public static function __init__ ():Void {
 		
-		var args = Sys.args ();
+	// 	var args = Sys.args ();
 		
-		if (args.length > 0 && args[0].toLowerCase () == "rebuild") {
+	// 	if (args.length > 0 && args[0].toLowerCase () == "rebuild") {
 			
-			CFFI.enabled = false;
+	// 		CFFI.enabled = false;
 			
-		}
+	// 	}
 		
 		
-		for (arg in args) {
+	// 	for (arg in args) {
 			
-			// TODO: Allow -rebuild without locking native binary?
+	// 		// TODO: Allow -rebuild without locking native binary?
 			
-			if (arg == "-nocffi" || arg == "-rebuild") {
+	// 		if (arg == "-nocffi" || arg == "-rebuild") {
 				
-				CFFI.enabled = false;
+	// 			CFFI.enabled = false;
 				
-			}
+	// 		}
 			
-		}
+	// 	}
 		
-		var path = "";
+	// 	var path = "";
 		
-		if (FileSystem.exists ("tools.n")) {
+	// 	if (FileSystem.exists ("tools.n")) {
 			
-			path = PathHelper.combine (Sys.getCwd (), "../");
+	// 		path = PathHelper.combine (Sys.getCwd (), "../");
 			
-		} else if (FileSystem.exists ("run.n")) {
+	// 	} else if (FileSystem.exists ("run.n")) {
 			
-			path = Sys.getCwd ();
+	// 		path = Sys.getCwd ();
 			
-		}
+	// 	}
 		
-		if (path == "") {
+	// 	if (path == "") {
 			
-			var process = new Process ("haxelib", [ "path", "lime" ]);
-			var lines = new Array<String> ();
+	// 		var process = new Process ("haxelib", [ "path", "lime" ]);
+	// 		var lines = new Array<String> ();
 			
-			try {
+	// 		try {
 				
-				while (true) {
+	// 			while (true) {
 					
-					var length = lines.length;
-					var line = StringTools.trim (process.stdout.readLine ());
+	// 				var length = lines.length;
+	// 				var line = StringTools.trim (process.stdout.readLine ());
 					
-					if (length > 0 && (line == "-D lime" || StringTools.startsWith (line, "-D lime="))) {
+	// 				if (length > 0 && (line == "-D lime" || StringTools.startsWith (line, "-D lime="))) {
 						
-						path = StringTools.trim (lines[length - 1]);
+	// 					path = StringTools.trim (lines[length - 1]);
 						
-					}
+	// 				}
 					
-					lines.push (line);
+	// 				lines.push (line);
 					
-				}
+	// 			}
 				
-			} catch (e:Dynamic) {
+	// 		} catch (e:Dynamic) {
 				
-			}
+	// 		}
 			
-			if (path == "") {
+	// 		if (path == "") {
 				
-				for (line in lines) {
+	// 			for (line in lines) {
 					
-					if (line != "" && line.substr (0, 1) != "-") {
+	// 				if (line != "" && line.substr (0, 1) != "-") {
 						
-						try {
+	// 					try {
 							
-							if (FileSystem.exists (line)) {
+	// 						if (FileSystem.exists (line)) {
 								
-								path = line;
+	// 							path = line;
 								
-							}
+	// 						}
 							
-						} catch (e:Dynamic) {}
+	// 					} catch (e:Dynamic) {}
 						
-					}
+	// 				}
 					
-				}
+	// 			}
 				
-			}
+	// 		}
 			
-			process.close ();
+	// 		process.close ();
 			
-		}
+	// 	}
 		
-		path += "/ndll/";
+	// 	path += "/ndll/";
 		
-		switch (PlatformHelper.hostPlatform) {
+	// 	switch (PlatformHelper.hostPlatform) {
 			
-			case WINDOWS:
+	// 		case WINDOWS:
 				
-				untyped $loader.path = $array (path + "Windows/", $loader.path);
+	// 			untyped $loader.path = $array (path + "Windows/", $loader.path);
 				
-			case MAC:
+	// 		case MAC:
 				
-				//if (PlatformHelper.hostArchitecture == Architecture.X64) {
+	// 			//if (PlatformHelper.hostArchitecture == Architecture.X64) {
 					
-					untyped $loader.path = $array (path + "Mac64/", $loader.path);
+	// 				untyped $loader.path = $array (path + "Mac64/", $loader.path);
 					
-				//} else {
+	// 			//} else {
 					
-				//	untyped $loader.path = $array (path + "Mac/", $loader.path);
+	// 			//	untyped $loader.path = $array (path + "Mac/", $loader.path);
 					
-				//}
+	// 			//}
 				
-			case LINUX:
+	// 		case LINUX:
 				
-				var arguments = Sys.args ();
-				var raspberryPi = false;
+	// 			var arguments = Sys.args ();
+	// 			var raspberryPi = false;
 				
-				for (argument in arguments) {
+	// 			for (argument in arguments) {
 					
-					if (argument == "-rpi") raspberryPi = true;
+	// 				if (argument == "-rpi") raspberryPi = true;
 					
-				}
+	// 			}
 				
-				if (raspberryPi || PlatformHelper.hostArchitecture == Architecture.ARMV6 || PlatformHelper.hostArchitecture == Architecture.ARMV7) {
+	// 			if (raspberryPi || PlatformHelper.hostArchitecture == Architecture.ARMV6 || PlatformHelper.hostArchitecture == Architecture.ARMV7) {
 					
-					untyped $loader.path = $array (path + "RPi/", $loader.path);
+	// 				untyped $loader.path = $array (path + "RPi/", $loader.path);
 					
-				} else if (PlatformHelper.hostArchitecture == Architecture.X64) {
+	// 			} else if (PlatformHelper.hostArchitecture == Architecture.X64) {
 					
-					untyped $loader.path = $array (path + "Linux64/", $loader.path);
+	// 				untyped $loader.path = $array (path + "Linux64/", $loader.path);
 					
-				} else {
+	// 			} else {
 					
-					untyped $loader.path = $array (path + "Linux/", $loader.path);
+	// 				untyped $loader.path = $array (path + "Linux/", $loader.path);
 					
-				}
+	// 			}
 			
-			default:
+	// 		default:
 			
-		}
+	// 	}
 		
-	}
-	#end
+	// }
+	// #end
 	
 	
 	private function buildProject (project:HXProject, command:String = "") {
@@ -1368,11 +1368,11 @@ class CommandLineTools {
 			
 		} else if (targetFlags.exists ("java-externs")) {
 			
-			var config = ConfigHelper.getConfig ();
-			var sourcePath = words[0];
-			var targetPath = words[1];
+			// var config = ConfigHelper.getConfig ();
+			// var sourcePath = words[0];
+			// var targetPath = words[1];
 			
-			new JavaExternGenerator (config, sourcePath, targetPath);
+			// new JavaExternGenerator (config, sourcePath, targetPath);
 			
 		}
 		

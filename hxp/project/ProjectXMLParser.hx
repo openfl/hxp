@@ -18,7 +18,7 @@ import hxp.project.AssetType;
 import hxp.project.Dependency;
 import hxp.project.Haxelib;
 import hxp.project.HXProject;
-import lime.utils.AssetManifest;
+// import lime.utils.AssetManifest;
 import sys.io.File;
 import sys.FileSystem;
 
@@ -841,37 +841,37 @@ class ProjectXMLParser extends HXProject {
 			
 			try {
 				
-				var manifest = AssetManifest.fromFile (jsonPath);
+				// var manifest = AssetManifest.fromFile (jsonPath);
 				
-				if (manifest != null) {
+				// if (manifest != null) {
 					
-					library = targetPath;
-					manifest.rootPath = targetPath;
+				// 	library = targetPath;
+				// 	manifest.rootPath = targetPath;
 					
-					var asset = new Asset ("", PathHelper.combine (targetPath, "library.json"), AssetType.MANIFEST);
-					asset.id = "libraries/" + library + ".json";
-					asset.library = library;
-					asset.data = manifest.serialize ();
-					asset.embed = embed;
-					assets.push (asset);
+				// 	var asset = new Asset ("", PathHelper.combine (targetPath, "library.json"), AssetType.MANIFEST);
+				// 	asset.id = "libraries/" + library + ".json";
+				// 	asset.library = library;
+				// 	asset.data = manifest.serialize ();
+				// 	asset.embed = embed;
+				// 	assets.push (asset);
 					
-					for (manifestAsset in manifest.assets) {
+				// 	for (manifestAsset in manifest.assets) {
 						
-						if (Reflect.hasField (manifestAsset, "path")) {
+				// 		if (Reflect.hasField (manifestAsset, "path")) {
 							
-							var asset = new Asset (PathHelper.combine (path, manifestAsset.path), PathHelper.combine (targetPath, manifestAsset.path), type, embed);
-							asset.id = manifestAsset.id;
-							asset.library = library;
-							asset.embed = embed;
-							assets.push (asset);
+				// 			var asset = new Asset (PathHelper.combine (path, manifestAsset.path), PathHelper.combine (targetPath, manifestAsset.path), type, embed);
+				// 			asset.id = manifestAsset.id;
+				// 			asset.library = library;
+				// 			asset.embed = embed;
+				// 			assets.push (asset);
 							
-						}
+				// 		}
 						
-					}
+				// 	}
 					
-					processedLibrary = true;
+				// 	processedLibrary = true;
 					
-				}
+				// }
 				
 			} catch (e:Dynamic) {}
 			

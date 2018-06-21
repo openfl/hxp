@@ -1,9 +1,9 @@
 package hxp.helpers;
 
 
-import lime.graphics.Image;
-import lime.graphics.ImageBuffer;
-import lime.utils.UInt8Array;
+// import lime.graphics.Image;
+// import lime.graphics.ImageBuffer;
+// import lime.utils.UInt8Array;
 import hxp.project.Haxelib;
 import hxp.project.Platform;
 import sys.io.File;
@@ -13,128 +13,128 @@ import sys.FileSystem;
 class ImageHelper {
 	
 	
-	public static function rasterizeSVG (path:String, width:Int, height:Int, backgroundColor:Int = null):Image {
+	public static function rasterizeSVG (path:String, width:Int, height:Int, backgroundColor:Int = null):Dynamic /*Image*/ {
 	//public static function rasterizeSVG (svg:Dynamic /*SVG*/, width:Int, height:Int, backgroundColor:Int = null):Image {
 		
-		if (path == null) return null;
+		// if (path == null) return null;
 		
-		var temp = PathHelper.getTemporaryFile (".png");
+		// var temp = PathHelper.getTemporaryFile (".png");
 		
-		try {
+		// try {
 			
-			ProcessHelper.runCommand ("", "neko", [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "svg.n"), "process", path, Std.string (width), Std.string (height), temp ], true, true);
+		// 	ProcessHelper.runCommand ("", "neko", [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "svg.n"), "process", path, Std.string (width), Std.string (height), temp ], true, true);
 			
-			if (FileSystem.exists (temp)) {
+		// 	if (FileSystem.exists (temp)) {
 				
-				var image = Image.fromFile (temp);
+		// 		var image = Image.fromFile (temp);
 				
-				try {
+		// 		try {
 					
-					FileSystem.deleteFile (temp);
+		// 			FileSystem.deleteFile (temp);
 					
-				} catch (e:Dynamic) {}
+		// 		} catch (e:Dynamic) {}
 				
-				if (image.buffer != null) {
+		// 		if (image.buffer != null) {
 					
-					return image;
+		// 			return image;
 					
-				}
+		// 		}
 				
-			}
+		// 	}
 			
-		} catch (e:Dynamic) {}
+		// } catch (e:Dynamic) {}
 		
-		var rasterizer = PathHelper.getHaxelib (new Haxelib ("hxp")) + "/templates/bin/batik/batik-rasterizer.jar";
-		var args = [ "-Dapple.awt.UIElement=true", "-jar", rasterizer, "-d", temp, "-w", Std.string (width), "-h", Std.string (height) ];
+		// var rasterizer = PathHelper.getHaxelib (new Haxelib ("hxp")) + "/templates/bin/batik/batik-rasterizer.jar";
+		// var args = [ "-Dapple.awt.UIElement=true", "-jar", rasterizer, "-d", temp, "-w", Std.string (width), "-h", Std.string (height) ];
 		
-		if (backgroundColor != null) {
+		// if (backgroundColor != null) {
 			
-			var a:Int = (( backgroundColor >> 24) & 0xFF);
-			var r:Int = (( backgroundColor >> 16) & 0xFF);
-			var g:Int = (( backgroundColor >> 8) & 0xFF);
-			var b:Int = (backgroundColor & 0xFF);
+		// 	var a:Int = (( backgroundColor >> 24) & 0xFF);
+		// 	var r:Int = (( backgroundColor >> 16) & 0xFF);
+		// 	var g:Int = (( backgroundColor >> 8) & 0xFF);
+		// 	var b:Int = (backgroundColor & 0xFF);
 			
-			args.push ("-bg");
-			args.push (a + "." + r + "." + g + "." + b);
+		// 	args.push ("-bg");
+		// 	args.push (a + "." + r + "." + g + "." + b);
 			
-		}
+		// }
 		
-		args.push (path);
+		// args.push (path);
 		
-		if (PlatformHelper.hostPlatform == Platform.MAC) {
+		// if (PlatformHelper.hostPlatform == Platform.MAC) {
 			
-			try {
+		// 	try {
 				
-				var found = false;
+		// 		var found = false;
 				
-				if (FileSystem.exists ("/System/Library/Java/JavaVirtualMachines")) {
+		// 		if (FileSystem.exists ("/System/Library/Java/JavaVirtualMachines")) {
 					
-					found = (FileSystem.readDirectory ("/System/Library/Java/JavaVirtualMachines").length > 0);
+		// 			found = (FileSystem.readDirectory ("/System/Library/Java/JavaVirtualMachines").length > 0);
 					
-				}
+		// 		}
 				
-				if (!found && FileSystem.exists ("/Library/Java/JavaVirtualMachines")) {
+		// 		if (!found && FileSystem.exists ("/Library/Java/JavaVirtualMachines")) {
 					
-					found = (FileSystem.readDirectory ("/Library/Java/JavaVirtualMachines").length > 0);
+		// 			found = (FileSystem.readDirectory ("/Library/Java/JavaVirtualMachines").length > 0);
 					
-				}
+		// 		}
 				
-				if (!found) {
+		// 		if (!found) {
 					
-					if (LogHelper.verbose) LogHelper.warn ("Skipping SVG to PNG rasterization step, no Java runtime detected");
+		// 			if (LogHelper.verbose) LogHelper.warn ("Skipping SVG to PNG rasterization step, no Java runtime detected");
 					
-					return null;
+		// 			return null;
 					
-				}
+		// 		}
 				
-			} catch (e:Dynamic) {}
+		// 	} catch (e:Dynamic) {}
 			
-		}
+		// }
 		
-		if (LogHelper.verbose) {
+		// if (LogHelper.verbose) {
 			
-			ProcessHelper.runCommand ("", "java", args, true, true);
+		// 	ProcessHelper.runCommand ("", "java", args, true, true);
 			
-		} else {
+		// } else {
 			
-			ProcessHelper.runProcess ("", "java", args, true, true, true);
+		// 	ProcessHelper.runProcess ("", "java", args, true, true, true);
 			
-		}
+		// }
 		
-		if (FileSystem.exists (temp)) {
+		// if (FileSystem.exists (temp)) {
 			
-			var image = Image.fromFile (temp);
+		// 	var image = Image.fromFile (temp);
 			
-			try {
+		// 	try {
 				
-				FileSystem.deleteFile (temp);
+		// 		FileSystem.deleteFile (temp);
 				
-			} catch (e:Dynamic) {}
+		// 	} catch (e:Dynamic) {}
 			
-			if (image.buffer != null) {
+		// 	if (image.buffer != null) {
 				
-				return image;
+		// 		return image;
 				
-			}
+		// 	}
 			
-		}
+		// }
 		
 		return null;
 		
 	}
 	
 	
-	public static function resizeImage (image:Image, width:Int, height:Int):Image {
+	public static function resizeImage (image:Dynamic /*Image*/, width:Int, height:Int):Dynamic /*Image*/ {
 		
-		if (image == null) return null;
+		// if (image == null) return null;
 		
-		if (image.width == width && image.height == height) {
+		// if (image.width == width && image.height == height) {
 			
-			return image;
+		// 	return image;
 			
-		}
+		// }
 		
-		image.resize (width, height);
+		// image.resize (width, height);
 		
 		return image;
 		

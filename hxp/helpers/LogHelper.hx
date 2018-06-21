@@ -4,7 +4,7 @@ package hxp.helpers;
 import haxe.io.Bytes;
 import hxp.helpers.PlatformHelper;
 import hxp.project.Platform;
-import lime.system.CFFI;
+// import lime.system.CFFI;
 import sys.io.Process;
 
 #if neko
@@ -52,7 +52,7 @@ class LogHelper {
 		
 		if (verbose && e != null) {
 			
-			#if js
+			#if (js || eval)
 			throw e;
 			#elseif !cs
 			Lib.rethrow (e);
@@ -124,7 +124,7 @@ class LogHelper {
 					
 					colorSupported = true;
 					
-				} else if (CFFI.enabled) {
+				} /*else if (CFFI.enabled) {
 					
 					var getConsoleMode = CFFI.load ("lime", "lime_system_get_windows_console_mode", 1);
 					var setConsoleMode = CFFI.load ("lime", "lime_system_set_windows_console_mode", 2);
@@ -169,7 +169,7 @@ class LogHelper {
 						
 					}
 					
-				}
+				}*/
 				
 			}
 			

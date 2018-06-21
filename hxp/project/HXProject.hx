@@ -18,15 +18,15 @@ import hxp.project.AssetType;
 import sys.FileSystem;
 import sys.io.File;
 
-#if lime
+// #if lime
 import haxe.io.Eof;
 import haxe.xml.Fast;
-import lime.text.Font;
+// import lime.text.Font;
 import hxp.helpers.FileHelper;
 import hxp.helpers.ProcessHelper;
 import sys.io.Process;
-@:access(lime.text.Font)
-#end
+// @:access(lime.text.Font)
+// #end
 
 
 class HXProject {
@@ -107,9 +107,9 @@ class HXProject {
 		LogHelper.verbose = inputData.logVerbose;
 		LogHelper.enableColor = inputData.logEnableColor;
 		
-		#if lime
+		// #if lime
 		ProcessHelper.dryRun = inputData.processDryRun;
-		#end
+		// #end
 		
 		HaxelibHelper.debug = inputData.haxelibDebug;
 		
@@ -500,8 +500,6 @@ class HXProject {
 	}
 	
 	
-	#if lime
-	
 	public static function fromFile (projectFile:String, userDefines:Map<String, Dynamic> = null, includePaths:Array<String> = null):HXProject {
 		
 		var project:HXProject = null;
@@ -694,8 +692,6 @@ class HXProject {
 		
 	}
 	
-	#end
-	
 	
 	private function getHaxelibVersion (haxelib:Haxelib):String {
 		
@@ -805,7 +801,7 @@ class HXProject {
 	}
 	
 	
-	#if lime
+	// #if lime
 	
 	public function includeXML (xml:String):Void {
 		
@@ -815,7 +811,7 @@ class HXProject {
 		
 	}
 	
-	#end
+	// #end
 	
 	
 	private static function initialize ():Void {
@@ -962,7 +958,7 @@ class HXProject {
 	}
 	
 	
-	#if lime
+	// #if lime
 	
 	@:noCompletion private static function processHaxelibs (project:HXProject, userDefines:Map<String, Dynamic>):Void {
 		
@@ -1013,7 +1009,7 @@ class HXProject {
 		
 	}
 	
-	#end
+	// #end
 	
 	
 	public function setenv (name:String, value:String):Void {
@@ -1198,20 +1194,20 @@ class HXProject {
 				
 				embeddedAsset.type = Std.string (asset.type).toLowerCase ();
 				
-				#if lime
-				if (asset.type == FONT) {
+				// #if lime
+				// if (asset.type == FONT) {
 					
-					try {
+				// 	try {
 						
-						var font = Font.fromFile (asset.sourcePath);
-						embeddedAsset.fontName = font.name;
+				// 		var font = Font.fromFile (asset.sourcePath);
+				// 		embeddedAsset.fontName = font.name;
 						
-						LogHelper.info ("", " - \x1b[1mDetecting font name:\x1b[0m " + asset.sourcePath + " \x1b[3;37m->\x1b[0m \"" + font.name + "\"");
+				// 		LogHelper.info ("", " - \x1b[1mDetecting font name:\x1b[0m " + asset.sourcePath + " \x1b[3;37m->\x1b[0m \"" + font.name + "\"");
 						
-					} catch (e:Dynamic) {}
+				// 	} catch (e:Dynamic) {}
 					
-				}
-				#end
+				// }
+				// #end
 				
 				context.assets.push (embeddedAsset);
 				
@@ -1275,7 +1271,7 @@ class HXProject {
 				
 			}
 			
-			#if lime
+			// #if lime
 			
 			if (HaxelibHelper.pathOverrides.exists (name)) {
 				
@@ -1374,11 +1370,11 @@ class HXProject {
 				
 			}
 			
-			#else
+			// #else
 			
-			compilerFlags.push ("-lib " + name);
+			// compilerFlags.push ("-lib " + name);
 			
-			#end
+			// #end
 			
 			Reflect.setField (context, "LIB_" + StringHelper.formatUppercaseVariable (haxelib.name), true);
 			
