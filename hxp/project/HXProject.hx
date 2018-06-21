@@ -514,7 +514,7 @@ class HXProject {
 		
 		FileHelper.copyFile (path, classFile);
 		
-		var args = [ name, "-main", "hxp.project.HXProject", "-cp", tempDirectory, "-neko", nekoOutput, "-cp", PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "tools"), "-lib", "hxp", "-D", "lime-curl", "-D", "native", "-D", "lime-native", "-D", "lime-cffi" ];
+		var args = [ name, "--interp", "-main", "hxp.project.HXProject", "-cp", tempDirectory, "-cp", PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "tools"), "-lib", "hxp", "-D", "lime-curl", "-D", "native", "-D", "lime-native", "-D", "lime-cffi" ];
 		var input = File.read (classFile, false);
 		var tag = "@:compiler(";
 		
@@ -539,7 +539,7 @@ class HXProject {
 		var cacheDryRun = ProcessHelper.dryRun;
 		ProcessHelper.dryRun = false;
 		
-		ProcessHelper.runCommand ("", "haxe", args);
+		// ProcessHelper.runCommand ("", "haxe", args);
 		
 		var inputFile = PathHelper.combine (tempDirectory, "input.dat");
 		var outputFile = PathHelper.combine (tempDirectory, "output.dat");
@@ -565,7 +565,8 @@ class HXProject {
 		
 		try {
 			
-			ProcessHelper.runCommand ("", "neko", [ FileSystem.fullPath (nekoOutput), inputFile, outputFile ]);
+			ProcessHelper.runCommand ("", "haxe", args.concat ([ "--", inputFile, outputFile ]));
+			// ProcessHelper.runCommand ("", "neko", [ FileSystem.fullPath (nekoOutput), inputFile, outputFile ]);
 			
 		} catch (e:Dynamic) {
 			
