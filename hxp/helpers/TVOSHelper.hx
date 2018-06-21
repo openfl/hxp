@@ -420,7 +420,7 @@ class TVOSHelper {
 	}
 	
 	
-	public static function sign (project:HXProject, workingDirectory:String, entitlementsPath:String):Void {
+	public static function sign (project:HXProject, workingDirectory:String, entitlementsPath:String = null):Void {
 		
 		initialize (project);
 		

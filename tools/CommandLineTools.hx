@@ -630,7 +630,7 @@ class CommandLineTools {
 			
 		}
 		
-		if (project.targetHandlers.exists (Std.string (project.target))) {
+		if (project.targetHandlers.exists (Std.string (project.target).toLowerCase ())) {
 			
 			if (command == "build" || command == "test") {
 				
@@ -641,13 +641,10 @@ class CommandLineTools {
 			LogHelper.info ("", LogHelper.accentColor + "Using target platform: " + Std.string (project.target).toUpperCase () + "\x1b[0m");
 			
 			var handler = project.targetHandlers.get (Std.string (project.target));
+			
 			var projectData = Serializer.run (project);
 			var temporaryFile = PathHelper.getTemporaryFile ();
 			File.saveContent (temporaryFile, projectData);
-			
-			var targetDir = HaxelibHelper.getPath (new Haxelib (handler));
-			var exePath = Path.join ([targetDir, "run.exe"]);
-			var exeExists = FileSystem.exists (exePath);
 			
 			var args = [ command, temporaryFile ];
 			
@@ -662,13 +659,32 @@ class CommandLineTools {
 				
 			}
 			
-			if (exeExists) {
+			if (StringTools.endsWith (handler, ".hx")) {
 				
-				ProcessHelper.runCommand ("", exePath, args);
+				var targetDir = Path.directory (handler);
+				var className = Path.withoutDirectory (Path.withoutExtension (handler));
+				
+				// TODO: Optional additional args
+				
+				args = [ "-cp", targetDir, className, "--interp", "-main", "hxp.project.PlatformTargetMain", "-cp", HaxelibHelper.getPath (new Haxelib ("hxp")), "--", className ].concat (args);
+				
+				ProcessHelper.runCommand ("", "haxe", args);
 				
 			} else {
 				
-				HaxelibHelper.runCommand ("", [ "run", handler ].concat (args));
+				var targetDir = HaxelibHelper.getPath (new Haxelib (handler));
+				var exePath = Path.join ([targetDir, "run.exe"]);
+				var exeExists = FileSystem.exists (exePath);
+				
+				if (exeExists) {
+					
+					ProcessHelper.runCommand ("", exePath, args);
+					
+				} else {
+					
+					HaxelibHelper.runCommand ("", [ "run", handler ].concat (args));
+					
+				}
 				
 			}
 			
@@ -1956,6 +1972,7 @@ class CommandLineTools {
 		}
 		
 		project.haxedefs.set ("tools", version);
+		project.haxedefs.set ("hxp", version);
 		
 		/*if (userDefines.exists ("nme")) {
 			

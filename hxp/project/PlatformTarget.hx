@@ -57,7 +57,7 @@ class PlatformTarget {
 	
 	public function execute (additionalArguments:Array<String>):Void {
 		
-		LogHelper.info ("", LogHelper.accentColor + "Using target platform: " + Std.string (project.target).toUpperCase () + LogHelper.resetColor);
+		// LogHelper.info ("", LogHelper.accentColor + "Using target platform: " + Std.string (project.target).toUpperCase () + LogHelper.resetColor);
 		
 		this.additionalArguments = additionalArguments;
 		var metaFields = Meta.getFields (Type.getClass (this));
@@ -70,21 +70,21 @@ class PlatformTarget {
 			
 		}
 		
-		if (!Reflect.hasField (metaFields.display, "ignore") && (command == "display")) {
+		if ((!Reflect.hasField (metaFields, "display") || !Reflect.hasField (metaFields.display, "ignore")) && (command == "display")) {
 			
 			display ();
 			
 		}
 		
 		//if (!Reflect.hasField (metaFields.clean, "ignore") && (command == "clean" || targetFlags.exists ("clean"))) {
-		if (!Reflect.hasField (metaFields.clean, "ignore") && (command == "clean" || (project.targetFlags.exists ("clean") && (command == "update" || command == "build" || command == "test")))) {
+		if ((!Reflect.hasField (metaFields, "clean") || !Reflect.hasField (metaFields.clean, "ignore")) && (command == "clean" || (project.targetFlags.exists ("clean") && (command == "update" || command == "build" || command == "test")))) {
 			
 			LogHelper.info ("", LogHelper.accentColor + "Running command: CLEAN" + LogHelper.resetColor);
 			clean ();
 			
 		}
 		
-		if (!Reflect.hasField (metaFields.rebuild, "ignore") && (command == "rebuild" || project.targetFlags.exists ("rebuild"))) {
+		if ((!Reflect.hasField (metaFields, "rebuild") || !Reflect.hasField (metaFields.rebuild, "ignore")) && (command == "rebuild" || project.targetFlags.exists ("rebuild"))) {
 			
 			LogHelper.info ("", "\n" + LogHelper.accentColor + "Running command: REBUILD" + LogHelper.resetColor);
 			
@@ -100,15 +100,16 @@ class PlatformTarget {
 			
 		}
 		
-		if (!Reflect.hasField (metaFields.update, "ignore") && (command == "update" || command == "build" || command == "test")) {
+		if ((!Reflect.hasField (metaFields, "update") || !Reflect.hasField (metaFields.update, "ignore")) && (command == "update" || command == "build" || command == "test")) {
 			
 			LogHelper.info ("", "\n" + LogHelper.accentColor + "Running command: UPDATE" + LogHelper.resetColor);
-			AssetHelper.processLibraries (project, targetDirectory);
+			
+			// AssetHelper.processLibraries (project, targetDirectory);
 			update ();
 			
 		}
 		
-		if (!Reflect.hasField (metaFields.build, "ignore") && (command == "build" || command == "test")) {
+		if ((!Reflect.hasField (metaFields, "build") || !Reflect.hasField (metaFields.build, "ignore")) && (command == "build" || command == "test")) {
 			
 			CommandHelper.executeCommands (project.preBuildCallbacks);
 			
@@ -119,28 +120,28 @@ class PlatformTarget {
 			
 		}
 		
-		if (!Reflect.hasField (metaFields.deploy, "deploy") && (command == "deploy")) {
+		if ((!Reflect.hasField (metaFields, "deploy") || !Reflect.hasField (metaFields.deploy, "ignore")) && (command == "deploy")) {
 			
 			LogHelper.info ("", "\n" + LogHelper.accentColor + "Running command: DEPLOY" + LogHelper.resetColor);
 			deploy ();
 			
 		}
 		
-		if (!Reflect.hasField (metaFields.install, "ignore") && (command == "install" || command == "run" || command == "test")) {
+		if ((!Reflect.hasField (metaFields, "install") || !Reflect.hasField (metaFields.install, "ignore")) && (command == "install" || command == "run" || command == "test")) {
 			
 			LogHelper.info ("", "\n" + LogHelper.accentColor + "Running command: INSTALL" + LogHelper.resetColor);
 			install ();
 			
 		}
 		
-		if (!Reflect.hasField (metaFields.run, "ignore") && (command == "run" || command == "rerun" || command == "test")) {
+		if ((!Reflect.hasField (metaFields, "run") || !Reflect.hasField (metaFields.run, "ignore")) && (command == "run" || command == "rerun" || command == "test")) {
 			
 			LogHelper.info ("", "\n" + LogHelper.accentColor + "Running command: RUN" + LogHelper.resetColor);
 			run ();
 			
 		}
 		
-		if (!Reflect.hasField (metaFields.trace, "ignore") && (command == "test" || command == "trace" || command == "run" || command == "rerun" )) {
+		if ((!Reflect.hasField (metaFields, "trace") || !Reflect.hasField (metaFields.trace, "ignore")) && (command == "test" || command == "trace" || command == "run" || command == "rerun" )) {
 			
 			if (traceEnabled || command == "trace") {
 				
@@ -151,7 +152,7 @@ class PlatformTarget {
 			
 		}
 		
-		if (!Reflect.hasField (metaFields.uninstall, "ignore") && (command == "uninstall")) {
+		if ((!Reflect.hasField (metaFields, "uninstall") || !Reflect.hasField (metaFields.uninstall, "ignore")) && (command == "uninstall")) {
 			
 			LogHelper.info ("", "\n" + LogHelper.accentColor + "Running command: UNINSTALL" + LogHelper.resetColor);
 			uninstall ();

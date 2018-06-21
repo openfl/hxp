@@ -206,6 +206,8 @@ class ProjectXMLParser extends HXProject {
 			
 		}
 		
+		defines.set ("hxp", "1"); // TODO: Version?
+		
 	}
 	
 	
@@ -1736,6 +1738,14 @@ class ProjectXMLParser extends HXProject {
 							if (element.has.name) {
 								
 								targetHandlers.set (substitute (element.att.name), substitute (element.att.handler));
+								
+							}
+							
+						} else if (element.has.path) {
+							
+							if (element.has.name) {
+								
+								targetHandlers.set (substitute (element.att.name), PathHelper.combine (extensionPath, substitute (element.att.path)));
 								
 							}
 							
