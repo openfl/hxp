@@ -553,6 +553,7 @@ class PlatformSetup {
 						
 						case "lime": setupLime ();
 						case "openfl": setupOpenFL ();
+						case "hxp": setupHXP ();
 						default: setupHaxelib (new Haxelib (CommandLineTools.defaultLibrary));
 						
 					}
