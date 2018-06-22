@@ -1257,16 +1257,56 @@ class CommandLineTools {
 			
 		} else {
 			
-			LogHelper.println ("\x1b[34;1m d8b                         \x1b[0m");
-			LogHelper.println ("\x1b[34;1m ?88                         \x1b[0m");
-			LogHelper.println ("\x1b[34;1m  88b                        \x1b[0m");
-			LogHelper.println ("\x1b[34;1m  888888b ?88,  88P?88,.d88b,\x1b[0m");
-			LogHelper.println ("\x1b[34;1m  88P `?8b `?8bd8P'`?88'  ?88\x1b[0m");
-			LogHelper.println ("\x1b[34;1m d88   88P d8P?8b,   88b  d8P\x1b[0m");
-			LogHelper.println ("\x1b[34;1md88'   88bd8P' `?8b  888888P'\x1b[0m");
-			LogHelper.println ("\x1b[34;1m                     88P'    \x1b[0m");
-			LogHelper.println ("\x1b[34;1m                    d88      \x1b[0m");
-			LogHelper.println ("\x1b[34;1m                    ?8P      \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m██╗  ██╗ ██╗  ██╗ ██████╗ \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m██║  ██║ ╚██╗██╔╝ ██╔══██╗\x1b[0m");
+			// LogHelper.println ("\x1b[34;1m███████║  ╚███╔╝  ██████╔╝\x1b[0m");
+			// LogHelper.println ("\x1b[34;1m██╔══██║  ██╔██╗  ██╔═══╝ \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m██║  ██║ ██╔╝ ██╗ ██║     \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m╚═╝  ╚═╝ ╚═╝  ╚═╝ ╚═╝     \x1b[0m");
+			
+			// LogHelper.println ("\x1b[34;1m  ,,                              \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m`7MM                              \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m  MM                              \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m  MMpMMMb.  `7M'   `MF'`7MMpdMAo. \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m  MM    MM    `VA ,V'    MM   `Wb \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m  MM    MM      XMX      MM    M8 \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m  MM    MM    ,V' VA.    MM   ,AP \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m.JMML  JMML..AM.   .MA.  MMbmmd'  \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m                         MM       \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m                       .JMML.     \x1b[0m");
+			
+			// LogHelper.println ("\x1b[34;1moooo                               \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m`888                               \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m 888 .oo.   oooo    ooo oo.ooooo.  \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m 888P\"Y88b   `88b..8P'   888' `88b \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m 888   888     Y888'     888   888 \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m 888   888   .o8\"'88b    888   888 \x1b[0m");
+			// LogHelper.println ("\x1b[34;1mo888o o888o o88'   888o  888bod8P' \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m                         888       \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m                        o888o      \x1b[0m");
+			
+			LogHelper.println ("");
+			LogHelper.println ("\x1b[34;1m 88                                     \x1b[0m");
+			LogHelper.println ("\x1b[34;1m 88                                     \x1b[0m");
+			LogHelper.println ("\x1b[34;1m 88                                     \x1b[0m");
+			LogHelper.println ("\x1b[34;1m 88,dPPYba,   8b,     ,d8  8b,dPPYba,   \x1b[0m");
+			LogHelper.println ("\x1b[34;1m 88P'    \"8a   `Y8, ,8P'   88P'    \"8a  \x1b[0m");
+			LogHelper.println ("\x1b[34;1m 88       88     )888(     88       d8  \x1b[0m");
+			LogHelper.println ("\x1b[34;1m 88       88   ,d8\" \"8b,   88b,   ,a8\"  \x1b[0m");
+			LogHelper.println ("\x1b[34;1m 88       88  8P'     `Y8  88`YbbdP\"'   \x1b[0m");
+			LogHelper.println ("\x1b[34;1m                           88           \x1b[0m");
+			LogHelper.println ("\x1b[34;1m                           88           \x1b[0m");
+			
+			// LogHelper.println ("\x1b[34;1m d8b                         \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m ?88                         \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m  88b                        \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m  888888b ?88,  88P?88,.d88b,\x1b[0m");
+			// LogHelper.println ("\x1b[34;1m  88P `?8b `?8bd8P'`?88'  ?88\x1b[0m");
+			// LogHelper.println ("\x1b[34;1m d88   88P d8P?8b,   88b  d8P\x1b[0m");
+			// LogHelper.println ("\x1b[34;1md88'   88bd8P' `?8b  888888P'\x1b[0m");
+			// LogHelper.println ("\x1b[34;1m                     88P'    \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m                    d88      \x1b[0m");
+			// LogHelper.println ("\x1b[34;1m                    ?8P      \x1b[0m");
 			
 			LogHelper.println ("");
 			LogHelper.println ("\x1b[1mHXP Command-Line Tools\x1b[0;1m (" + getToolsVersion () + ")\x1b[0m");
