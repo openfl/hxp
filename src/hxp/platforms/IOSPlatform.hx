@@ -579,7 +579,7 @@ class IOSPlatform extends PlatformTarget {
 					LogHelper.info ("", " - \x1b[1mGenerating image:\x1b[0m " + imagePath);
 					
 					var image = new Image (null, 0, 0, size.w, size.h, (0xFF << 24) | (project.window.background & 0xFFFFFF));
-					var bytes = image.encode ("png");
+					var bytes = image.encode (PNG);
 					
 					File.saveBytes (imagePath, bytes);
 					#end

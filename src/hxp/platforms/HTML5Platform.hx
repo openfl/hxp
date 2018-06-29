@@ -7,6 +7,7 @@ import haxe.Template;
 import lime.text.Font;
 #end
 import hxp.helpers.DeploymentHelper;
+import hxp.helpers.ElectronHelper;
 import hxp.helpers.FileHelper;
 import hxp.helpers.HTML5Helper;
 import hxp.helpers.IconHelper;

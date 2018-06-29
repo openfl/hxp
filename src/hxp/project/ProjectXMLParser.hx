@@ -214,6 +214,10 @@ class ProjectXMLParser extends HXProject {
 			
 		}
 		
+		#if lime
+		defines.set ("lime-tools", "1");
+		#end
+		
 		defines.set ("hxp", "1"); // TODO: Version?
 		
 	}

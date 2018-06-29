@@ -19,6 +19,7 @@ class ImageHelper {
 	public static function rasterizeSVG (path:String, width:Int, height:Int, backgroundColor:Int = null):#if lime Image #else Dynamic #end {
 	//public static function rasterizeSVG (svg:Dynamic /*SVG*/, width:Int, height:Int, backgroundColor:Int = null):Image {
 		
+		#if lime
 		if (path == null) return null;
 		
 		var temp = PathHelper.getTemporaryFile (".png");
@@ -121,6 +122,7 @@ class ImageHelper {
 			}
 			
 		}
+		#end
 		
 		return null;
 		
@@ -129,6 +131,7 @@ class ImageHelper {
 	
 	public static function resizeImage (image:#if lime Image #else Dynamic #end, width:Int, height:Int):#if lime Image #else Dynamic #end {
 		
+		#if lime
 		if (image == null) return null;
 		
 		if (image.width == width && image.height == height) {
@@ -138,6 +141,7 @@ class ImageHelper {
 		}
 		
 		image.resize (width, height);
+		#end
 		
 		return image;
 		

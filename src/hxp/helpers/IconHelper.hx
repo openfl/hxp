@@ -158,7 +158,7 @@ class IconHelper {
 			
 			if (image != null) {
 				
-				var bytes = image.encode ("png");
+				var bytes = image.encode (PNG);
 				
 				if (bytes != null) {
 					
