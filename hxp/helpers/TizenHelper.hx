@@ -41,7 +41,7 @@ class TizenHelper {
 		
 		if (keystore == null) {
 			
-			var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "templates") ].concat (project.templatePaths);
+			var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), "templates") ].concat (project.templatePaths);
 			keystore = PathHelper.findTemplate (templatePaths, "bin/debug.p12");
 			password = "1234";
 			

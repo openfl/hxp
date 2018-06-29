@@ -89,7 +89,7 @@ class AndroidPlatform extends PlatformTarget {
 				
 				if (hasARMV5) {
 					
-					path = sourceSet + "/jniLibs/armeabi-v7";
+					path = sourceSet + "/jniLibs/armeabi-v7a";
 					
 				}
 				
@@ -123,9 +123,9 @@ class AndroidPlatform extends PlatformTarget {
 		
 		if (!ArrayHelper.containsValue (project.architectures, Architecture.ARMV7) || !hasARMV5) {
 			
-			if (FileSystem.exists (sourceSet + "/jniLibs/armeabi-v7")) {
+			if (FileSystem.exists (sourceSet + "/jniLibs/armeabi-v7a")) {
 				
-				PathHelper.removeDirectory (sourceSet + "/jniLibs/armeabi-v7");
+				PathHelper.removeDirectory (sourceSet + "/jniLibs/armeabi-v7a");
 				
 			}
 			
@@ -326,8 +326,8 @@ class AndroidPlatform extends PlatformTarget {
 		context.CPP_DIR = targetDirectory + "/obj";
 		context.OUTPUT_DIR = targetDirectory;
 		context.ANDROID_INSTALL_LOCATION = project.config.getString ("android.install-location", "auto");
-		context.ANDROID_MINIMUM_SDK_VERSION = project.config.getInt ("android.minimum-sdk-version", 9);
-		context.ANDROID_TARGET_SDK_VERSION = project.config.getInt ("android.target-sdk-version", 19);
+		context.ANDROID_MINIMUM_SDK_VERSION = project.config.getInt ("android.minimum-sdk-version", 14);
+		context.ANDROID_TARGET_SDK_VERSION = project.config.getInt ("android.target-sdk-version", 26);
 		context.ANDROID_EXTENSIONS = project.config.getArrayString ("android.extension");
 		context.ANDROID_PERMISSIONS = project.config.getArrayString ("android.permission", [ "android.permission.WAKE_LOCK", "android.permission.INTERNET", "android.permission.VIBRATE", "android.permission.ACCESS_NETWORK_STATE" ]);
 		context.ANDROID_GRADLE_VERSION = project.config.getString ("android.gradle-version", "2.10");
@@ -336,7 +336,7 @@ class AndroidPlatform extends PlatformTarget {
 		
 		if (!project.environment.exists ("ANDROID_SDK") || !project.environment.exists ("ANDROID_NDK_ROOT")) {
 			
-			var command = "hxp";
+			var command = #if lime "lime" #else "hxp" #end;
 			var toolsBase = Type.resolveClass ("CommandLineTools");
 			if (toolsBase != null)
 				command = Reflect.field (toolsBase, "commandName");

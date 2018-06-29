@@ -3,7 +3,9 @@ package hxp.platforms;
 
 import haxe.io.Path;
 import haxe.Template;
-// import lime.text.Font;
+#if lime
+import lime.text.Font;
+#end
 import hxp.helpers.DeploymentHelper;
 import hxp.helpers.FileHelper;
 import hxp.helpers.HTML5Helper;
@@ -98,7 +100,15 @@ class HTML5Platform extends PlatformTarget {
 	
 	public override function deploy ():Void {
 		
-		DeploymentHelper.deploy (project, targetFlags, targetDirectory, "HTML5");
+		var name = "HTML5";
+		
+		if (targetFlags.exists ("electron")) {
+			
+			name = "Electron";
+			
+		}
+		
+		DeploymentHelper.deploy (project, targetFlags, targetDirectory, name);
 		
 	}
 	
@@ -112,7 +122,15 @@ class HTML5Platform extends PlatformTarget {
 	
 	private function getDisplayHXML ():String {
 		
-		var hxml = PathHelper.findTemplate (project.templatePaths, "html5/hxml/" + buildType + ".hxml");
+		var type = "html5";
+		
+		if (targetFlags.exists ("electron")) {
+			
+			type = "electron";
+			
+		}
+		
+		var hxml = PathHelper.findTemplate (project.templatePaths, type + "/hxml/" + buildType + ".hxml");
 		
 		var context = project.templateContext;
 		context.OUTPUT_DIR = targetDirectory;
@@ -127,8 +145,24 @@ class HTML5Platform extends PlatformTarget {
 	
 	private function initialize (command:String, project:HXProject):Void {
 		
-		targetDirectory = PathHelper.combine (project.app.path, project.config.getString ("html5.output-directory", "html5"));
+		if (targetFlags.exists ("electron")) {
+			
+			targetDirectory = PathHelper.combine (project.app.path, project.config.getString ("electron.output-directory", "electron"));
+			
+		} else {
+			
+			targetDirectory = PathHelper.combine (project.app.path, project.config.getString ("html5.output-directory", "html5"));
+			
+		}
+		
 		dependencyPath = project.config.getString ("html5.dependency-path", "lib");
+		
+		if (targetFlags.exists ("electron")) {
+			
+			dependencyPath = project.config.getString ("html5.dependency-path", dependencyPath);
+			
+		}
+		
 		outputFile = targetDirectory + "/bin/" + project.app.file + ".js";
 		
 	}
@@ -136,7 +170,15 @@ class HTML5Platform extends PlatformTarget {
 	
 	public override function run ():Void {
 		
-		HTML5Helper.launch (project, targetDirectory + "/bin");
+		if (targetFlags.exists ("electron")) {
+			
+			ElectronHelper.launch (project, targetDirectory + "/bin");
+			
+		} else {
+			
+			HTML5Helper.launch (project, targetDirectory + "/bin");
+			
+		}
 		
 	}
 	
@@ -346,36 +388,38 @@ class HTML5Platform extends PlatformTarget {
 						
 						if (embeddedAsset.type == "font" && embeddedAsset.sourcePath == asset.sourcePath) {
 							
-							// var font = Font.fromFile (asset.sourcePath);
+							#if lime
+							var font = Font.fromFile (asset.sourcePath);
 							
-							// embeddedAsset.ascender = font.ascender;
-							// embeddedAsset.descender = font.descender;
-							// embeddedAsset.height = font.height;
-							// embeddedAsset.numGlyphs = font.numGlyphs;
-							// embeddedAsset.underlinePosition = font.underlinePosition;
-							// embeddedAsset.underlineThickness = font.underlineThickness;
-							// embeddedAsset.unitsPerEM = font.unitsPerEM;
+							embeddedAsset.ascender = font.ascender;
+							embeddedAsset.descender = font.descender;
+							embeddedAsset.height = font.height;
+							embeddedAsset.numGlyphs = font.numGlyphs;
+							embeddedAsset.underlinePosition = font.underlinePosition;
+							embeddedAsset.underlineThickness = font.underlineThickness;
+							embeddedAsset.unitsPerEM = font.unitsPerEM;
 							
-							// if (shouldEmbedFont) {
+							if (shouldEmbedFont) {
 								
-							// 	var urls = [];
-							// 	if (hasFormat[1]) urls.push ("url('" + embeddedAsset.targetPath + ".eot?#iefix') format('embedded-opentype')");
-							// 	if (hasFormat[3]) urls.push ("url('" + embeddedAsset.targetPath + ".woff') format('woff')");
-							// 	urls.push ("url('" + embeddedAsset.targetPath + ext + "') format('truetype')");
-							// 	if (hasFormat[2]) urls.push ("url('" + embeddedAsset.targetPath + ".svg#" + StringTools.urlEncode (embeddedAsset.fontName) + "') format('svg')");
+								var urls = [];
+								if (hasFormat[1]) urls.push ("url('" + embeddedAsset.targetPath + ".eot?#iefix') format('embedded-opentype')");
+								if (hasFormat[3]) urls.push ("url('" + embeddedAsset.targetPath + ".woff') format('woff')");
+								urls.push ("url('" + embeddedAsset.targetPath + ext + "') format('truetype')");
+								if (hasFormat[2]) urls.push ("url('" + embeddedAsset.targetPath + ".svg#" + StringTools.urlEncode (embeddedAsset.fontName) + "') format('svg')");
 								
-							// 	var fontFace = "\t\t@font-face {\n";
-							// 	fontFace += "\t\t\tfont-family: '" + embeddedAsset.fontName + "';\n";
-							// 	// if (hasFormat[1]) fontFace += "\t\t\tsrc: url('" + embeddedAsset.targetPath + ".eot');\n";
-							// 	fontFace += "\t\t\tsrc: " + urls.join (",\n\t\t\t") + ";\n";
-							// 	fontFace += "\t\t\tfont-weight: normal;\n";
-							// 	fontFace += "\t\t\tfont-style: normal;\n";
-							// 	fontFace += "\t\t}\n";
+								var fontFace = "\t\t@font-face {\n";
+								fontFace += "\t\t\tfont-family: '" + embeddedAsset.fontName + "';\n";
+								// if (hasFormat[1]) fontFace += "\t\t\tsrc: url('" + embeddedAsset.targetPath + ".eot');\n";
+								fontFace += "\t\t\tsrc: " + urls.join (",\n\t\t\t") + ";\n";
+								fontFace += "\t\t\tfont-weight: normal;\n";
+								fontFace += "\t\t\tfont-style: normal;\n";
+								fontFace += "\t\t}\n";
 								
-							// 	embeddedAsset.cssFontFace = fontFace;
+								embeddedAsset.cssFontFace = fontFace;
 								
-							// }
-							// break;
+							}
+							break;
+							#end
 							
 						}
 						
@@ -395,9 +439,16 @@ class HTML5Platform extends PlatformTarget {
 			FileHelper.recursiveSmartCopyTemplate (project, "html5/haxe", targetDirectory + "/haxe", context, true, false);
 			FileHelper.recursiveSmartCopyTemplate (project, "html5/hxml", targetDirectory + "/haxe", context);
 			
-			if (project.targetFlags.exists ("webgl")) {
+		}
+		
+		if (targetFlags.exists ("electron")) {
+			
+			FileHelper.recursiveSmartCopyTemplate (project, "electron/template", destination, context);
+			
+			if (project.app.main != null) {
 				
-				FileHelper.recursiveSmartCopyTemplate (project, "webgl/hxml", targetDirectory + "/haxe", context, true, false);
+				FileHelper.recursiveSmartCopyTemplate (project, "electron/haxe", targetDirectory + "/haxe", context, true, false);
+				FileHelper.recursiveSmartCopyTemplate (project, "electron/hxml", targetDirectory + "/haxe", context);
 				
 			}
 			

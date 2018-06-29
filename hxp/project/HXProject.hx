@@ -18,15 +18,15 @@ import hxp.project.AssetType;
 import sys.FileSystem;
 import sys.io.File;
 
-// #if lime
+#if lime
 import haxe.io.Eof;
 import haxe.xml.Fast;
-// import lime.text.Font;
+import lime.text.Font;
 import hxp.helpers.FileHelper;
 import hxp.helpers.ProcessHelper;
 import sys.io.Process;
-// @:access(lime.text.Font)
-// #end
+@:access(lime.text.Font)
+#end
 
 
 class HXProject {
@@ -107,9 +107,9 @@ class HXProject {
 		LogHelper.verbose = inputData.logVerbose;
 		LogHelper.enableColor = inputData.logEnableColor;
 		
-		// #if lime
+		#if lime
 		ProcessHelper.dryRun = inputData.processDryRun;
-		// #end
+		#end
 		
 		HaxelibHelper.debug = inputData.haxelibDebug;
 		
@@ -140,7 +140,7 @@ class HXProject {
 		
 		defaultMeta = { title: "MyApplication", description: "", packageName: "com.example.myapp", version: "1.0.0", company: "", companyUrl: "", buildNumber: null, companyId: "" }
 		defaultApp = { main: "Main", file: "MyApplication", path: "bin", preloader: "", swfVersion: 17, url: "", init: null }
-		defaultWindow = { width: 800, height: 600, parameters: "{}", background: 0xFFFFFF, fps: 30, hardware: true, display: 0, resizable: true, borderless: false, orientation: Orientation.AUTO, vsync: false, fullscreen: false, allowHighDPI: true, alwaysOnTop: false, antialiasing: 0, allowShaders: true, requireShaders: false, depthBuffer: false, stencilBuffer: false, colorDepth: 16, maximized: false, minimized: false, hidden: false }
+		defaultWindow = { width: 800, height: 600, parameters: "{}", background: 0xFFFFFF, fps: 30, hardware: true, display: 0, resizable: true, borderless: false, orientation: Orientation.AUTO, vsync: false, fullscreen: false, allowHighDPI: true, alwaysOnTop: false, antialiasing: 0, allowShaders: true, requireShaders: false, depthBuffer: true, stencilBuffer: true, colorDepth: 32, maximized: false, minimized: false, hidden: false }
 		
 		platformType = PlatformType.DESKTOP;
 		architectures = [];
@@ -514,7 +514,11 @@ class HXProject {
 		
 		FileHelper.copyFile (path, classFile);
 		
+		#if lime
+		var args = [ name, "-main", "hxp.project.HXProject", "-cp", tempDirectory, "-neko", nekoOutput, "-cp", PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "tools"), "-lib", "hxp" ];
+		#else
 		var args = [ name, "--interp", "-main", "hxp.project.HXProject", "-cp", tempDirectory, "-cp", PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "tools"), "-lib", "hxp", "-D", "lime-curl", "-D", "native", "-D", "lime-native", "-D", "lime-cffi" ];
+		#end
 		var input = File.read (classFile, false);
 		var tag = "@:compiler(";
 		
@@ -539,7 +543,9 @@ class HXProject {
 		var cacheDryRun = ProcessHelper.dryRun;
 		ProcessHelper.dryRun = false;
 		
-		// ProcessHelper.runCommand ("", "haxe", args);
+		#if lime
+		ProcessHelper.runCommand ("", "haxe", args);
+		#end
 		
 		var inputFile = PathHelper.combine (tempDirectory, "input.dat");
 		var outputFile = PathHelper.combine (tempDirectory, "output.dat");
@@ -565,8 +571,11 @@ class HXProject {
 		
 		try {
 			
+			#if lime
+			ProcessHelper.runCommand ("", "neko", [ FileSystem.fullPath (nekoOutput), inputFile, outputFile ]);
+			#else
 			ProcessHelper.runCommand ("", "haxe", args.concat ([ "--", inputFile, outputFile ]));
-			// ProcessHelper.runCommand ("", "neko", [ FileSystem.fullPath (nekoOutput), inputFile, outputFile ]);
+			#end
 			
 		} catch (e:Dynamic) {
 			
@@ -1195,20 +1204,20 @@ class HXProject {
 				
 				embeddedAsset.type = Std.string (asset.type).toLowerCase ();
 				
-				// #if lime
-				// if (asset.type == FONT) {
+				#if lime
+				if (asset.type == FONT) {
 					
-				// 	try {
+					try {
 						
-				// 		var font = Font.fromFile (asset.sourcePath);
-				// 		embeddedAsset.fontName = font.name;
+						var font = Font.fromFile (asset.sourcePath);
+						embeddedAsset.fontName = font.name;
 						
-				// 		LogHelper.info ("", " - \x1b[1mDetecting font name:\x1b[0m " + asset.sourcePath + " \x1b[3;37m->\x1b[0m \"" + font.name + "\"");
+						LogHelper.info ("", " - \x1b[1mDetecting font name:\x1b[0m " + asset.sourcePath + " \x1b[3;37m->\x1b[0m \"" + font.name + "\"");
 						
-				// 	} catch (e:Dynamic) {}
+					} catch (e:Dynamic) {}
 					
-				// }
-				// #end
+				}
+				#end
 				
 				context.assets.push (embeddedAsset);
 				
@@ -1311,7 +1320,7 @@ class HXProject {
 							
 							var path = PathHelper.standardize (arg);
 							
-							if (path != null && StringTools.trim (path) != "") {
+							if (path != null && StringTools.trim (path) != "" && !StringTools.startsWith (StringTools.trim (path), "#")) {
 								
 								var param = "-cp " + path;
 								compilerFlags.remove (param);

@@ -1,4 +1,4 @@
-package hxp.helpers;
+package hxp.helpers; #if lime
 
 
 import haxe.io.Path;
@@ -9,9 +9,8 @@ import hxp.project.AssetType;
 import hxp.project.Asset;
 import hxp.project.HXProject;
 import hxp.project.Library;
-// import lime.utils.compress.Deflate;
-// import lime.utils.compress.GZip;
-// import lime.utils.AssetManifest;
+import lime.utils.AssetManifest;
+import lime.utils.Bytes;
 import sys.io.File;
 import sys.io.FileOutput;
 import sys.FileSystem;
@@ -23,10 +22,9 @@ class AssetHelper {
 	private static var DEFAULT_LIBRARY_NAME = "default";
 	
 	
-	public static function createManifest (project:HXProject, library:String = null, targetPath:String = null):Dynamic /*AssetManifest*/ {
+	public static function createManifest (project:HXProject, library:String = null, targetPath:String = null):AssetManifest {
 		
-		// var manifest = new AssetManifest ();
-		var manifest:Dynamic = {};
+		var manifest = new AssetManifest ();
 		var pathGroups = new Map<String, Array<String>> ();
 		
 		var libraries = new Map<String, Library> ();
@@ -65,7 +63,7 @@ class AssetHelper {
 	}
 	
 	
-	public static function createManifests (project:HXProject, targetDirectory:String = null):Array<Dynamic /*AssetManifest*/> {
+	public static function createManifests (project:HXProject, targetDirectory:String = null):Array<AssetManifest> {
 		
 		var libraryNames = new Map<String, Bool> ();
 		var hasManifest = new Map<String, Bool> ();
@@ -261,33 +259,37 @@ class AssetHelper {
 				
 				switch (library.type) {
 					
-					// case "deflate", "zip":
+					case "deflate", "zip":
 						
-					// 	if (asset.data != null) {
+						if (asset.data != null) {
 							
-					// 		output.writeBytes (Deflate.compress (asset.data), 0, asset.data.length);
+							var bytes:Bytes = asset.data;
+							bytes = bytes.compress (DEFLATE);
+							output.writeBytes (bytes, 0, bytes.length);
 							
-					// 	} else if (asset.sourcePath != null) {
+						} else if (asset.sourcePath != null) {
 							
-					// 		var tempBytes = File.getBytes (asset.sourcePath);
-					// 		tempBytes = Deflate.compress (tempBytes);
-					// 		output.writeBytes (tempBytes, 0, tempBytes.length);
+							var tempBytes:Bytes = File.getBytes (asset.sourcePath);
+							tempBytes = tempBytes.compress (DEFLATE);
+							output.writeBytes (tempBytes, 0, tempBytes.length);
 							
-					// 	}
+						}
 					
-					// case "gzip":
+					case "gzip":
 						
-					// 	if (asset.data != null) {
+						if (asset.data != null) {
 							
-					// 		output.writeBytes (GZip.compress (asset.data), 0, asset.data.length);
+							var bytes:Bytes = asset.data;
+							bytes = bytes.compress (GZIP);
+							output.writeBytes (bytes, 0, asset.data.length);
 							
-					// 	} else if (asset.sourcePath != null) {
+						} else if (asset.sourcePath != null) {
 							
-					// 		var tempBytes = File.getBytes (asset.sourcePath);
-					// 		tempBytes = GZip.compress (tempBytes);
-					// 		output.writeBytes (tempBytes, 0, tempBytes.length);
+							var tempBytes:Bytes = File.getBytes (asset.sourcePath);
+							tempBytes = tempBytes.compress (GZIP);
+							output.writeBytes (tempBytes, 0, tempBytes.length);
 							
-					// 	}
+						}
 					
 					default:
 						
@@ -570,7 +572,7 @@ class AssetHelper {
 	public static function processPackedLibraries (project:HXProject, targetDirectory:String = null):Void {
 		
 		var type, asset, cacheAvailable, cacheDirectory, filename;
-		var output, manifest:Dynamic, position, assetData:Dynamic, input;
+		var output, manifest, position, assetData:Dynamic, input;
 		var embeddedLibrary = false;
 		
 		var pathGroups = new Map<String, Array<String>> ();
@@ -599,8 +601,7 @@ class AssetHelper {
 				
 				if (targetDirectory != null) {
 					
-					// manifest = new AssetManifest ();
-					manifest = {};
+					manifest = new AssetManifest ();
 					
 					cacheDirectory = targetDirectory + "/obj/libraries/";
 					filename = library.name + ".pak";
@@ -685,3 +686,6 @@ class AssetHelper {
 	
 	
 }
+
+
+#end

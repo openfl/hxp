@@ -9,7 +9,9 @@ import hxp.project.Asset;
 import hxp.project.AssetEncoding;
 import hxp.project.AssetType;
 import hxp.project.HXProject;
-// import lime.text.Font;
+#if lime
+import lime.text.Font;
+#end
 import hxp.helpers.LogHelper;
 import hxp.helpers.ProcessHelper;
 import sys.io.File;
@@ -312,164 +314,172 @@ class FlashHelper {
 			
 			// More code ripped off from "samhaxe"
 			
-			// var src = path;
-			// var face = Font.fromFile (src);
-			// var font = face.decompose ();
-			// var font_name = font.family_name;
-			// //fallback for font name is case no one could be found..
-			// if ( font_name == null || font_name.length == 0 )
-			// 	font_name = Path.withoutExtension(name).split("/").pop().split("\\").pop();
+			#if lime
+			var src = path;
+			var face = Font.fromFile (src);
+			var font = face.decompose ();
+			var font_name = font.family_name;
+			//fallback for font name is case no one could be found..
+			if ( font_name == null || font_name.length == 0 )
+				font_name = Path.withoutExtension(name).split("/").pop().split("\\").pop();
 			
-			// var glyphs = new Array<Font2GlyphData> ();
-			// var glyph_layout = new Array<FontLayoutGlyphData> ();
+			var glyphs = new Array<Font2GlyphData> ();
+			var glyph_layout = new Array<FontLayoutGlyphData> ();
 			
-			// for (native_glyph in font.glyphs) {
+			for (native_glyph in font.glyphs) {
 				
-			// 	if (native_glyph.char_code > 65535) {
+				if (native_glyph.char_code > 65535) {
 					
-			// 		Sys.println("Warning: glyph with character code greater than 65535 encountered ("+ native_glyph.char_code+"). Skipping...");
-			// 		continue;
+					Sys.println("Warning: glyph with character code greater than 65535 encountered ("+ native_glyph.char_code+"). Skipping...");
+					continue;
 					
-			// 	}
+				}
 				
-			// 	var shapeRecords = new Array<ShapeRecord> ();
-			// 	var i:Int = 0;
-			// 	var styleChanged:Bool = false;
-			// 	var dx = 0;
-			// 	var dy = 0;
+				var shapeRecords = new Array<ShapeRecord> ();
+				var i:Int = 0;
+				var styleChanged:Bool = false;
+				var dx = 0;
+				var dy = 0;
 				
-			// 	while (i < native_glyph.points.length) {
+				while (i < native_glyph.points.length) {
 					
-			// 		var type = native_glyph.points[i++];
+					var type = native_glyph.points[i++];
 					
-			// 		switch (type) {
+					switch (type) {
 						
-			// 			case 1: // Move
+						case 1: // Move
 							
-			// 				dx = native_glyph.points[i++];
-			// 				dy = native_glyph.points[i++];
-			// 				shapeRecords.push( SHRChange({
-			// 					moveTo: {dx: dx, dy: -dy},
-			// 					// Set fill style to 1 in first style change record
-			// 					// Required by DefineFontX
-			// 					fillStyle0: if (!styleChanged) {idx: 1} else null,
-			// 					fillStyle1: null,
-			// 					lineStyle:  null,
-			// 					newStyles:  null
-			// 				}));
-			// 				styleChanged = true;
+							dx = native_glyph.points[i++];
+							dy = native_glyph.points[i++];
+							shapeRecords.push( SHRChange({
+								moveTo: {dx: dx, dy: -dy},
+								// Set fill style to 1 in first style change record
+								// Required by DefineFontX
+								fillStyle0: if (!styleChanged) {idx: 1} else null,
+								fillStyle1: null,
+								lineStyle:  null,
+								newStyles:  null
+							}));
+							styleChanged = true;
 						
-			// 			case 2: // LineTo
+						case 2: // LineTo
 							
-			// 				dx = native_glyph.points[i++];
-			// 				dy = native_glyph.points[i++];
-			// 				shapeRecords.push (SHREdge(dx, -dy));
+							dx = native_glyph.points[i++];
+							dy = native_glyph.points[i++];
+							shapeRecords.push (SHREdge(dx, -dy));
 						
-			// 			case 3: // CurveTo
-			// 				var cdx = native_glyph.points[i++];
-			// 				var cdy = native_glyph.points[i++];
-			// 				dx = native_glyph.points[i++];
-			// 				dy = native_glyph.points[i++];
-			// 				shapeRecords.push (SHRCurvedEdge(cdx, -cdy, dx, -dy));
+						case 3: // CurveTo
+							var cdx = native_glyph.points[i++];
+							var cdy = native_glyph.points[i++];
+							dx = native_glyph.points[i++];
+							dy = native_glyph.points[i++];
+							shapeRecords.push (SHRCurvedEdge(cdx, -cdy, dx, -dy));
 						
-			// 			case 4: // CubicCurveTo
-			// 				var p1x = native_glyph.points[i++];
-			// 				var p1y = native_glyph.points[i++];
-			// 				var p2x = native_glyph.points[i++];
-			// 				var p2y = native_glyph.points[i++];
-			// 				var p3x = native_glyph.points[i++];
-			// 				var p3y = native_glyph.points[i++];
+						case 4: // CubicCurveTo
+							var p1x = native_glyph.points[i++];
+							var p1y = native_glyph.points[i++];
+							var p2x = native_glyph.points[i++];
+							var p2y = native_glyph.points[i++];
+							var p3x = native_glyph.points[i++];
+							var p3y = native_glyph.points[i++];
 							
-			// 				// Get original points
+							// Get original points
 							
-			// 				var cp1x = p1x + dx;
-			// 				var cp1y = p1y + dy;
-			// 				var cp2x = p2x + cp1x;
-			// 				var cp2y = p2y + cp1y;
-			// 				var endx = p3x + cp2x;
-			// 				var endy = p3y + cp2y;
+							var cp1x = p1x + dx;
+							var cp1y = p1y + dy;
+							var cp2x = p2x + cp1x;
+							var cp2y = p2y + cp1y;
+							var endx = p3x + cp2x;
+							var endy = p3y + cp2y;
 							
-			// 				// Convert to quadratic
+							// Convert to quadratic
 							
-			// 				var cpx = Std.int ((-0.25 * dx) + (0.75 * cp1x) + (0.75 * cp2x) + ( -0.25 * endx));
-			// 				var cpy = Std.int (( -0.25 * dy) + (0.75 * cp1y) + (0.75 * cp2y) + ( -0.25 * endy));
+							var cpx = Std.int ((-0.25 * dx) + (0.75 * cp1x) + (0.75 * cp2x) + ( -0.25 * endx));
+							var cpy = Std.int (( -0.25 * dy) + (0.75 * cp1y) + (0.75 * cp2y) + ( -0.25 * endy));
 							
-			// 				// Offset again
+							// Offset again
 							
-			// 				var cdx = cpx - dx;
-			// 				var cdy = cpy - dy;
-			// 				dx = endx - cpx;
-			// 				dy = endy - cpy;
+							var cdx = cpx - dx;
+							var cdy = cpy - dy;
+							dx = endx - cpx;
+							dy = endy - cpy;
 							
-			// 				shapeRecords.push (SHRCurvedEdge(cdx, -cdy, dx, -dy));
+							shapeRecords.push (SHRCurvedEdge(cdx, -cdy, dx, -dy));
 						
-			// 			default:
-			// 				throw "Invalid control point type encountered! (" + type + ")";
+						default:
+							throw "Invalid control point type encountered! (" + type + ")";
 						
-			// 		}
+					}
 					
-			// 	}
+				}
 				
-			// 	shapeRecords.push (SHREnd);
+				shapeRecords.push (SHREnd);
 				
-			// 	glyphs.push({
-			// 		charCode: native_glyph.char_code,
-			// 		shape: {
-			// 			shapeRecords: shapeRecords
-			// 		} 
-			// 	});
+				glyphs.push({
+					charCode: native_glyph.char_code,
+					shape: {
+						shapeRecords: shapeRecords
+					} 
+				});
 				
-			// 	glyph_layout.push({
-			// 		advance: native_glyph.advance,
-			// 		bounds: {
-			// 			left:    native_glyph.min_x,
-			// 			right:   native_glyph.max_x,
-			// 			top:    -native_glyph.max_y,
-			// 			bottom: -native_glyph.min_y,
-			// 		}
-			// 	});
+				glyph_layout.push({
+					advance: native_glyph.advance,
+					bounds: {
+						left:    native_glyph.min_x,
+						right:   native_glyph.max_x,
+						top:    -native_glyph.max_y,
+						bottom: -native_glyph.min_y,
+					}
+				});
 				
-			// }
+			}
 			
-			// var kerning = new Array<FontKerningData> ();
+			var kerning = new Array<FontKerningData> ();
 			
-			// if (font.kerning != null) {
+			if (font.kerning != null) {
 				
-				// var length = font.kerning.length;
-				// if (length > 0xFFFF) length = 0xFFFF;
-				// var k;
+				var length = font.kerning.length;
+				if (length > 0xFFFF) length = 0xFFFF;
+				var k;
 				
-				// for (i in 0...length) {
+				for (i in 0...length) {
 					
-				// 	k = font.kerning[i];
+					k = font.kerning[i];
 					
-			// 	}
+					kerning.push ({
+						charCode1:  k.left_glyph,
+						charCode2:  k.right_glyph,
+						adjust:     k.x,
+					});
+					
+				}
 				
-			// }
+			}
 			
-			// var swf_em = 1024 * 20;
-			// var ascent = Math.round (Math.abs (font.ascend * swf_em / font.em_size));
-			// var descent = Math.round (Math.abs ((font.descend) * swf_em / font.em_size));
-			// var leading = Math.round ((font.height - font.ascend + font.descend) * swf_em / font.em_size);
-			// var language = LangCode.LCNone;
+			var swf_em = 1024 * 20;
+			var ascent = Math.round (Math.abs (font.ascend * swf_em / font.em_size));
+			var descent = Math.round (Math.abs ((font.descend) * swf_em / font.em_size));
+			var leading = Math.round ((font.height - font.ascend + font.descend) * swf_em / font.em_size);
+			var language = LangCode.LCNone;
 			
-			// outTags.push (TFont (cid, FDFont3 ({
-			// 	shiftJIS:   false,
-			// 	isSmall:    false,
-			// 	isANSI:     false,
-			// 	isItalic:   font.is_italic,
-			// 	isBold:     font.is_bold,
-			// 	language:   language,
-			// 	name:       font_name,
-			// 	glyphs:     glyphs,
-			// 	layout: {
-			// 		ascent:     ascent,
-			// 		descent:    descent,
-			// 		leading:    leading,
-			// 		glyphs:     glyph_layout,
-			// 		kerning:    kerning
-			// 	}
-			// })) );
+			outTags.push (TFont (cid, FDFont3 ({
+				shiftJIS:   false,
+				isSmall:    false,
+				isANSI:     false,
+				isItalic:   font.is_italic,
+				isBold:     font.is_bold,
+				language:   language,
+				name:       font_name,
+				glyphs:     glyphs,
+				layout: {
+					ascent:     ascent,
+					descent:    descent,
+					leading:    leading,
+					glyphs:     glyph_layout,
+					kerning:    kerning
+				}
+			})) );
+			#end
 			
 		} else {
 			

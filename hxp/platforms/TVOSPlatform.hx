@@ -17,7 +17,9 @@ import hxp.helpers.PlatformHelper;
 import hxp.helpers.ProcessHelper;
 import hxp.helpers.StringHelper;
 import hxp.helpers.WatchHelper;
-// import lime.graphics.Image;
+#if lime
+import lime.graphics.Image;
+#end
 import hxp.project.Architecture;
 import hxp.project.Asset;
 import hxp.project.AssetType;
@@ -58,8 +60,7 @@ class TVOSPlatform extends PlatformTarget {
 			
 			if (!project.targetFlags.exists ("simulator")) {
 				
-				var entitlements = targetDirectory + "/" + project.app.file + "/" + project.app.file + "-Entitlements.plist";
-				TVOSHelper.sign (project, targetDirectory + "/bin", entitlements);
+				TVOSHelper.sign (project, targetDirectory + "/bin");
 				
 			}
 			
@@ -461,12 +462,14 @@ class TVOSPlatform extends PlatformTarget {
 				
 				if (!FileSystem.exists (imagePath)) {
 					
-					// LogHelper.info ("", " - \x1b[1mGenerating image:\x1b[0m " + imagePath);
+					#if lime
+					LogHelper.info ("", " - \x1b[1mGenerating image:\x1b[0m " + imagePath);
 					
-					// var image = new Image (null, 0, 0, size.w, size.h, (0xFF << 24) | (project.window.background & 0xFFFFFF));
-					// var bytes = image.encode ("png");
+					var image = new Image (null, 0, 0, size.w, size.h, (0xFF << 24) | (project.window.background & 0xFFFFFF));
+					var bytes = image.encode ("png");
 					
-					// File.saveBytes (imagePath, bytes);
+					File.saveBytes (imagePath, bytes);
+					#end
 					
 				}
 				

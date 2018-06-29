@@ -419,7 +419,7 @@ class HaxelibHelper {
 		
 		if (haxelib == null) {
 			
-			haxelib = new Haxelib ("hxp");
+			haxelib = new Haxelib (#if lime "lime" #else "hxp" #end);
 			clearCache = true;
 			
 		}

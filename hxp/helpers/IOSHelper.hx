@@ -345,7 +345,7 @@ class IOSHelper {
 				
 			}
 			
-			var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "templates") ].concat (project.templatePaths);
+			var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), "templates") ].concat (project.templatePaths);
 			
 			var output = ProcessHelper.runProcess ("", "xcrun", [ "simctl", "list", "devices" ]);
 			var lines = output.split ("\n");
@@ -444,7 +444,7 @@ class IOSHelper {
 				
 			}
 			
-			var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "templates") ].concat (project.templatePaths);
+			var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), "templates") ].concat (project.templatePaths);
 			var launcher = PathHelper.findTemplate (templatePaths, "bin/ios-deploy");
 			Sys.command ("chmod", [ "+x", launcher ]);
 			
@@ -457,7 +457,7 @@ class IOSHelper {
 	}
 	
 	
-	public static function sign (project:HXProject, workingDirectory:String, entitlementsPath:String = null):Void {
+	public static function sign (project:HXProject, workingDirectory:String):Void {
 		
 		initialize (project);
 		
@@ -472,13 +472,6 @@ class IOSHelper {
 		var identity = project.config.getString ("ios.identity", "iPhone Developer");
 		
 		var commands = [ "-s", identity, "CODE_SIGN_IDENTITY=" + identity ];
-		
-		if (entitlementsPath != null) {
-			
-			commands.push ("--entitlements");
-			commands.push (entitlementsPath);
-			
-		}
 		
 		if (project.config.exists ("ios.provisioning-profile")) {
 			

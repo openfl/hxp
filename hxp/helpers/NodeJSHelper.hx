@@ -36,7 +36,7 @@ class NodeJSHelper {
 			
 		}
 		
-		var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "templates") ].concat (project.templatePaths);
+		var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), "templates") ].concat (project.templatePaths);
 		var node = PathHelper.findTemplate (templatePaths, "bin/node/node" + suffix);
 		
 		if (PlatformHelper.hostPlatform != Platform.WINDOWS) {

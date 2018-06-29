@@ -18,7 +18,9 @@ import hxp.project.AssetType;
 import hxp.project.Dependency;
 import hxp.project.Haxelib;
 import hxp.project.HXProject;
-// import lime.utils.AssetManifest;
+#if lime
+import lime.utils.AssetManifest;
+#end
 import sys.io.File;
 import sys.FileSystem;
 
@@ -94,6 +96,12 @@ class ProjectXMLParser extends HXProject {
 			defines.set ("targetType", "neko");
 			defines.set ("native", "1");
 			defines.set ("neko", "1");
+			
+		} else if (targetFlags.exists ("hl")) {
+			
+			defines.set ("targetType", "hl");
+			defines.set ("native", "1");
+			defines.set ("hl", "1");
 			
 		} else if (targetFlags.exists ("java")) {
 			
@@ -841,41 +849,43 @@ class ProjectXMLParser extends HXProject {
 		
 		if (FileSystem.exists (jsonPath)) {
 			
+			#if lime
 			try {
 				
-				// var manifest = AssetManifest.fromFile (jsonPath);
+				var manifest = AssetManifest.fromFile (jsonPath);
 				
-				// if (manifest != null) {
+				if (manifest != null) {
 					
-				// 	library = targetPath;
-				// 	manifest.rootPath = targetPath;
+					library = targetPath;
+					manifest.rootPath = targetPath;
 					
-				// 	var asset = new Asset ("", PathHelper.combine (targetPath, "library.json"), AssetType.MANIFEST);
-				// 	asset.id = "libraries/" + library + ".json";
-				// 	asset.library = library;
-				// 	asset.data = manifest.serialize ();
-				// 	asset.embed = embed;
-				// 	assets.push (asset);
+					var asset = new Asset ("", PathHelper.combine (targetPath, "library.json"), AssetType.MANIFEST);
+					asset.id = "libraries/" + library + ".json";
+					asset.library = library;
+					asset.data = manifest.serialize ();
+					asset.embed = embed;
+					assets.push (asset);
 					
-				// 	for (manifestAsset in manifest.assets) {
+					for (manifestAsset in manifest.assets) {
 						
-				// 		if (Reflect.hasField (manifestAsset, "path")) {
+						if (Reflect.hasField (manifestAsset, "path")) {
 							
-				// 			var asset = new Asset (PathHelper.combine (path, manifestAsset.path), PathHelper.combine (targetPath, manifestAsset.path), type, embed);
-				// 			asset.id = manifestAsset.id;
-				// 			asset.library = library;
-				// 			asset.embed = embed;
-				// 			assets.push (asset);
+							var asset = new Asset (PathHelper.combine (path, manifestAsset.path), PathHelper.combine (targetPath, manifestAsset.path), type, embed);
+							asset.id = manifestAsset.id;
+							asset.library = library;
+							asset.embed = embed;
+							assets.push (asset);
 							
-				// 		}
+						}
 						
-				// 	}
+					}
 					
-				// 	processedLibrary = true;
+					processedLibrary = true;
 					
-				// }
+				}
 				
 			} catch (e:Dynamic) {}
+			#end
 			
 		}
 		

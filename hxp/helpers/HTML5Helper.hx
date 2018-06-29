@@ -57,7 +57,7 @@ class HTML5Helper {
 		
 		if (!FileSystem.exists (FileSystem.fullPath (sourcePath) + ".hash")) {
 			
-			var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "templates") ].concat (project.templatePaths);
+			var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), "templates") ].concat (project.templatePaths);
 			ProcessHelper.runCommand (Path.directory (sourcePath), "neko", [ PathHelper.findTemplate (templatePaths, "bin/hxswfml.n"), "ttf2hash2", Path.withoutDirectory (sourcePath), FileSystem.fullPath (sourcePath) + ".hash", "-glyphs", font.glyphs ]);
 			
 		}
@@ -92,7 +92,7 @@ class HTML5Helper {
 			
 		}
 		
-		var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "templates") ].concat (project.templatePaths);
+		var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), "templates") ].concat (project.templatePaths);
 		var webify = PathHelper.findTemplate (templatePaths, "bin/webify" + suffix);
 		if (PlatformHelper.hostPlatform != Platform.WINDOWS) {
 			
@@ -144,7 +144,7 @@ class HTML5Helper {
 				
 			}
 			
-			var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "templates") ].concat (project.templatePaths);
+			var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), "templates") ].concat (project.templatePaths);
 			var node = PathHelper.findTemplate (templatePaths, "bin/node/node" + suffix);
 			var server = PathHelper.findTemplate (templatePaths, "bin/node/http-server/bin/http-server");
 			
@@ -202,12 +202,12 @@ class HTML5Helper {
 			
 			if (project.targetFlags.exists ("yui")) {
 				
-				var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "templates") ].concat (project.templatePaths);
+				var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), "templates") ].concat (project.templatePaths);
 				ProcessHelper.runCommand ("", "java", [ "-Dapple.awt.UIElement=true", "-jar", PathHelper.findTemplate (templatePaths, "bin/yuicompressor-2.4.7.jar"), "-o", tempFile, sourceFile ]);
 				
 			} else {
 				
-				var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "templates") ].concat (project.templatePaths);
+				var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), "templates") ].concat (project.templatePaths);
 				var args = [ "-Dapple.awt.UIElement=true", "-jar", PathHelper.findTemplate (templatePaths, "bin/compiler.jar"), "--strict_mode_input", "false", "--js", sourceFile, "--js_output_file", tempFile ];
 				
 				if (project.targetFlags.exists ("advanced")) {
