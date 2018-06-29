@@ -1,30 +1,29 @@
 package hxp.project;
 
 
+import haxe.io.Eof;
 import haxe.io.Path;
+import haxe.xml.Fast;
 import haxe.Json;
 import haxe.Serializer;
 import haxe.Unserializer;
 import hxp.helpers.ArrayHelper;
-import hxp.helpers.CompatibilityHelper;
+import hxp.helpers.FileHelper;
 import hxp.helpers.HaxelibHelper;
 import hxp.helpers.LogHelper;
 import hxp.helpers.ObjectHelper;
 import hxp.helpers.PathHelper;
 import hxp.helpers.PlatformHelper;
+import hxp.helpers.ProcessHelper;
 import hxp.helpers.StringHelper;
 import hxp.helpers.StringMapHelper;
 import hxp.project.AssetType;
 import sys.FileSystem;
 import sys.io.File;
+import sys.io.Process;
 
 #if lime
-import haxe.io.Eof;
-import haxe.xml.Fast;
 import lime.text.Font;
-import hxp.helpers.FileHelper;
-import hxp.helpers.ProcessHelper;
-import sys.io.Process;
 @:access(lime.text.Font)
 #end
 

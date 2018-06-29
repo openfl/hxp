@@ -10,7 +10,6 @@ import hxp.helpers.BlackBerryHelper;
 import hxp.helpers.CLIHelper;
 import hxp.helpers.CPPHelper;
 import hxp.helpers.CSHelper;
-import hxp.helpers.CompatibilityHelper;
 import hxp.helpers.CordovaHelper;
 import hxp.helpers.FileHelper;
 import hxp.helpers.FlashHelper;
