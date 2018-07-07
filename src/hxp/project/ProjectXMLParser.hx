@@ -1361,6 +1361,10 @@ class ProjectXMLParser extends HXProject {
 						
 						javaPaths.push (PathHelper.combine (extensionPath, substitute (element.att.path)));
 					
+					case "language":
+						
+						languages.push (element.att.name);
+					
 					case "haxelib":
 						
 						if (element.has.repository) {

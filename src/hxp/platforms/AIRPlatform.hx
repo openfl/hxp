@@ -278,19 +278,19 @@ class AIRPlatform extends FlashPlatform {
 		}
 		
 		if (iconData.length > 0) context.icons = iconData;
-
+		
 		context.extensions = new Array<String>();
-
+		
 		for (dependency in project.dependencies) {
-
-			if (StringTools.endsWith(dependency.path, ".ane")) {
-
+			
+			if (StringTools.endsWith (dependency.path, ".ane")) {
+				
 				var extension:Dynamic = { name: dependency.name };
-				context.extensions.push(extension);
+				context.extensions.push (extension);
 				context.HAXE_FLAGS += "\n-swf-lib " + dependency.path;
-
+				
 			}
-
+			
 		}
 		
 		FileHelper.recursiveSmartCopyTemplate (project, "haxe", targetDirectory + "/haxe", context);

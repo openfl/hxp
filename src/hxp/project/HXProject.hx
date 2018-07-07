@@ -47,6 +47,7 @@ class HXProject {
 	public var icons:Array<Icon>;
 	public var javaPaths:Array<String>;
 	public var keystore:Keystore;
+	public var languages:Array<String>;
 	public var libraries:Array<Library>;
 	public var libraryHandlers:Map<String, String>;
 	public var meta:MetaData;
@@ -299,6 +300,7 @@ class HXProject {
 		haxelibs = new Array<Haxelib> ();
 		icons = new Array<Icon> ();
 		javaPaths = new Array<String> ();
+		languages = new Array<String> ();
 		libraries = new Array<Library> ();
 		libraryHandlers = new Map<String, String> ();
 		modules = new Map<String, ModuleData> ();
@@ -376,6 +378,8 @@ class HXProject {
 			project.keystore = keystore.clone ();
 			
 		}
+		
+		project.languages = languages.copy ();
 		
 		for (library in libraries) {
 			
@@ -922,7 +926,7 @@ class HXProject {
 				
 			}
 			
-			
+			languages = ArrayHelper.concatUnique (languages, project.languages, true);
 			libraries = ArrayHelper.concatUnique (libraries, project.libraries, true);
 			
 			for (key in project.modules.keys ()) {
@@ -1224,6 +1228,7 @@ class HXProject {
 			
 		}
 		
+		context.languages = (languages.length > 0) ? languages : null;
 		context.libraries = new Array<Dynamic> ();
 		var embeddedLibraries = new Map<String, Dynamic> ();
 		
