@@ -42,14 +42,24 @@ class AndroidHelper {
 			
 		}
 		
+		var args = task.split (" ");
+		// args.push ("--stacktrace");
+		// args.push ("--debug");
+		
+		if (LogHelper.verbose) {
+			
+			args.push ("--info");
+			
+		}
+		
 		if (PlatformHelper.hostPlatform != Platform.WINDOWS) {
 			
 			ProcessHelper.runCommand ("", "chmod", [ "755", PathHelper.combine (projectDirectory, "gradlew") ]);
-			ProcessHelper.runCommand (projectDirectory, "./gradlew", task.split (" "));
+			ProcessHelper.runCommand (projectDirectory, "./gradlew", args);
 			
 		} else {
 			
-			ProcessHelper.runCommand (projectDirectory, "gradlew", task.split (" "));
+			ProcessHelper.runCommand (projectDirectory, "gradlew", args);
 			
 		}
 	}
