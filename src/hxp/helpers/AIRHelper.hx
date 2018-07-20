@@ -129,6 +129,19 @@ class AIRHelper {
 			
 			args.push ("-target");
 			args.push (airTarget);
+			
+			if (project.debug) {
+				
+				args.push ("-connect");
+				
+				if (project.config.exists ("air.connect")) {
+					
+					args.push(project.config.getString ("air.connect"));
+					
+				}
+				
+			}
+			
 			args = args.concat (signingOptions);
 			
 		}
