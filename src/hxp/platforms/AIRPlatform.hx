@@ -24,6 +24,7 @@ class AIRPlatform extends FlashPlatform {
 	
 	
 	private var iconData:Array<Dynamic>;
+	private var splashScreenData:Array<Dynamic>;
 	private var targetPlatform:Platform;
 	private var targetPlatformType:PlatformType;
 	
@@ -92,6 +93,12 @@ class AIRPlatform extends FlashPlatform {
 			for (icon in iconData) {
 				
 				files.push (icon.path);
+				
+			}
+			
+			for (splashScreen in splashScreenData) {
+				
+				files.push (splashScreen.path);
 				
 			}
 			
@@ -339,6 +346,20 @@ class AIRPlatform extends FlashPlatform {
 				
 				PathHelper.mkdir (Path.directory (path));
 				FileHelper.copyAsset (asset, path, context);
+				
+			}
+			
+		}
+		
+		splashScreenData = [];
+		
+		if (project.splashScreens != null) {
+			
+			for (splashScreen in project.splashScreens) {
+				
+				var path = Path.withoutDirectory (splashScreen.path);
+				FileHelper.copyFile (splashScreen.path, PathHelper.combine (destination, path), context);
+				splashScreenData.push ({ path: path });
 				
 			}
 			
