@@ -100,7 +100,7 @@ class IOSHelper {
 	}
 	
 	
-	private static function getXCodeArgs(project:HXProject):Array<String> {
+	private static function getXCodeArgs (project:HXProject):Array<String> {
 		
 		var platformName = "iphoneos";
 		var iphoneVersion = project.environment.get ("IPHONE_VER");
@@ -324,7 +324,7 @@ class IOSHelper {
 		initialize (project);
 		
 		var configuration = "Release";
-			
+		
 		if (project.debug) {
 			
 			configuration = "Debug";
@@ -345,73 +345,7 @@ class IOSHelper {
 				
 			}
 			
-			var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), "templates") ].concat (project.templatePaths);
-			
-			var output = ProcessHelper.runProcess ("", "xcrun", [ "simctl", "list", "devices" ]);
-			var lines = output.split ("\n");
-			var foundSection = false;
-			
-			var device, deviceID;
-			var devices = new Map<String, String> ();
-			
-			var currentDeviceID = null;
-			
-			for (line in lines) {
-				
-				if (StringTools.startsWith (line, "--")) {
-					
-					if (line.indexOf ("iOS") > -1) {
-						
-						foundSection = true;
-						
-					} else if (foundSection) {
-						
-						break;
-						
-					}
-					
-				} else if (foundSection) {
-					
-					device = StringTools.trim (line);
-					device = device.substring (0, device.indexOf ("(") - 1);
-					device = device.toLowerCase ();
-					device = StringTools.replace (device, " ", "-");
-					
-					deviceID = line.substring (line.indexOf ("(") + 1, line.indexOf (")"));
-					
-					if (deviceID.indexOf ("inch") > -1) {
-						
-						var startIndex = line.indexOf (")") + 2;
-						deviceID = line.substring (line.indexOf ("(", startIndex) + 1, line.indexOf (")", startIndex));
-						
-					}
-					
-					devices.set (device, deviceID);
-					
-					if (project.targetFlags.exists (device)) {
-						
-						currentDeviceID = deviceID;
-						break;
-						
-					}
-					
-				}
-				
-			}
-			
-			if (currentDeviceID == null) {
-				
-				if (project.targetFlags.exists ("ipad")) {
-					
-					currentDeviceID = devices.get ("ipad-air");
-					
-				} else {
-					
-					currentDeviceID = devices.get ("iphone-6");
-					
-				}
-				
-			}
+			var currentDeviceID = XCodeHelper.getSimulatorID (project);
 			
 			try {
 				
@@ -448,7 +382,7 @@ class IOSHelper {
 			var launcher = PathHelper.findTemplate (templatePaths, "bin/ios-deploy");
 			Sys.command ("chmod", [ "+x", launcher ]);
 			
-			var xcodeVersion = getXcodeVersion ();
+			// var xcodeVersion = getXcodeVersion ();
 			
 			ProcessHelper.runCommand ("", launcher, [ "install", "--noninteractive", "--debug", "--bundle", FileSystem.fullPath (applicationPath) ]);
 			

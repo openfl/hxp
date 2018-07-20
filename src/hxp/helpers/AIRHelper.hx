@@ -196,6 +196,12 @@ class AIRHelper {
 			
 		}
 		
+		if (targetPlatform == IOS) {
+			
+			Sys.putEnv ("AIR_IOS_SIMULATOR_DEVICE", XCodeHelper.getSimulatorName (project));
+			
+ 		}
+		
 		ProcessHelper.runCommand (workingDirectory, project.defines.get ("AIR_SDK") + "/bin/adt", args);
 		
 		return targetPath + extension;
@@ -249,6 +255,7 @@ class AIRHelper {
 			
 			ProcessHelper.runCommand (workingDirectory, project.defines.get ("AIR_SDK") + "/bin/adt", [ "-uninstallApp" ].concat (args).concat ([ "-appid", project.meta.packageName ]), true, true);
 			ProcessHelper.runCommand (workingDirectory, project.defines.get ("AIR_SDK") + "/bin/adt", [ "-installApp" ].concat (args).concat ([ "-package", FileSystem.fullPath (workingDirectory) + "/" + (rootDirectory != null ? rootDirectory + "/" : "") + project.app.file + ".ipa" ]));
+			ProcessHelper.runCommand (workingDirectory, project.defines.get ("AIR_SDK") + "/bin/adt", [ "-launchApp" ].concat (args).concat ([ "-appid", project.meta.packageName ]), true, true);
 			
 			if (project.targetFlags.exists ("simulator")) {
 

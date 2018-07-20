@@ -264,6 +264,14 @@ class AIRPlatform extends FlashPlatform {
 			
 		}
 		
+		var targetDevice = project.config.getString ("ios.device", "universal");
+		var targetDevices = [];
+		
+		if (targetDevice != "ipad") targetDevices.push (1); // iphone
+		if (targetDevice != "iphone") targetDevices.push (2); // ipad
+		
+		context.IOS_TARGET_DEVICES = targetDevices;
+		
 		var iconSizes = [ 16, 29, 32, 36, 40, 48, 50, 57, 58, 60, 72, 75, 76, 80, 87, 96, 100, 114, 120, 128, 144, 152, 167, 180, 192, 512, 1024 ];
 		var icons = project.icons;
 		iconData = [];
