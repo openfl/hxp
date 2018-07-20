@@ -403,13 +403,15 @@ class WindowsPlatform extends PlatformTarget {
 			
 			var commands = [];
 			
-			if (targetFlags.exists ("64")) {
+			if (!targetFlags.exists ("32") && PlatformHelper.hostArchitecture == X64) {
 				
-				commands.push ([ "-Dwindow", "-DHXCPP_M64" ]);
+				commands.push ([ "-Dwindows", "-DHXCPP_M64" ]);
 				
-			} else {
+			}
+			
+			if (!targetFlags.exists ("64") && (command == "rebuild" || PlatformHelper.hostArchitecture == Architecture.X86)) {
 				
-				commands.push ([ "-Dwindow", "-DHXCPP_M32" ]);
+				commands.push ([ "-Dwindows", "-DHXCPP_M32" ]);
 				
 			}
 			

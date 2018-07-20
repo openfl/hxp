@@ -239,7 +239,7 @@ class HXProject {
 					
 				} else {
 					
-					architectures = [ Architecture.X86 ];
+					architectures = [ PlatformHelper.hostArchitecture ];
 					
 				}
 				
