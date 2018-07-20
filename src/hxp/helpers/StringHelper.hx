@@ -417,13 +417,13 @@ class StringHelper {
 					
 				}
 				
-			} else if (substring == "projectDirectory") {
+			} #if sys else if (substring == "projectDirectory") {
 				
 				// TODO: Better handling if CWD has changed?
 				
 				return Std.string (Sys.getCwd ());
 				
-			}
+			} #end
 			
 		}
 		
