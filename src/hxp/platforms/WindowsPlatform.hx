@@ -554,19 +554,16 @@ class WindowsPlatform extends PlatformTarget {
 		
 		if (targetType == "cpp" && project.targetFlags.exists ("static")) {
 			
-			// TODO: Better way to detect the suffix HXCPP will use?
+			var programFiles = project.environment.get ("ProgramFiles(x86)");
+			var hasVSCommunity = (programFiles != null && FileSystem.exists (PathHelper.combine (programFiles, "Microsoft Visual Studio/Installer/vswhere.exe")));
+			var hxcppMSVC = project.environment.get ("HXCPP_MSVC");
+			var vs140 = project.environment.get ("VS140COMNTOOLS");
 			
 			var msvc19 = true;
-			var olderVersions = [ "120", "110", "100", "90", "80", "71", "70" ];
 			
-			for (olderVersion in olderVersions) {
+			if ((!hasVSCommunity && vs140 == null) || (hxcppMSVC != null && hxcppMSVC != vs140)) {
 				
-				if (project.environment.exists ("VS" + olderVersion + "COMNTOOLS")) {
-					
-					msvc19 = false;
-					break;
-					
-				}
+				msvc19 = false;
 				
 			}
 			
