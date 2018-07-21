@@ -515,7 +515,7 @@ class PlatformSetup {
 					
 					// setupWebOS ();
 				
-				case "windows":
+				case "windows", "winrt":
 					
 					if (PlatformHelper.hostPlatform == Platform.WINDOWS) {
 						

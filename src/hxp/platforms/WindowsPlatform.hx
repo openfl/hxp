@@ -405,13 +405,29 @@ class WindowsPlatform extends PlatformTarget {
 			
 			if (!targetFlags.exists ("32") && PlatformHelper.hostArchitecture == X64) {
 				
-				commands.push ([ "-Dwindows", "-DHXCPP_M64" ]);
+				if (targetFlags.exists ("winrt")) {
+					
+					commands.push ([ "-Dwinrt", "-DHXCPP_M64" ]);
+					
+				} else {
+					
+					commands.push ([ "-Dwindows", "-DHXCPP_M64" ]);
+					
+				}
 				
 			}
 			
 			if (!targetFlags.exists ("64") && (command == "rebuild" || PlatformHelper.hostArchitecture == Architecture.X86)) {
 				
-				commands.push ([ "-Dwindows", "-DHXCPP_M32" ]);
+				if (targetFlags.exists ("winrt")) {
+					
+					commands.push ([ "-Dwinrt", "-DHXCPP_M32" ]);
+					
+				} else {
+					
+					commands.push ([ "-Dwindows", "-DHXCPP_M32" ]);
+					
+				}
 				
 			}
 			
