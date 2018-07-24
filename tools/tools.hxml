@@ -1,6 +1,0 @@
--main CommandLineTools
--neko tools.n
--cp ../src
--lib format
-#-lib svg
--D no-inline

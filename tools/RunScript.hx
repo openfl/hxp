@@ -17,117 +17,6 @@ import hxp.helpers.ProcessHelper;
 class RunScript {
 	
 	
-	private static function rebuildTools (rebuildBinaries = true):Void {
-		
-		var hxpDirectory = HaxelibHelper.getPath (new Haxelib ("hxp"), true);
-		var toolsDirectory = PathHelper.combine (hxpDirectory, "tools");
-		
-		if (!FileSystem.exists (toolsDirectory)) {
-			
-			toolsDirectory = PathHelper.combine (hxpDirectory, "../tools");
-			
-		}
-		
-		/*var extendedToolsDirectory = HaxelibHelper.getPath (new Haxelib ("lime-extended"), false);
-		
-		if (extendedToolsDirectory != null && extendedToolsDirectory != "") {
-			
-			var buildScript = File.getContent (PathHelper.combine (extendedToolsDirectory, "tools.hxml"));
-			buildScript = StringTools.replace (buildScript, "\r\n", "\n");
-			buildScript = StringTools.replace (buildScript, "\n", " ");
-			
-			ProcessHelper.runCommand (toolsDirectory, "haxe", buildScript.split (" "));
-			
-		} else {*/
-			
-			ProcessHelper.runCommand (toolsDirectory, "haxe", [ "tools.hxml" ]);
-			
-		//}
-		
-		return;
-		
-		if (!rebuildBinaries) return;
-		
-		var platforms = [ "Windows", "Mac", "Mac64", "Linux", "Linux64" ];
-		
-		for (platform in platforms) {
-			
-			var source = PathHelper.combine (hxpDirectory, "ndll/" + platform + "/hxp.ndll");
-			//var target = PathHelper.combine (toolsDirectory, "ndll/" + platform + "/hxp.ndll");
-			
-			if (!FileSystem.exists (source)) {
-				
-				var args = [ "tools/tools.n", "rebuild", "hxp", "-release", "-nocffi" ];
-				
-				if (LogHelper.verbose) {
-					
-					args.push ("-verbose");
-					
-				}
-				
-				if (!LogHelper.enableColor) {
-					
-					args.push ("-nocolor");
-					
-				}
-				
-				switch (platform) {
-					
-					case "Windows":
-						
-						if (PlatformHelper.hostPlatform == WINDOWS) {
-							
-							ProcessHelper.runCommand (hxpDirectory, "neko", args.concat ([ "windows", toolsDirectory ]));
-							
-						}
-					
-					case "Mac", "Mac64":
-						
-						if (PlatformHelper.hostPlatform == MAC) {
-							
-							ProcessHelper.runCommand (hxpDirectory, "neko", args.concat ([ "mac", toolsDirectory ]));
-							
-						}
-					
-					case "Linux":
-						
-						if (PlatformHelper.hostPlatform == LINUX && PlatformHelper.hostArchitecture != X64) {
-							
-							ProcessHelper.runCommand (hxpDirectory, "neko", args.concat ([ "linux", "-32", toolsDirectory ]));
-							
-						}
-					
-					case "Linux64":
-						
-						if (PlatformHelper.hostPlatform == LINUX && PlatformHelper.hostArchitecture == X64) {
-							
-							ProcessHelper.runCommand (hxpDirectory, "neko", args.concat ([ "linux", "-64", toolsDirectory ]));
-							
-						}
-					
-				}
-				
-			}
-			
-			if (!FileSystem.exists (source)) {
-				
-				if (LogHelper.verbose) {
-					
-					LogHelper.warn ("", "Source path \"" + source + "\" does not exist");
-					
-				}
-				
-			} else {
-				
-				//FileHelper.copyIfNewer (source, target);
-				
-			}
-			
-		}
-		
-	}
-	
-	
 	public static function runCommand (path:String, command:String, args:Array<String>, throwErrors:Bool = true):Int {
 		
 		var oldPath:String = "";
@@ -169,90 +58,18 @@ class RunScript {
 	
 	public static function main () {
 		
-		var args = Sys.args ();
+		var args = [
+			
+			"--interp",
+			"-main",
+			"CommandLineTools",
+			"-cp", "src",
+			"-cp", "tools",
+			"--"
+			
+		];
 		
-		if (args.length > 2 && args[0] == "rebuild" && args[1] == "tools") {
-			
-			var lastArgument = new Path (args[args.length - 1]).toString ();
-			var cacheDirectory = Sys.getCwd ();
-			
-			if (((StringTools.endsWith (lastArgument, "/") && lastArgument != "/") || StringTools.endsWith (lastArgument, "\\")) && !StringTools.endsWith (lastArgument, ":\\")) {
-				
-				lastArgument = lastArgument.substr (0, lastArgument.length - 1);
-				
-			}
-			
-			if (FileSystem.exists (lastArgument) && FileSystem.isDirectory (lastArgument)) {
-				
-				Sys.setCwd (lastArgument);
-				
-			}
-			
-			HaxelibHelper.workingDirectory = Sys.getCwd ();
-			var rebuildBinaries = true;
-			
-			for (arg in args) {
-				
-				var equals = arg.indexOf ("=");
-				
-				if (equals > -1 && StringTools.startsWith (arg, "--")) {
-					
-					var argValue = arg.substr (equals + 1);
-					var field = arg.substr (2, equals - 2);
-					
-					if (StringTools.startsWith (field, "haxelib-")) {
-						
-						var name = field.substr (8);
-						HaxelibHelper.pathOverrides.set (name, PathHelper.tryFullPath (argValue));
-						
-					}
-					
-				} else if (StringTools.startsWith (arg, "-")) {
-					
-					switch (arg) {
-						
-						case "-v", "-verbose":
-							
-							LogHelper.verbose = true;
-						
-						case "-nocolor":
-							
-							LogHelper.enableColor = false;
-						
-						case "-nocffi":
-							
-							rebuildBinaries = false;
-						
-						default:
-						
-					}
-					
-				}
-				
-			}
-			
-			rebuildTools (rebuildBinaries);
-			
-			if (args.indexOf ("-openfl") > -1) {
-				
-				Sys.setCwd (cacheDirectory);
-				
-			} else {
-				
-				Sys.exit (0);
-				
-			}
-			
-		}
-		
-		if (!FileSystem.exists ("tools/tools.n") || args.indexOf ("-rebuild") > -1) {
-			
-			rebuildTools ();
-			
-		}
-		
-		var args = [ "tools/tools.n" ].concat (args);
-		Sys.exit (runCommand ("", "neko", args));
+		Sys.exit (runCommand ("", "haxe", args.concat (Sys.args ())));
 		
 	}
 	
