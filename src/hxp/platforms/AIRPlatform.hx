@@ -2,6 +2,7 @@ package hxp.platforms;
 
 
 import haxe.io.Path;
+import haxe.Template;
 import hxp.project.AssetType;
 import hxp.project.HXProject;
 import hxp.project.Icon;
@@ -183,6 +184,31 @@ class AIRPlatform extends FlashPlatform {
 			}
 			
 		}
+		
+	}
+	
+	
+	private override function getDisplayHXML ():String {
+		
+		var hxml = PathHelper.findTemplate (project.templatePaths, "flash/hxml/" + buildType + ".hxml");
+		
+		var context = project.templateContext;
+		context.WIN_FLASHBACKGROUND = StringTools.hex (project.window.background, 6);
+		context.OUTPUT_DIR = targetDirectory;
+		
+		for (dependency in project.dependencies) {
+			
+			if (StringTools.endsWith (dependency.path, ".ane")) {
+				
+				context.HAXE_FLAGS += "\n-swf-lib " + dependency.path;
+				
+			}
+			
+		}
+		
+		var template = new Template (File.getContent (hxml));
+		
+		return template.execute (context) + "\n-D display";
 		
 	}
 	
