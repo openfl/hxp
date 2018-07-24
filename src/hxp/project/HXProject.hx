@@ -518,9 +518,9 @@ class HXProject {
 		FileHelper.copyFile (path, classFile);
 		
 		#if lime
-		var args = [ name, "-main", "hxp.project.HXProject", "-cp", tempDirectory, "-neko", nekoOutput, "-cp", PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "tools"), "-lib", "hxp" ];
+		var args = [ name, "-main", "hxp.project.HXProject", "-cp", tempDirectory, "-neko", nekoOutput, "-cp", PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "src"), "-lib", "hxp" ];
 		#else
-		var args = [ name, "--interp", "-main", "hxp.project.HXProject", "-cp", tempDirectory, "-cp", PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "tools"), "-lib", "hxp", "-D", "lime-curl", "-D", "native", "-D", "lime-native", "-D", "lime-cffi" ];
+		var args = [ name, "--interp", "-main", "hxp.project.HXProject", "-cp", tempDirectory, "-cp", PathHelper.combine (PathHelper.getHaxelib (new Haxelib ("hxp")), "src") ];
 		#end
 		var input = File.read (classFile, false);
 		var tag = "@:compiler(";

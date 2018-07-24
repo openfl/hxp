@@ -666,7 +666,7 @@ class CommandLineTools {
 				
 				// TODO: Optional additional args
 				
-				args = [ "-cp", targetDir, className, "--interp", "-main", "hxp.project.PlatformTargetMain", "-cp", HaxelibHelper.getPath (new Haxelib ("hxp")), "--", className ].concat (args);
+				args = [ "-cp", targetDir, className, "--interp", "-main", "hxp.project.PlatformTargetMain", "-cp", PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("hxp")), "src"), "--", className ].concat (args);
 				
 				ProcessHelper.runCommand ("", "haxe", args);
 				
@@ -704,6 +704,7 @@ class CommandLineTools {
 			
 			var platform:PlatformTarget = null;
 			
+			#if lime
 			switch (project.target) {
 				
 				case ANDROID:
@@ -765,6 +766,7 @@ class CommandLineTools {
 				default:
 				
 			}
+			#end
 			
 			if (platform != null) {
 				
