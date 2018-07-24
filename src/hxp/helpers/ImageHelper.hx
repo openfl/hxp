@@ -48,7 +48,7 @@ class ImageHelper {
 			
 		} catch (e:Dynamic) {}
 		
-		var rasterizer = PathHelper.getHaxelib (new Haxelib ("hxp")) + "/templates/bin/batik/batik-rasterizer.jar";
+		var rasterizer = PathHelper.getHaxelib (new Haxelib ("lime")) + "/templates/bin/batik/batik-rasterizer.jar";
 		var args = [ "-Dapple.awt.UIElement=true", "-jar", rasterizer, "-d", temp, "-w", Std.string (width), "-h", Std.string (height) ];
 		
 		if (backgroundColor != null) {

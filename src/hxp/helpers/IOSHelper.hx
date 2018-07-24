@@ -378,7 +378,7 @@ class IOSHelper {
 				
 			}
 			
-			var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), "templates") ].concat (project.templatePaths);
+			var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), #if lime "templates" #else "" #end) ].concat (project.templatePaths);
 			var launcher = PathHelper.findTemplate (templatePaths, "bin/ios-deploy");
 			Sys.command ("chmod", [ "+x", launcher ]);
 			

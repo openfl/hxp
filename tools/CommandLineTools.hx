@@ -1,23 +1,17 @@
 package;
 
 
-//import openfl.text.Font;
-//import openfl.utils.ByteArray;
-//import openfl.utils.CompressionAlgorithm;
 import haxe.Serializer;
 import haxe.Unserializer;
 import haxe.io.Path;
 import haxe.rtti.Meta;
-// import lime.system.CFFI;
 import hxp.helpers.*;
-import hxp.platforms.*;
 import hxp.project.*;
 import sys.io.File;
 import sys.io.Process;
 import sys.FileSystem;
 import utils.publish.*;
 import utils.CreateTemplate;
-// import utils.JavaExternGenerator;
 import utils.PlatformSetup;
 
 @:access(hxp.project.HXProject)
@@ -67,22 +61,6 @@ class CommandLineTools {
 		processArguments ();
 		version = HaxelibHelper.getVersion ();
 		
-		if (targetFlags.exists ("lime")) {
-			
-			LogHelper.accentColor = "\x1b[32;1m";
-			commandName = "lime";
-			defaultLibrary = "lime";
-			defaultLibraryName = "Lime";
-			
-		} else if (targetFlags.exists ("openfl")) {
-			
-			LogHelper.accentColor = "\x1b[36;1m";
-			commandName = "openfl";
-			defaultLibrary = "openfl";
-			defaultLibraryName = "OpenFL";
-			
-		}
-		
 		if (command == "" && targetFlags.exists ("help")) {
 			
 			command = "help";
@@ -120,18 +98,6 @@ class CommandLineTools {
 			case "setup":
 				
 				platformSetup ();
-			
-			case "document":
-				
-				document ();
-			
-			case "generate":
-				
-				generate ();
-			
-			case "compress":
-				
-				compress ();
 			
 			case "create":
 				
@@ -176,19 +142,7 @@ class CommandLineTools {
 				
 				if (words.length < 2) {
 					
-					if (targetFlags.exists ("lime")) {
-						
-						words.unshift ("lime");
-						
-					} else if (targetFlags.exists ("openfl")) {
-						
-						words.unshift ("openfl");
-						
-					} else {
-						
-						words.unshift ("hxp");
-						
-					}
+					words.unshift ("hxp");
 					
 				}
 				
@@ -468,10 +422,6 @@ class CommandLineTools {
 				
 				publishProject ();
 			
-			case "installer", "copy-if-newer":
-				
-				// deprecated?
-			
 			default:
 				
 				LogHelper.error ("'" + command + "' is not a valid command");
@@ -479,147 +429,6 @@ class CommandLineTools {
 		}
 		
 	}
-	
-	
-	// #if (neko && (haxe_210 || haxe3))
-	// public static function __init__ ():Void {
-		
-	// 	var args = Sys.args ();
-		
-	// 	if (args.length > 0 && args[0].toLowerCase () == "rebuild") {
-			
-	// 		CFFI.enabled = false;
-			
-	// 	}
-		
-		
-	// 	for (arg in args) {
-			
-	// 		// TODO: Allow -rebuild without locking native binary?
-			
-	// 		if (arg == "-nocffi" || arg == "-rebuild") {
-				
-	// 			CFFI.enabled = false;
-				
-	// 		}
-			
-	// 	}
-		
-	// 	var path = "";
-		
-	// 	if (FileSystem.exists ("tools.n")) {
-			
-	// 		path = PathHelper.combine (Sys.getCwd (), "../");
-			
-	// 	} else if (FileSystem.exists ("run.n")) {
-			
-	// 		path = Sys.getCwd ();
-			
-	// 	}
-		
-	// 	if (path == "") {
-			
-	// 		var process = new Process ("haxelib", [ "path", "lime" ]);
-	// 		var lines = new Array<String> ();
-			
-	// 		try {
-				
-	// 			while (true) {
-					
-	// 				var length = lines.length;
-	// 				var line = StringTools.trim (process.stdout.readLine ());
-					
-	// 				if (length > 0 && (line == "-D lime" || StringTools.startsWith (line, "-D lime="))) {
-						
-	// 					path = StringTools.trim (lines[length - 1]);
-						
-	// 				}
-					
-	// 				lines.push (line);
-					
-	// 			}
-				
-	// 		} catch (e:Dynamic) {
-				
-	// 		}
-			
-	// 		if (path == "") {
-				
-	// 			for (line in lines) {
-					
-	// 				if (line != "" && line.substr (0, 1) != "-") {
-						
-	// 					try {
-							
-	// 						if (FileSystem.exists (line)) {
-								
-	// 							path = line;
-								
-	// 						}
-							
-	// 					} catch (e:Dynamic) {}
-						
-	// 				}
-					
-	// 			}
-				
-	// 		}
-			
-	// 		process.close ();
-			
-	// 	}
-		
-	// 	path += "/ndll/";
-		
-	// 	switch (PlatformHelper.hostPlatform) {
-			
-	// 		case WINDOWS:
-				
-	// 			untyped $loader.path = $array (path + "Windows/", $loader.path);
-				
-	// 		case MAC:
-				
-	// 			//if (PlatformHelper.hostArchitecture == Architecture.X64) {
-					
-	// 				untyped $loader.path = $array (path + "Mac64/", $loader.path);
-					
-	// 			//} else {
-					
-	// 			//	untyped $loader.path = $array (path + "Mac/", $loader.path);
-					
-	// 			//}
-				
-	// 		case LINUX:
-				
-	// 			var arguments = Sys.args ();
-	// 			var raspberryPi = false;
-				
-	// 			for (argument in arguments) {
-					
-	// 				if (argument == "-rpi") raspberryPi = true;
-					
-	// 			}
-				
-	// 			if (raspberryPi || PlatformHelper.hostArchitecture == Architecture.ARMV6 || PlatformHelper.hostArchitecture == Architecture.ARMV7) {
-					
-	// 				untyped $loader.path = $array (path + "RPi/", $loader.path);
-					
-	// 			} else if (PlatformHelper.hostArchitecture == Architecture.X64) {
-					
-	// 				untyped $loader.path = $array (path + "Linux64/", $loader.path);
-					
-	// 			} else {
-					
-	// 				untyped $loader.path = $array (path + "Linux/", $loader.path);
-					
-	// 			}
-			
-	// 		default:
-			
-	// 	}
-		
-	// }
-	// #end
 	
 	
 	private function buildProject (project:HXProject, command:String = "") {
@@ -704,69 +513,69 @@ class CommandLineTools {
 			
 			var platform:PlatformTarget = null;
 			
-			#if lime
-			switch (project.target) {
+			// #if lime
+			// switch (project.target) {
 				
-				case ANDROID:
+			// 	case ANDROID:
 					
-					platform = new AndroidPlatform (command, project, targetFlags);
+			// 		platform = new AndroidPlatform (command, project, targetFlags);
 					
-				case BLACKBERRY:
+			// 	case BLACKBERRY:
 					
-					//platform = new BlackBerryPlatform (command, project, targetFlags);
+			// 		//platform = new BlackBerryPlatform (command, project, targetFlags);
 				
-				case IOS:
+			// 	case IOS:
 					
-					platform = new IOSPlatform (command, project, targetFlags);
+			// 		platform = new IOSPlatform (command, project, targetFlags);
 				
-				case TIZEN:
+			// 	case TIZEN:
 					
-					//platform = new TizenPlatform (command, project, targetFlags);
+			// 		//platform = new TizenPlatform (command, project, targetFlags);
 				
-				case WEBOS:
+			// 	case WEBOS:
 					
-					//platform = new WebOSPlatform (command, project, targetFlags);
+			// 		//platform = new WebOSPlatform (command, project, targetFlags);
 				
-				case WINDOWS:
+			// 	case WINDOWS:
 					
-					platform = new WindowsPlatform (command, project, targetFlags);
+			// 		platform = new WindowsPlatform (command, project, targetFlags);
 				
-				case MAC:
+			// 	case MAC:
 					
-					platform = new MacPlatform (command, project, targetFlags);
+			// 		platform = new MacPlatform (command, project, targetFlags);
 				
-				case LINUX:
+			// 	case LINUX:
 					
-					platform = new LinuxPlatform (command, project, targetFlags);
+			// 		platform = new LinuxPlatform (command, project, targetFlags);
 				
-				case FLASH:
+			// 	case FLASH:
 					
-					platform = new FlashPlatform (command, project, targetFlags);
+			// 		platform = new FlashPlatform (command, project, targetFlags);
 				
-				case HTML5:
+			// 	case HTML5:
 					
-					platform = new HTML5Platform (command, project, targetFlags);
+			// 		platform = new HTML5Platform (command, project, targetFlags);
 				
-				case FIREFOX:
+			// 	case FIREFOX:
 					
-					platform = new FirefoxPlatform (command, project, targetFlags);
+			// 		platform = new FirefoxPlatform (command, project, targetFlags);
 				
-				case EMSCRIPTEN:
+			// 	case EMSCRIPTEN:
 					
-					platform = new EmscriptenPlatform (command, project, targetFlags);
+			// 		platform = new EmscriptenPlatform (command, project, targetFlags);
 				
-				case TVOS:
+			// 	case TVOS:
 					
-					platform = new TVOSPlatform (command, project, targetFlags);
+			// 		platform = new TVOSPlatform (command, project, targetFlags);
 				
-				case AIR:
+			// 	case AIR:
 					
-					platform = new AIRPlatform (command, project, targetFlags);
+			// 		platform = new AIRPlatform (command, project, targetFlags);
 				
-				default:
+			// 	default:
 				
-			}
-			#end
+			// }
+			// #end
 			
 			if (platform != null) {
 				
@@ -778,21 +587,6 @@ class CommandLineTools {
 				LogHelper.error ("\"" + Std.string (project.target) + "\" is an unknown target");
 				
 			}
-			
-		}
-		
-	}
-	
-	
-	private function compress () {
-		
-		if (words.length > 0) {
-			
-			//var bytes = new ByteArray ();
-			//bytes.writeUTFBytes (words[0]);
-			//bytes.compress (CompressionAlgorithm.LZMA);
-			//Sys.print (bytes.toString ());
-			//File.saveBytes (words[0] + ".compress", bytes);
 			
 		}
 		
@@ -954,13 +748,6 @@ class CommandLineTools {
 		
 		var basicCommands = [ "config", "create", "clean", "update", "build", "run", "test", "help" ];
 		var additionalCommands = [ "trace", "deploy", "display", "rebuild", "install", "remove", "upgrade", "setup" ];
-		
-		if (targetFlags.exists ("openfl")) {
-			
-			commands.set ("process", "Process a SWF asset for use with " + defaultLibraryName);
-			additionalCommands.push ("process");
-			
-		}
 		
 		var command = (words.length > 0 ? words[0] : "");
 		var isProjectCommand = false, isBuildCommand = false;
@@ -1216,132 +1003,32 @@ class CommandLineTools {
 	
 	private function displayInfo (showHint:Bool = false):Void {
 		
-		// var out = "";
-		// for (i in 0...80) out += "-";
-		// LogHelper.println (out);
-		
 		if (PlatformHelper.hostPlatform == Platform.WINDOWS) {
 			
 			LogHelper.println ("");
 			
 		}
 		
-		if (targetFlags.exists ("lime")) {
-			
-			LogHelper.println ("\x1b[32m_\x1b[1m/\\\\\\\\\\\\\x1b[0m\x1b[32m______________________________________________\x1b[0m");
-			LogHelper.println ("\x1b[32m_\x1b[1m\\////\\\\\\\x1b[0m\x1b[32m______________________________________________\x1b[0m");
-			LogHelper.println ("\x1b[32m_____\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m_____\x1b[1m/\\\\\\\x1b[0m\x1b[32m_____________________________________\x1b[0m");
-			LogHelper.println ("\x1b[32m______\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m____\x1b[1m\\///\x1b[0m\x1b[32m_____\x1b[1m/\\\\\\\\\\\x1b[0m\x1b[32m__\x1b[1m/\\\\\\\\\\\x1b[0m\x1b[32m_______\x1b[1m/\\\\\\\\\\\\\\\\\x1b[0m\x1b[32m___\x1b[0m");
-			LogHelper.println ("\x1b[32m_______\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m_____\x1b[1m/\\\\\\\x1b[0m\x1b[32m__\x1b[1m/\\\\\\///\\\\\\\\\\///\\\\\\\x1b[0m\x1b[32m___\x1b[1m/\\\\\\/////\\\\\\\x1b[0m\x1b[32m__\x1b[0m");
-			LogHelper.println ("\x1b[32m________\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m____\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m_\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m_\x1b[1m\\//\\\\\\\x1b[0m\x1b[32m__\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m__\x1b[1m/\\\\\\\\\\\\\\\\\\\\\\\x1b[0m\x1b[32m___\x1b[0m");
-			LogHelper.println ("\x1b[32m_________\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m____\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m_\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m__\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m__\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m_\x1b[1m\\//\\\\///////\x1b[0m\x1b[32m____\x1b[0m");
-			LogHelper.println ("\x1b[32m________\x1b[1m/\\\\\\\\\\\\\\\\\\\x1b[0m\x1b[32m_\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m_\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m__\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m__\x1b[1m\\/\\\\\\\x1b[0m\x1b[32m__\x1b[1m\\//\\\\\\\\\\\\\\\\\\\\\x1b[0m\x1b[32m__\x1b[0m");
-			LogHelper.println ("\x1b[32m________\x1b[1m\\/////////\x1b[0m\x1b[32m__\x1b[1m\\///\x1b[0m\x1b[32m__\x1b[1m\\///\x1b[0m\x1b[32m___\x1b[1m\\///\x1b[0m\x1b[32m___\x1b[1m\\///\x1b[0m\x1b[32m____\x1b[1m\\//////////\x1b[0m\x1b[32m___\x1b[0m");
-			
-			LogHelper.println ("");
-			LogHelper.println ("\x1b[1mLime Command-Line Tools\x1b[0;1m (" + getToolsVersion () + ")\x1b[0m");
-			
-		} else if (targetFlags.exists ("openfl")) {
-			
-			LogHelper.println ("\x1b[37m .d88 88b.                             \x1b[0m\x1b[1;36m888888b 888 \x1b[0m");
-			LogHelper.println ("\x1b[37md88P\" \"Y88b                            \x1b[0m\x1b[1;36m888     888 \x1b[0m");
-			LogHelper.println ("\x1b[37m888     888                            \x1b[0m\x1b[1;36m888     888 \x1b[0m");
-			LogHelper.println ("\x1b[37m888     888 88888b.   .d88b.  88888b.  \x1b[0m\x1b[1;36m8888888 888 \x1b[0m");
-			LogHelper.println ("\x1b[37m888     888 888 \"88b d8P  Y8b 888 \"88b \x1b[0m\x1b[1;36m888     888 \x1b[0m");
-			LogHelper.println ("\x1b[37m888     888 888  888 88888888 888  888 \x1b[0m\x1b[1;36m888     888 \x1b[0m");
-			LogHelper.println ("\x1b[37mY88b. .d88P 888 d88P Y8b.     888  888 \x1b[0m\x1b[1;36m888     888 \x1b[0m");
-			LogHelper.println ("\x1b[37m \"Y88 88P\"  88888P\"   \"Y8888  888  888 \x1b[0m\x1b[1;36m888     \"Y888P \x1b[0m");
-			LogHelper.println ("\x1b[37m            888                                   ");
-			LogHelper.println ("\x1b[37m            888                                   \x1b[0m");
-			
-			LogHelper.println ("");
-			LogHelper.println ("\x1b[1mOpenFL Command-Line Tools\x1b[0;1m (" + getToolsVersion () + ")\x1b[0m");
-			
-		} else {
-			
-			// LogHelper.println ("\x1b[34;1m██╗  ██╗ ██╗  ██╗ ██████╗ \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m██║  ██║ ╚██╗██╔╝ ██╔══██╗\x1b[0m");
-			// LogHelper.println ("\x1b[34;1m███████║  ╚███╔╝  ██████╔╝\x1b[0m");
-			// LogHelper.println ("\x1b[34;1m██╔══██║  ██╔██╗  ██╔═══╝ \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m██║  ██║ ██╔╝ ██╗ ██║     \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m╚═╝  ╚═╝ ╚═╝  ╚═╝ ╚═╝     \x1b[0m");
-			
-			// LogHelper.println ("\x1b[34;1m  ,,                              \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m`7MM                              \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m  MM                              \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m  MMpMMMb.  `7M'   `MF'`7MMpdMAo. \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m  MM    MM    `VA ,V'    MM   `Wb \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m  MM    MM      XMX      MM    M8 \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m  MM    MM    ,V' VA.    MM   ,AP \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m.JMML  JMML..AM.   .MA.  MMbmmd'  \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m                         MM       \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m                       .JMML.     \x1b[0m");
-			
-			// LogHelper.println ("\x1b[34;1moooo                               \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m`888                               \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m 888 .oo.   oooo    ooo oo.ooooo.  \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m 888P\"Y88b   `88b..8P'   888' `88b \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m 888   888     Y888'     888   888 \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m 888   888   .o8\"'88b    888   888 \x1b[0m");
-			// LogHelper.println ("\x1b[34;1mo888o o888o o88'   888o  888bod8P' \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m                         888       \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m                        o888o      \x1b[0m");
-			
-			// LogHelper.println ("");
-			LogHelper.println ("\x1b[36;1m ,dPb,                              \x1b[0m");
-			LogHelper.println ("\x1b[36;1m IP`Yb                              \x1b[0m");
-			LogHelper.println ("\x1b[36;1m I8 8I                              \x1b[0m");
-			LogHelper.println ("\x1b[36;1m I8 8'                              \x1b[0m");
-			LogHelper.println ("\x1b[36;1m I8d8Pgg,       ,gg,   ,gg gg,gggg,   \x1b[0m");
-			LogHelper.println ("\x1b[36;1m I8dP\" \"8I    d8\"\"8b,dP\"  I8P\"  \"Yb  \x1b[0m");
-			LogHelper.println ("\x1b[36;1m I8P    I8   dP   ,88\"    I8'    ,8i \x1b[0m");
-			LogHelper.println ("\x1b[36;1m,d8     I8,,dP  ,dP\"Y8,  ,I8 _  ,d8' \x1b[0m");
-			LogHelper.println ("\x1b[36;1md8P     `Y88\"  dP\"   \"Y88PI8 YY88P\x1b[0m");
-			LogHelper.println ("\x1b[36;1m                          I8         \x1b[0m");
-			LogHelper.println ("\x1b[36;1m                          I8         \x1b[0m");
-			// LogHelper.println ("\x1b[36;1m                          I8         \x1b[0m");
-
-			
-			// LogHelper.println ("");
-			// LogHelper.println ("\x1b[36;1m 88                                     \x1b[0m");
-			// LogHelper.println ("\x1b[36;1m 88                                     \x1b[0m");
-			// LogHelper.println ("\x1b[36;1m 88                                     \x1b[0m");
-			// LogHelper.println ("\x1b[36;1m 88,dPPYba,   8b,     ,d8  8b,dPPYba,   \x1b[0m");
-			// LogHelper.println ("\x1b[36;1m 88P'    \"8a   `Y8, ,8P'   88P'    \"8a  \x1b[0m");
-			// LogHelper.println ("\x1b[36;1m 88       88     )888(     88       d8  \x1b[0m");
-			// LogHelper.println ("\x1b[36;1m 88       88   ,d8\" \"8b,   88b,   ,a8\"  \x1b[0m");
-			// LogHelper.println ("\x1b[36;1m 88       88  8P'     `Y8  88`YbbdP\"'   \x1b[0m");
-			// LogHelper.println ("\x1b[36;1m                           88           \x1b[0m");
-			// LogHelper.println ("\x1b[36;1m                           88           \x1b[0m");
-			
-			// LogHelper.println ("\x1b[34;1m d8b                         \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m ?88                         \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m  88b                        \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m  888888b ?88,  88P?88,.d88b,\x1b[0m");
-			// LogHelper.println ("\x1b[34;1m  88P `?8b `?8bd8P'`?88'  ?88\x1b[0m");
-			// LogHelper.println ("\x1b[34;1m d88   88P d8P?8b,   88b  d8P\x1b[0m");
-			// LogHelper.println ("\x1b[34;1md88'   88bd8P' `?8b  888888P'\x1b[0m");
-			// LogHelper.println ("\x1b[34;1m                     88P'    \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m                    d88      \x1b[0m");
-			// LogHelper.println ("\x1b[34;1m                    ?8P      \x1b[0m");
-			
-			LogHelper.println ("");
-			LogHelper.println ("\x1b[1mHXP Command-Line Tools\x1b[0;1m (" + getToolsVersion () + ")\x1b[0m");
-			
-		}
+		LogHelper.println ("\x1b[36;1m ,dPb,                              \x1b[0m");
+		LogHelper.println ("\x1b[36;1m IP`Yb                              \x1b[0m");
+		LogHelper.println ("\x1b[36;1m I8 8I                              \x1b[0m");
+		LogHelper.println ("\x1b[36;1m I8 8'                              \x1b[0m");
+		LogHelper.println ("\x1b[36;1m I8d8Pgg,       ,gg,   ,gg gg,gggg,   \x1b[0m");
+		LogHelper.println ("\x1b[36;1m I8dP\" \"8I    d8\"\"8b,dP\"  I8P\"  \"Yb  \x1b[0m");
+		LogHelper.println ("\x1b[36;1m I8P    I8   dP   ,88\"    I8'    ,8i \x1b[0m");
+		LogHelper.println ("\x1b[36;1m,d8     I8,,dP  ,dP\"Y8,  ,I8 _  ,d8' \x1b[0m");
+		LogHelper.println ("\x1b[36;1md8P     `Y88\"  dP\"   \"Y88PI8 YY88P\x1b[0m");
+		LogHelper.println ("\x1b[36;1m                          I8         \x1b[0m");
+		LogHelper.println ("\x1b[36;1m                          I8         \x1b[0m");
+		
+		LogHelper.println ("");
+		LogHelper.println ("\x1b[1mHXP Command-Line Tools\x1b[0;1m (" + getToolsVersion () + ")\x1b[0m");
 		
 		if (showHint) {
 			
 			LogHelper.println ("Use \x1b[3m" + commandName + " setup\x1b[0m to configure platforms or \x1b[3m" + commandName + " help\x1b[0m for more commands");
 			
 		}
-		
-	}
-	
-	
-	private function document ():Void {
-		
-		
 		
 	}
 	
@@ -1418,36 +1105,6 @@ class CommandLineTools {
 		}
 		
 		return "";
-		
-	}
-	
-	
-	private function generate ():Void {
-		
-		if (targetFlags.exists ("font-hash")) {
-			
-			var sourcePath = words[0];
-			var glyphs = "32-255";
-			
-			ProcessHelper.runCommand (Path.directory (sourcePath), "neko", [ HaxelibHelper.getPath (new Haxelib ("lime")) + "/templates/bin/hxswfml.n", "ttf2hash2", Path.withoutDirectory (sourcePath), Path.withoutDirectory (sourcePath) + ".hash", "-glyphs", glyphs ]);
-			
-		} else if (targetFlags.exists ("font-details")) {
-			
-			//var sourcePath = words[0];
-			
-			//var details = Font.load (sourcePath);
-			//var json = Json.stringify (details);
-			//Sys.print (json);
-			
-		} else if (targetFlags.exists ("java-externs")) {
-			
-			// var config = ConfigHelper.getConfig ();
-			// var sourcePath = words[0];
-			// var targetPath = words[1];
-			
-			// new JavaExternGenerator (config, sourcePath, targetPath);
-			
-		}
 		
 	}
 	
@@ -1606,20 +1263,7 @@ class CommandLineTools {
 	private function getToolsVersion (version:String = null):String {
 		
 		if (version == null) version = this.version;
-		
-		if (targetFlags.exists ("lime")) {
-			
-			return HaxelibHelper.getVersion (new Haxelib ("lime")) + "-L" + StringHelper.generateUUID (5, null, StringHelper.generateHashCode (version));
-			
-		} else if (targetFlags.exists ("openfl")) {
-			
-			return HaxelibHelper.getVersion (new Haxelib ("openfl")) + "-L" + StringHelper.generateUUID (5, null, StringHelper.generateHashCode (version));
-			
-		} else {
-			
-			return version;
-			
-		}
+		return version;
 		
 	}
 	
@@ -2055,32 +1699,6 @@ class CommandLineTools {
 				
 				if (!project.targetFlags.exists ("notoolscheck")) {
 					
-					if (targetFlags.exists ("lime")) {
-						
-						for (haxelib in project.haxelibs) {
-							
-							if (haxelib.name == "lime") {
-								
-								HaxelibHelper.setOverridePath (haxelib, HaxelibHelper.getPath (haxelib));
-								
-							}
-							
-						}
-						
-					} else if (targetFlags.exists ("openfl")) {
-						
-						for (haxelib in project.haxelibs) {
-							
-							if (haxelib.name == "openfl") {
-								
-								HaxelibHelper.setOverridePath (haxelib, HaxelibHelper.getPath (haxelib));
-								
-							}
-							
-						}
-						
-					}
-					
 					LogHelper.info ("", LogHelper.accentColor + "Requesting tools version " + getToolsVersion (haxelib.version) + "...\x1b[0m\n\n");
 					
 					HaxelibHelper.pathOverrides.remove ("lime");
@@ -2275,28 +1893,28 @@ class CommandLineTools {
 			
 		}
 		
-		if (!runFromHaxelib) {
+		// if (!runFromHaxelib) {
 			
-			var path = null;
+		// 	var path = null;
 			
-			if (FileSystem.exists ("tools.n")) {
+		// 	if (FileSystem.exists ("tools.n")) {
 				
-				path = PathHelper.combine (Sys.getCwd (), "../");
+		// 		path = PathHelper.combine (Sys.getCwd (), "../");
 				
-			} else if (FileSystem.exists ("run.n")) {
+		// 	} else if (FileSystem.exists ("run.n")) {
 				
-				path = Sys.getCwd ();
+		// 		path = Sys.getCwd ();
 				
-			} else {
+		// 	} else {
 				
-				LogHelper.error ("Could not run Lime tools from this directory");
+		// 		LogHelper.error ("Could not run Lime tools from this directory");
 				
-			}
+		// 	}
 			
-			HaxelibHelper.setOverridePath (new Haxelib ("lime"), path);
-			HaxelibHelper.setOverridePath (new Haxelib ("lime-tools"), PathHelper.combine (path, "tools"));
+		// 	HaxelibHelper.setOverridePath (new Haxelib ("lime"), path);
+		// 	HaxelibHelper.setOverridePath (new Haxelib ("lime-tools"), PathHelper.combine (path, "tools"));
 			
-		}
+		// }
 		
 		var catchArguments = false;
 		var catchHaxeFlag = false;

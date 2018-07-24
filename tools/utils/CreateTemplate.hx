@@ -42,7 +42,7 @@ class CreateTemplate {
 		context.ANDROID_GRADLE_PLUGIN = "::ANDROID_GRADLE_PLUGIN::";
 		
 		PathHelper.mkdir (title);
-		FileHelper.recursiveCopyTemplate ([ HaxelibHelper.getPath (new Haxelib ("hxp"), true)  + "/templates" ], "extension", title, context);
+		FileHelper.recursiveCopyTemplate ([ HaxelibHelper.getPath (new Haxelib ("lime"), true)  + "/templates" ], "extension", title, context);
 		
 		if (FileSystem.exists (title + "/Extension.hx")) {
 			

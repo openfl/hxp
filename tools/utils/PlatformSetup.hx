@@ -972,8 +972,8 @@ class PlatformSetup {
 				
 			}
 			
-			try { File.copy (HaxelibHelper.getPath (new Haxelib ("hxp")) + "\\templates\\\\bin\\hxp.exe", haxePath + "\\hxp.exe"); } catch (e:Dynamic) {}
-			try { File.copy (HaxelibHelper.getPath (new Haxelib ("hxp")) + "\\templates\\\\bin\\hxp.sh", haxePath + "\\hxp"); } catch (e:Dynamic) {}
+			try { File.copy (HaxelibHelper.getPath (new Haxelib ("hxp")) + "\\bin\\hxp.exe", haxePath + "\\hxp.exe"); } catch (e:Dynamic) {}
+			try { File.copy (HaxelibHelper.getPath (new Haxelib ("hxp")) + "\\bin\\hxp.sh", haxePath + "\\hxp"); } catch (e:Dynamic) {}
 			
 		} else {
 			
@@ -1000,7 +1000,7 @@ class PlatformSetup {
 				
 				try {
 					
-					ProcessHelper.runCommand ("", "sudo", [ "cp", "-f", HaxelibHelper.getPath (new Haxelib ("hxp")) + "/templates/bin/hxp.sh", "/usr/local/bin/hxp" ], false);
+					ProcessHelper.runCommand ("", "sudo", [ "cp", "-f", HaxelibHelper.getPath (new Haxelib ("hxp")) + "/bin/hxp.sh", "/usr/local/bin/hxp" ], false);
 					ProcessHelper.runCommand ("", "sudo", [ "chmod", "755", "/usr/local/bin/hxp" ], false);
 					installedCommand = true;
 					
@@ -1016,7 +1016,7 @@ class PlatformSetup {
 				Sys.println (" a) Manually add an alias called \"hxp\" to run \"haxelib run hxp\"");
 				Sys.println (" b) Run the following commands:");
 				Sys.println ("");
-				Sys.println ("sudo cp \"" + PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("hxp")), "templates/bin/hxp.sh") + "\" /usr/local/bin/hxp");
+				Sys.println ("sudo cp \"" + PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("hxp")), "bin/hxp.sh") + "\" /usr/local/bin/hxp");
 				Sys.println ("sudo chmod 755 /usr/local/bin/hxp");
 				Sys.println ("");
 				
@@ -1070,8 +1070,8 @@ class PlatformSetup {
 				
 			}
 			
-			try { File.copy (HaxelibHelper.getPath (new Haxelib ("lime")) + "\\templates\\\\bin\\lime.exe", haxePath + "\\lime.exe"); } catch (e:Dynamic) {}
-			try { File.copy (HaxelibHelper.getPath (new Haxelib ("lime")) + "\\templates\\\\bin\\lime.sh", haxePath + "\\lime"); } catch (e:Dynamic) {}
+			try { File.copy (HaxelibHelper.getPath (new Haxelib ("lime")) + "\\bin\\lime.exe", haxePath + "\\lime.exe"); } catch (e:Dynamic) {}
+			try { File.copy (HaxelibHelper.getPath (new Haxelib ("lime")) + "\\bin\\lime.sh", haxePath + "\\lime"); } catch (e:Dynamic) {}
 			
 		} else {
 			
@@ -1114,7 +1114,7 @@ class PlatformSetup {
 				Sys.println (" a) Manually add an alias called \"lime\" to run \"haxelib run lime\"");
 				Sys.println (" b) Run the following commands:");
 				Sys.println ("");
-				Sys.println ("sudo cp \"" + PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("lime")), "templates/bin/lime.sh") + "\" /usr/local/bin/lime");
+				Sys.println ("sudo cp \"" + PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("lime")), "bin/lime.sh") + "\" /usr/local/bin/lime");
 				Sys.println ("sudo chmod 755 /usr/local/bin/lime");
 				Sys.println ("");
 				

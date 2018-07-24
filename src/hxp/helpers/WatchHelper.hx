@@ -92,7 +92,7 @@ class WatchHelper {
 			
 		}
 		
-		var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), "templates") ].concat (project.templatePaths);
+		var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), #if lime "templates" #else "" #end) ].concat (project.templatePaths);
 		var node = PathHelper.findTemplate (templatePaths, "bin/node/node" + suffix);
 		var bin = PathHelper.findTemplate (templatePaths, "bin/node/watch/cli-custom.js");
 		

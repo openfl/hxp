@@ -1,7 +1,0 @@
--main ApplicationMain ::HAXE_FLAGS::
--js ::NODE_FILE::
--cp ::OUTPUT_DIR::/haxe
---macro allowPackage("flash")
---macro define("sys")
--D nodejs
--D js-flatten

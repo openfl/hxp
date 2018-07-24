@@ -1,8 +1,0 @@
--main ApplicationMain ::HAXE_FLAGS::
--cp ::OUTPUT_DIR::/haxe
--cpp ::CPP_DIR::
---macro keep("::APP_MAIN::")
--D webos
--D HXCPP_LOAD_DEBUG
--D HXCPP_RTLD_LAZY
--debug
