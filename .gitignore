@@ -6,8 +6,8 @@ Export/
 *.swp
 .idea/
 *.iml
-tools/*.n
-tools/*.exe
+scripts/*.n
+scripts/*.exe
 haxedoc.xml
 .vscode/settings.json
 package-lock.json

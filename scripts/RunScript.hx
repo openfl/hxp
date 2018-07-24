@@ -64,7 +64,7 @@ class RunScript {
 			"-main",
 			"CommandLineTools",
 			"-cp", "src",
-			"-cp", "tools",
+			"-cp", "scripts",
 			"--"
 			
 		];
