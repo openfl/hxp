@@ -1068,6 +1068,8 @@ class CommandLineTools {
 	
 	private function executeScript (path:String):Void {
 		
+		LogHelper.info ("", LogHelper.accentColor + "Executing script: " + path + LogHelper.resetColor);
+		
 		var dir = Path.directory (path);
 		var file = Path.withoutDirectory (path);
 		var className = Path.withoutExtension (file);
