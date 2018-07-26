@@ -472,12 +472,37 @@ class CommandLineTools {
 				
 				var targetDir = Path.directory (handler);
 				var className = Path.withoutDirectory (Path.withoutExtension (handler));
+				var extraParams = PathHelper.combine (targetDir, "extraParams.hxml");
+				
+				var buildArgs = [ "-cp", targetDir, className, "--interp", "-main", "hxp.project.PlatformTargetMain", "-cp", PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("hxp")), "src") ];
+				
+				if (FileSystem.exists (extraParams)) {
+					
+					var content = File.getContent (extraParams);
+					var lines = content.split ("\n");
+					
+					for (line in lines) {
+						
+						var split = line.split (" ");
+						
+						for (value in split) {
+							
+							value = StringTools.trim (value);
+							if (value != "") buildArgs.push (value);
+							
+						}
+						
+					}
+					
+				}
 				
 				// TODO: Optional additional args
 				
-				args = [ "-cp", targetDir, className, "--interp", "-main", "hxp.project.PlatformTargetMain", "-cp", PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("hxp")), "src"), "--", className ].concat (args);
+				buildArgs.push ("--");
+				buildArgs.push (className);
+				buildArgs = buildArgs.concat (args);
 				
-				ProcessHelper.runCommand ("", "haxe", args);
+				ProcessHelper.runCommand ("", "haxe", buildArgs);
 				
 			} else {
 				

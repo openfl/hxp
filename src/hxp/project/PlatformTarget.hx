@@ -103,9 +103,9 @@ class PlatformTarget {
 		if ((!Reflect.hasField (metaFields, "update") || !Reflect.hasField (metaFields.update, "ignore")) && (command == "update" || command == "build" || command == "test")) {
 			
 			LogHelper.info ("", "\n" + LogHelper.accentColor + "Running command: UPDATE" + LogHelper.resetColor);
-			#if lime
-			AssetHelper.processLibraries (project, targetDirectory);
-			#end
+			// #if lime
+			// AssetHelper.processLibraries (project, targetDirectory);
+			// #end
 			update ();
 			
 		}
