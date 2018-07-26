@@ -1,6 +1,9 @@
 package hxp;
 
 
+import hxp.helpers.ProcessHelper;
+
+
 class HXML {
 	
 	
@@ -175,7 +178,7 @@ class HXML {
 	
 	public function new (hxml:String = null) {
 		
-		data = new Array ();
+		__data = new Array ();
 		
 		if (hxml != null) {
 			
@@ -188,6 +191,26 @@ class HXML {
 			}
 			
 		}
+		
+	}
+	
+	
+	/**
+		Include a specific class name in compilation.
+	**/
+	public function addClassName (classname:String):Void {
+		
+		__data.push (classname);
+		
+	}
+	
+	
+	/**
+		Builds the current HXML using Haxe.
+	**/
+	public function build ():Int {
+		
+		return ProcessHelper.runCommand ("", "haxe " + __data.join (" "), null);
 		
 	}
 	
@@ -290,16 +313,6 @@ class HXML {
 	
 	
 	/**
-		Call the given initialization macro before typing anything else.
-	**/
-	public function macro (value:String):Void {
-		
-		__data.push ("-macro " + value);
-		
-	}
-	
-	
-	/**
 		Add an external .NET DLL file.
 	**/
 	public function netLib (path:String, std:String = null):Void {
@@ -322,9 +335,9 @@ class HXML {
 	/**
 		Remap a package to another one.
 	**/
-	public function remap (package:String, target:String):Void {
+	public function remap (packageName:String, target:String):Void {
 		
-		__data.push ("--remap " + package + ":" + target);
+		__data.push ("--remap " + packageName + ":" + target);
 		
 	}
 	
@@ -335,6 +348,16 @@ class HXML {
 	public function resource (path:String, name:String = null):Void {
 		
 		__data.push ("-resource \"" + path + (name == null ? "" : "@" + name) + "\"");
+		
+	}
+	
+	
+	/**
+		Call the given initialization macro before typing anything else.
+	**/
+	public function runMacro (value:String):Void {
+		
+		__data.push ("-macro " + value);
 		
 	}
 	
@@ -366,7 +389,7 @@ class HXML {
 	}
 	
 	
-	@:noCompletion private function __getLine (prefix:String):Void {
+	@:noCompletion private function __getLine (prefix:String):String {
 		
 		for (line in __data) {
 			
@@ -385,7 +408,7 @@ class HXML {
 	
 	@:noCompletion private function __trimLines (prefixes:Array<String>):Void {
 		
-		var i = __data.length;
+		var i = __data.length - 1;
 		while (i >= 0) {
 			
 			for (prefix in prefixes) {
@@ -504,8 +527,8 @@ class HXML {
 		if (line != null) {
 			var type = line.substr (5);
 			if (type == "std") return STD;
-			elseif (type == "full") return FULL;
-			elseif (type = "no") return NO;
+			else if (type == "full") return FULL;
+			else if (type == "no") return NO;
 		}
 		return null;
 		

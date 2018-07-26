@@ -424,7 +424,15 @@ class CommandLineTools {
 			
 			default:
 				
-				LogHelper.error ("'" + command + "' is not a valid command");
+				if (Path.extension (command) == "hx" && FileSystem.exists (command)) {
+					
+					executeScript (command);
+					
+				} else {
+					
+					LogHelper.error ("'" + command + "' is not a valid command");
+					
+				}
 			
 		}
 		
@@ -1054,6 +1062,31 @@ class CommandLineTools {
 			LogHelper.println ("Use \x1b[3m" + commandName + " setup\x1b[0m to configure platforms or \x1b[3m" + commandName + " help\x1b[0m for more commands");
 			
 		}
+		
+	}
+	
+	
+	private function executeScript (path:String):Void {
+		
+		var dir = Path.directory (path);
+		var file = Path.withoutDirectory (path);
+		var className = Path.withoutExtension (file);
+		className = className.substr (0, 1).toUpperCase () + className.substr (1);
+		
+		var args = [ className, "--interp", "-main", "hxp.Script", "-cp", PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("hxp")), "src"), "--", className ];
+		
+		if (LogHelper.verbose) args.push ("-verbose");
+		if (!LogHelper.enableColor) args.push ("-nocolor");
+		if (!traceEnabled) args.push ("-notrace");
+		
+		if (additionalArguments.length > 0) {
+			
+			args.push ("-args");
+			args = args.concat (additionalArguments);
+			
+		}
+		
+		ProcessHelper.runCommand (dir, "haxe", args);
 		
 	}
 	
