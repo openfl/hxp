@@ -237,7 +237,7 @@ abstract HXML(Array<String>) {
 			}
 			if (Reflect.hasField (hxml, "defines")) {
 				for (_define in hxml.defines) {
-					define (_define);
+					this.push ("-D \"" + _define + "\"");
 				}
 			}
 			if (Reflect.hasField (hxml, "javaLibs")) {
@@ -247,7 +247,7 @@ abstract HXML(Array<String>) {
 			}
 			if (Reflect.hasField (hxml, "libs")) {
 				for (_lib in hxml.libs) {
-					lib (_lib);
+					this.push ("-lib " + _lib);
 				}
 			}
 			if (Reflect.hasField (hxml, "netLibs")) {

@@ -1075,7 +1075,7 @@ class CommandLineTools {
 		var className = Path.withoutExtension (file);
 		className = className.substr (0, 1).toUpperCase () + className.substr (1);
 		
-		var args = [ className, "--interp", "-main", "hxp.Script", "-cp", PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("hxp")), "src"), "--", className ];
+		var args = [ className, "--interp", "-main", "hxp.Script", "-D", "hxp="+ version, "-cp", PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("hxp")), "src"), "--", className ];
 		
 		if (LogHelper.verbose) args.push ("-verbose");
 		if (!LogHelper.enableColor) args.push ("-nocolor");
