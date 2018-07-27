@@ -3,6 +3,31 @@
 HXP
 ===
 
+Write scripts in Haxe, and execute them on Windows, macOS or Linux.
+
+## build.hx
+
+```haxe
+class Build {
+    
+    public function new () {
+        
+        trace ("Hello World");
+        
+    }
+    
+}
+```
+
+```
+hxp build.hx // Hello World
+```
+
+_Currently requires the Haxe 4 preview._
+
+HXP includes convenience methods for working with file paths, directories, executing child processes and creating quality CLI tools.
+
+The [Lime](https://github.com/openfl/lime) and [OpenFL](https://github.com/openfl/openfl) use HXP to develop cross-platform tools for delivering consistent content on Windows, macOS, Linux, iOS, Android, tvOS, Flash, HTML5 and other environments.
 
 
 License
@@ -14,38 +39,29 @@ HXP is free, open-source software under the [MIT license](LICENSE.md).
 Installation
 ============
 
-First install the latest version of [Haxe](http://www.haxe.org/download).
+You can easily install HXP with haxelib:
 
-The current version of Lime has not been released on haxelib, yet, so please install the latest [development build](http://www.openfl.org/builds/lime).
+    haxelib install hxp
+
+
+Once installed, run the following command to install the `hxp` command alias:
+    
+    haxelib run hxp install
 
 
 Development Builds
 ==================
 
-When there are changes, Lime is built nightly. Builds are available for download [here](http://www.openfl.org/builds/lime).
+Clone the HXP repository:
 
-To install a development build, use the "haxelib local" command:
+    git clone https://github.com/openfl/hxp
 
-    haxelib local filename.zip
-
-
-Building from Source
-====================
-
-Clone the HXP repository, as well as the submodules:
-
-    git clone --recursive https://github.com/openfl/hxp
 
 Tell haxelib where your development copy of HXP is installed:
 
     haxelib dev hxp hxp
 
-The first time you run the "hxp" command, it will attempt to build the HXP tools. To build these manually, use the following command:
 
-    haxelib install format
-    hxp rebuild tools
-
-To switch away from a source build, use:
+To return to release builds:
 
     haxelib dev hxp
-
