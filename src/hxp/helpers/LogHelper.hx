@@ -21,7 +21,7 @@ import cs.Lib;
 class LogHelper {
 	
 	
-	public static var accentColor = #if lime "\x1b[32;1m"; #else "\x1b[36;1m"; #end
+	public static var accentColor = #if (lime && !eval) "\x1b[32;1m"; #else "\x1b[36;1m"; #end
 	public static var enableColor = true;
 	public static var mute = false;
 	public static var resetColor = "\x1b[0m";
