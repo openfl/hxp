@@ -46,7 +46,7 @@ You can easily install HXP with haxelib:
 
 Once installed, run the following command to install the `hxp` command alias:
     
-    haxelib run hxp install
+    haxelib run hxp setup
 
 
 Development Builds
