@@ -22,7 +22,7 @@ import sys.FileSystem;
 import sys.io.File;
 import sys.io.Process;
 
-#if lime
+#if (lime && lime_cffi && !macro)
 import lime.text.Font;
 @:access(lime.text.Font)
 #end
@@ -1207,7 +1207,7 @@ class HXProject {
 				
 				embeddedAsset.type = Std.string (asset.type).toLowerCase ();
 				
-				#if lime
+				#if (lime && lime_cffi && !macro)
 				if (asset.type == FONT) {
 					
 					try {

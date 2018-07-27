@@ -9,7 +9,7 @@ import hxp.project.Asset;
 import hxp.project.AssetEncoding;
 import hxp.project.AssetType;
 import hxp.project.HXProject;
-#if lime
+#if (lime && lime_cffi && !macro)
 import lime.text.Font;
 #end
 import hxp.helpers.LogHelper;
@@ -314,7 +314,7 @@ class FlashHelper {
 			
 			// More code ripped off from "samhaxe"
 			
-			#if lime
+			#if (lime && lime_cffi && !macro)
 			var src = path;
 			var face = Font.fromFile (src);
 			var font = face.decompose ();

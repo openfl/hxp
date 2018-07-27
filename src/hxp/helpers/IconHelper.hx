@@ -14,7 +14,7 @@ import hxp.helpers.FileHelper;
 import hxp.helpers.ImageHelper;
 import hxp.helpers.LogHelper;
 import hxp.helpers.PathHelper;
-#if lime
+#if (lime && lime_cffi && !macro)
 import lime.graphics.Image;
 import lime.math.Rectangle;
 #end
@@ -53,7 +53,7 @@ class IconHelper {
 	
 	public static function createIcon (icons:Array<Icon>, width:Int, height:Int, targetPath:String):Bool {
 		
-		#if lime
+		#if (lime && lime_cffi && !macro)
 		
 		var icon = findMatch (icons, width, height);
 		
@@ -104,7 +104,7 @@ class IconHelper {
 	
 	public static function createMacIcon (icons:Array<Icon>, targetPath:String):Bool {
 		
-		#if lime
+		#if (lime && lime_cffi && !macro)
 		if (canUseCache (targetPath, icons)) {
 			
 			return true;
@@ -198,7 +198,7 @@ class IconHelper {
 	
 	public static function createWindowsIcon (icons:Array<Icon>, targetPath:String):Bool {
 		
-		#if lime
+		#if (lime && lime_cffi && !macro)
 		if (canUseCache (targetPath, icons)) {
 			
 			return true;
@@ -369,7 +369,7 @@ class IconHelper {
 	}
 	
 	
-	private static function getIconImage (icons:Array<Icon>, width:Int, height:Int, backgroundColor:Int = null):#if lime Image #else Dynamic #end {
+	private static function getIconImage (icons:Array<Icon>, width:Int, height:Int, backgroundColor:Int = null):#if (lime && lime_cffi && !macro) Image #else Dynamic #end {
 		
 		var icon = findMatch (icons, width, height);
 		
@@ -395,7 +395,7 @@ class IconHelper {
 		var extension = Path.extension (icon.path);
 		var image = null;
 		
-		#if lime
+		#if (lime && lime_cffi && !macro)
 		switch (extension) {
 			
 			case "png", "jpg", "jpeg":

@@ -4,7 +4,7 @@ package hxp.helpers;
 import haxe.io.Bytes;
 import hxp.helpers.PlatformHelper;
 import hxp.project.Platform;
-#if lime
+#if (lime && lime_cffi && !macro)
 import lime.system.CFFI;
 #end
 import sys.io.Process;
@@ -126,7 +126,7 @@ class LogHelper {
 					
 					colorSupported = true;
 					
-				} #if lime else if (CFFI.enabled) {
+				} #if (lime && lime_cffi && !macro) else if (CFFI.enabled) {
 					
 					var getConsoleMode = CFFI.load ("lime", "lime_system_get_windows_console_mode", 1);
 					var setConsoleMode = CFFI.load ("lime", "lime_system_set_windows_console_mode", 2);

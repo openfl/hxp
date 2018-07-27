@@ -1,7 +1,7 @@
 package hxp.helpers;
 
 
-#if lime
+#if (lime && lime_cffi && !macro)
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
 import lime.utils.UInt8Array;
@@ -16,10 +16,10 @@ import sys.FileSystem;
 class ImageHelper {
 	
 	
-	public static function rasterizeSVG (path:String, width:Int, height:Int, backgroundColor:Int = null):#if lime Image #else Dynamic #end {
+	public static function rasterizeSVG (path:String, width:Int, height:Int, backgroundColor:Int = null):#if (lime && lime_cffi && !macro) Image #else Dynamic #end {
 	//public static function rasterizeSVG (svg:Dynamic /*SVG*/, width:Int, height:Int, backgroundColor:Int = null):Image {
 		
-		#if lime
+		#if (lime && lime_cffi && !macro)
 		if (path == null) return null;
 		
 		var temp = PathHelper.getTemporaryFile (".png");
@@ -129,9 +129,9 @@ class ImageHelper {
 	}
 	
 	
-	public static function resizeImage (image:#if lime Image #else Dynamic #end, width:Int, height:Int):#if lime Image #else Dynamic #end {
+	public static function resizeImage (image:#if (lime && lime_cffi && !macro) Image #else Dynamic #end, width:Int, height:Int):#if (lime && lime_cffi && !macro) Image #else Dynamic #end {
 		
-		#if lime
+		#if (lime && lime_cffi && !macro)
 		if (image == null) return null;
 		
 		if (image.width == width && image.height == height) {
