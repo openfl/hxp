@@ -22,13 +22,13 @@ class ConfigHelper {
 		
 		if (FileSystem.exists (config)) {
 			
-			LogHelper.info ("", LogHelper.accentColor + "Reading Lime config: " + config + LogHelper.resetColor);
+			LogHelper.info ("", LogHelper.accentColor + "Reading HXP config: " + config + LogHelper.resetColor);
 			
 			return new ProjectXMLParser (config);
 			
 		} else {
 			
-			LogHelper.warn ("", "Could not read Lime config: " + config);
+			LogHelper.warn ("", "Could not read HXP config: " + config);
 			
 		}
 		
@@ -43,9 +43,9 @@ class ConfigHelper {
 			
 			var environment = Sys.environment ();
 			
-			if (environment.exists ("LIME_CONFIG")) {
+			if (environment.exists ("HXP_CONFIG")) {
 				
-				configPath = environment.get ("LIME_CONFIG");
+				configPath = environment.get ("HXP_CONFIG");
 				
 			} else {
 				
@@ -61,17 +61,29 @@ class ConfigHelper {
 					
 				} else {
 					
-					LogHelper.warn ("Lime config might be missing (Environment has no \"HOME\" variable)");
+					LogHelper.warn ("HXP config might be missing (Environment has no \"HOME\" variable)");
 					
 					return null;
 					
 				}
 				
-				configPath = home + "/.lime/config.xml";
+				configPath = home + "/.hxp/config.xml";
 				
 				if (PlatformHelper.hostPlatform == Platform.WINDOWS) {
 					
 					configPath = configPath.split ("/").join ("\\");
+					
+				}
+				
+				if (!FileSystem.exists (configPath)) {
+					
+					var limeConfig = home + "/.lime/config.xml";
+					
+					if (FileSystem.exists (limeConfig)) {
+						
+						FileHelper.copyFile (limeConfig, configPath);
+						
+					}
 					
 				}
 				
