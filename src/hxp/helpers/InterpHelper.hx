@@ -14,7 +14,7 @@ class InterpHelper {
 		
 		#if (haxe_ver >= "4.0.0")
 		
-		buildArgs = buildArgs.concat ([ "--interp" ]);
+		buildArgs = buildArgs.concat ([ "-D", "hxp-interp", "--interp" ]);
 		if (runArgs != null) {
 			buildArgs.push ("--");
 			buildArgs = buildArgs.concat (runArgs);
@@ -26,7 +26,7 @@ class InterpHelper {
 		var tempDirectory = PathHelper.getTemporaryDirectory ();
 		var nekoOutput = PathHelper.combine (tempDirectory, "script.n");
 		
-		buildArgs = buildArgs.concat ([ "-neko", nekoOutput ]);
+		buildArgs = buildArgs.concat ([ "-D", "hxp-interp", "-neko", nekoOutput ]);
 		var result = ProcessHelper.runCommand (workingDirectory, "haxe", buildArgs);
 		
 		if (result != 0) return result;
