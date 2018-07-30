@@ -1,17 +1,8 @@
 package;
 
 
-import haxe.io.Path;
-import hxp.project.Haxelib;
-import sys.io.File;
-import sys.io.Process;
-import sys.FileSystem;
-import hxp.helpers.FileHelper;
-import hxp.helpers.HaxelibHelper;
+import hxp.helpers.InterpHelper;
 import hxp.helpers.LogHelper;
-import hxp.helpers.PathHelper;
-import hxp.helpers.PlatformHelper;
-import hxp.helpers.ProcessHelper;
 
 
 class RunScript {
@@ -58,18 +49,14 @@ class RunScript {
 	
 	public static function main () {
 		
-		var args = [
+		Sys.exit (InterpHelper.run ([
 			
-			"--interp",
 			"-main",
 			"CommandLineTools",
 			"-cp", "src",
 			"-cp", "scripts",
-			"--"
 			
-		];
-		
-		Sys.exit (runCommand ("", "haxe", args.concat (Sys.args ())));
+		], Sys.args ()));
 		
 	}
 	

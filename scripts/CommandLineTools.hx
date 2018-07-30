@@ -482,7 +482,7 @@ class CommandLineTools {
 				var className = Path.withoutDirectory (Path.withoutExtension (handler));
 				var extraParams = PathHelper.combine (targetDir, "extraParams.hxml");
 				
-				var buildArgs = [ "-cp", targetDir, className, "--interp", "-main", "hxp.project.PlatformTargetMain", "-cp", PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("hxp")), "src") ];
+				var buildArgs = [ "-cp", targetDir, className, "-main", "hxp.project.PlatformTargetMain", "-cp", PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("hxp")), "src") ];
 				
 				if (FileSystem.exists (extraParams)) {
 					
@@ -504,13 +504,7 @@ class CommandLineTools {
 					
 				}
 				
-				// TODO: Optional additional args
-				
-				buildArgs.push ("--");
-				buildArgs.push (className);
-				buildArgs = buildArgs.concat (args);
-				
-				ProcessHelper.runCommand ("", "haxe", buildArgs);
+				InterpHelper.run (buildArgs, [ className ].concat (args));
 				
 			} else {
 				
@@ -1075,20 +1069,21 @@ class CommandLineTools {
 		var className = Path.withoutExtension (file);
 		className = className.substr (0, 1).toUpperCase () + className.substr (1);
 		
-		var args = [ className, "--interp", "-main", "hxp.Script", "-D", "hxp="+ version, "-cp", PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("hxp")), "src"), "--", className ];
+		var buildArgs = [ className, "-main", "hxp.Script", "-D", "hxp="+ version, "-cp", PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("hxp")), "src") ];
+		var runArgs = [ className ];
 		
-		if (LogHelper.verbose) args.push ("-verbose");
-		if (!LogHelper.enableColor) args.push ("-nocolor");
-		if (!traceEnabled) args.push ("-notrace");
+		if (LogHelper.verbose) runArgs.push ("-verbose");
+		if (!LogHelper.enableColor) runArgs.push ("-nocolor");
+		if (!traceEnabled) runArgs.push ("-notrace");
 		
 		if (additionalArguments.length > 0) {
 			
-			args.push ("-args");
-			args = args.concat (additionalArguments);
+			runArgs.push ("-args");
+			runArgs = runArgs.concat (additionalArguments);
 			
 		}
 		
-		ProcessHelper.runCommand (dir, "haxe", args);
+		InterpHelper.run (buildArgs, runArgs);
 		
 	}
 	
