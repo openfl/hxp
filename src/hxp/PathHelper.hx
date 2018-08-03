@@ -2,23 +2,15 @@ package hxp;
 
 
 import haxe.io.Path;
-import hxp.LogHelper;
+import hxp.Log;
 import hxp.ProcessHelper;
-import hxp.StringHelper;
-import hxp.Architecture;
 import hxp.Haxelib;
-import hxp.Project;
 import hxp.NDLL;
-import hxp.Platform;
 import sys.io.Process;
 import sys.FileSystem;
 
 
 class PathHelper {
-	
-	
-	//private static var doubleVarMatch = new EReg ("\\$\\${(.*?)}", "");
-	private static var varMatch = new EReg ("{{(.*?)}}", "");
 	
 	
 	public static function combine (firstPath:String, secondPath:String):String {
@@ -29,7 +21,7 @@ class PathHelper {
 			
 		} else if (secondPath != null && secondPath != "") {
 			
-			if (PlatformHelper.hostPlatform == Platform.WINDOWS) {
+			if (PlatformHelper.hostPlatform == WINDOWS) {
 				
 				if (secondPath.indexOf (":") == 1) {
 					
@@ -75,7 +67,7 @@ class PathHelper {
 	
 	public static function escape (path:String):String {
 		
-		if (PlatformHelper.hostPlatform != Platform.WINDOWS) {
+		if (PlatformHelper.hostPlatform != WINDOWS) {
 			
 			path = StringTools.replace (path, "\\ ", " ");
 			path = StringTools.replace (path, " ", "\\ ");
@@ -104,7 +96,7 @@ class PathHelper {
 			
 		}
 		
-		if (PlatformHelper.hostPlatform != Platform.WINDOWS) {
+		if (PlatformHelper.hostPlatform != WINDOWS) {
 			
 			if (StringTools.startsWith (path, "~/")) {
 				
@@ -236,7 +228,7 @@ class PathHelper {
 		
 		if (matches.length == 0 && warnIfNotFound) {
 			
-			LogHelper.warn ("Could not find template file: " + path);
+			Log.warn ("Could not find template file: " + path);
 			
 		}
 		
@@ -279,7 +271,7 @@ class PathHelper {
 		
 		var path = "";
 		
-		if (PlatformHelper.hostPlatform == Platform.WINDOWS) {
+		if (PlatformHelper.hostPlatform == WINDOWS) {
 			
 			path = Sys.getEnv ("TEMP");
 			
@@ -361,7 +353,7 @@ class PathHelper {
 				
 			} catch (e:Dynamic) {
 				
-				LogHelper.error ("Cannot create directory \"" + directory + "\"");
+				Log.error ("Cannot create directory \"" + directory + "\"");
 				
 			}
 			
@@ -381,7 +373,7 @@ class PathHelper {
 				
 				if (FileSystem.exists (total) && !FileSystem.isDirectory (total)) {
 					
-					LogHelper.info ("", " - \x1b[1mRemoving file:\x1b[0m " + total);
+					Log.info ("", " - \x1b[1mRemoving file:\x1b[0m " + total);
 					
 					FileSystem.deleteFile (total);
 					
@@ -389,7 +381,7 @@ class PathHelper {
 				
 				if (!FileSystem.exists (total)) {
 					
-					LogHelper.info ("", " - \x1b[1mCreating directory:\x1b[0m " + total);
+					Log.info ("", " - \x1b[1mCreating directory:\x1b[0m " + total);
 					
 					FileSystem.createDirectory (total);
 					
@@ -586,7 +578,7 @@ class PathHelper {
 				
 			}
 			
-			LogHelper.info ("", " - \x1b[1mRemoving directory:\x1b[0m " + directory);
+			Log.info ("", " - \x1b[1mRemoving directory:\x1b[0m " + directory);
 			
 			try {
 				
@@ -698,34 +690,13 @@ class PathHelper {
 			
 		}
 		
-		if (PlatformHelper.hostPlatform == Platform.WINDOWS && path.charAt (1) == ":") {
+		if (PlatformHelper.hostPlatform == WINDOWS && path.charAt (1) == ":") {
 			
 			path = path.charAt (0).toUpperCase () + ":" + path.substr (2);
 			
 		}
 		
 		return path;
-		
-	}
-	
-	
-	public static function substitutePath (project:Project, path:String):String {
-		
-		var newString = path;
-		
-		// while (doubleVarMatch.match (newString)) {
-			
-		// 	newString = doubleVarMatch.matchedLeft () + "${" + StringHelper.replaceVariable (this, doubleVarMatch.matched (1)) + "}" + doubleVarMatch.matchedRight ();
-			
-		// }
-		
-		while (varMatch.match (newString)) {
-			
-			newString = varMatch.matchedLeft () + StringHelper.replaceVariable (project, varMatch.matched (1)) + varMatch.matchedRight ();
-			
-		}
-		
-		return newString;
 		
 	}
 	

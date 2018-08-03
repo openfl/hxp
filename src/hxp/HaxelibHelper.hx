@@ -2,9 +2,7 @@ package hxp;
 
 
 import haxe.Json;
-import hxp.Architecture;
 import hxp.Haxelib;
-import hxp.Platform;
 import hxp.Version;
 import sys.io.File;
 import sys.FileSystem;
@@ -85,8 +83,8 @@ class HaxelibHelper {
 		
 		if (repositoryPath == null || clearCache) {
 			
-			var cache = LogHelper.verbose;
-			LogHelper.verbose = debug;
+			var cache = Log.verbose;
+			Log.verbose = debug;
 			var output = "";
 			
 			try {
@@ -100,7 +98,7 @@ class HaxelibHelper {
 				
 			} catch (e:Dynamic) { }
 			
-			LogHelper.verbose = cache;
+			Log.verbose = cache;
 			
 			repositoryPath = StringTools.trim (output);
 			
@@ -156,8 +154,8 @@ class HaxelibHelper {
 		
 		if (!paths.exists (name)) {
 			
-			var cache = LogHelper.verbose;
-			LogHelper.verbose = debug;
+			var cache = Log.verbose;
+			Log.verbose = debug;
 			var output = "";
 			
 			try {
@@ -172,7 +170,7 @@ class HaxelibHelper {
 				
 			} catch (e:Dynamic) { }
 			
-			LogHelper.verbose = cache;
+			Log.verbose = cache;
 			
 			var lines = output.split ("\n");
 			var result = "";
@@ -220,21 +218,21 @@ class HaxelibHelper {
 						
 						var directoryName = "";
 						
-						if (PlatformHelper.hostPlatform == Platform.WINDOWS) {
+						if (PlatformHelper.hostPlatform == WINDOWS) {
 							
 							directoryName = "Windows";
 							
-						} else if (PlatformHelper.hostPlatform == Platform.MAC) {
+						} else if (PlatformHelper.hostPlatform == MAC) {
 							
-							directoryName = PlatformHelper.hostArchitecture == Architecture.X64 ? "Mac64" : "Mac";
+							directoryName = PlatformHelper.hostArchitecture == X64 ? "Mac64" : "Mac";
 							
 						} else {
 							
-							directoryName = PlatformHelper.hostArchitecture == Architecture.X64 ? "Linux64" : "Linux";
+							directoryName = PlatformHelper.hostArchitecture == X64 ? "Linux64" : "Linux";
 							
 						}
 						
-						LogHelper.error ("haxelib \"" + haxelib.name + "\" does not have an \"ndll/" + directoryName + "\" directory");
+						Log.error ("haxelib \"" + haxelib.name + "\" does not have an \"ndll/" + directoryName + "\" directory");
 						
 					} else if (output.indexOf ("haxelib install ") > -1 && output.indexOf ("haxelib install " + haxelib.name) == -1) {
 						
@@ -242,17 +240,17 @@ class HaxelibHelper {
 						var end = output.lastIndexOf ("'");
 						var dependencyName = output.substring (start, end);
 						
-						LogHelper.error ("Could not find haxelib \"" + dependencyName + "\" (dependency of \"" + haxelib.name + "\"), does it need to be installed?");
+						Log.error ("Could not find haxelib \"" + dependencyName + "\" (dependency of \"" + haxelib.name + "\"), does it need to be installed?");
 						
 					} else {
 						
 						if (haxelib.version != "") {
 							
-							LogHelper.error ("Could not find haxelib \"" + haxelib.name + "\" version \"" + haxelib.version + "\", does it need to be installed?");
+							Log.error ("Could not find haxelib \"" + haxelib.name + "\" version \"" + haxelib.version + "\", does it need to be installed?");
 							
 						} else {
 							
-							LogHelper.error ("Could not find haxelib \"" + haxelib.name + "\", does it need to be installed?");
+							Log.error ("Could not find haxelib \"" + haxelib.name + "\", does it need to be installed?");
 							
 						}
 						
@@ -331,11 +329,11 @@ class HaxelibHelper {
 				
 				if (haxelib.version != "") {
 					
-					LogHelper.error ("Could not find haxelib \"" + haxelib.name + "\" version \"" + haxelib.version + "\", does it need to be installed?");
+					Log.error ("Could not find haxelib \"" + haxelib.name + "\" version \"" + haxelib.version + "\", does it need to be installed?");
 					
 				} else {
 					
-					LogHelper.error ("Could not find haxelib \"" + haxelib.name + "\", does it need to be installed?");
+					Log.error ("Could not find haxelib \"" + haxelib.name + "\", does it need to be installed?");
 					
 				}
 				
@@ -445,7 +443,7 @@ class HaxelibHelper {
 			
 			if (!FileSystem.exists (script)) {
 				
-				LogHelper.error ("Cannot find haxelib script: " + script);
+				Log.error ("Cannot find haxelib script: " + script);
 				
 			}
 			
@@ -477,7 +475,7 @@ class HaxelibHelper {
 			
 			if (!FileSystem.exists (script)) {
 				
-				LogHelper.error ("Cannot find haxelib script: " + script);
+				Log.error ("Cannot find haxelib script: " + script);
 				
 			}
 			

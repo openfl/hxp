@@ -67,7 +67,7 @@ class CommandLineTools {
 			
 		}
 		
-		if (LogHelper.verbose && command != "help" && command != "") {
+		if (Log.verbose && command != "help" && command != "") {
 			
 			displayInfo ();
 			Sys.println ("");
@@ -111,7 +111,7 @@ class CommandLineTools {
 				
 				if (words.length < 1 || words.length > 2) {
 					
-					LogHelper.error ("Incorrect number of arguments for command '" + command + "'");
+					Log.error ("Incorrect number of arguments for command '" + command + "'");
 					return;
 					
 				}
@@ -123,7 +123,7 @@ class CommandLineTools {
 				
 				if (words.length < 1 || words.length > 2) {
 					
-					LogHelper.error ("Incorrect number of arguments for command '" + command + "'");
+					Log.error ("Incorrect number of arguments for command '" + command + "'");
 					return;
 					
 				}
@@ -279,11 +279,11 @@ class CommandLineTools {
 						
 						case "mac", "macos":
 							
-							target = Platform.MAC;
+							target = MAC;
 						
 						case "rpi", "raspberrypi":
 							
-							target = Platform.LINUX;
+							target = LINUX;
 							targetFlags.set ("rpi", "");
 						
 						case "webassembly", "wasm":
@@ -401,9 +401,9 @@ class CommandLineTools {
 						project = initializeProject (project, targetName);
 						buildProject (project);
 						
-						if (LogHelper.verbose) {
+						if (Log.verbose) {
 							
-							LogHelper.println ("");
+							Log.println ("");
 							
 						}
 						
@@ -415,7 +415,7 @@ class CommandLineTools {
 				
 				if (words.length < 1 || words.length > 2) {
 					
-					LogHelper.error ("Incorrect number of arguments for command '" + command + "'");
+					Log.error ("Incorrect number of arguments for command '" + command + "'");
 					return;
 					
 				}
@@ -430,7 +430,7 @@ class CommandLineTools {
 					
 				} else {
 					
-					LogHelper.error ("'" + command + "' is not a valid command");
+					Log.error ("'" + command + "' is not a valid command");
 					
 				}
 			
@@ -455,7 +455,7 @@ class CommandLineTools {
 				
 			}
 			
-			LogHelper.info ("", LogHelper.accentColor + "Using target platform: " + Std.string (project.target).toUpperCase () + "\x1b[0m");
+			Log.info ("", Log.accentColor + "Using target platform: " + Std.string (project.target).toUpperCase () + "\x1b[0m");
 			
 			var handler = project.targetHandlers.get (Std.string (project.target));
 			
@@ -465,8 +465,8 @@ class CommandLineTools {
 			
 			var args = [ command, temporaryFile ];
 			
-			if (LogHelper.verbose) args.push ("-verbose");
-			if (!LogHelper.enableColor) args.push ("-nocolor");
+			if (Log.verbose) args.push ("-verbose");
+			if (!Log.enableColor) args.push ("-nocolor");
 			if (!traceEnabled) args.push ("-notrace");
 			
 			if (additionalArguments.length > 0) {
@@ -611,7 +611,7 @@ class CommandLineTools {
 				
 			} else {
 				
-				LogHelper.error ("\"" + Std.string (project.target) + "\" is an unknown target");
+				Log.error ("\"" + Std.string (project.target) + "\" is an unknown target");
 				
 			}
 			
@@ -622,7 +622,7 @@ class CommandLineTools {
 	
 	private function createTemplate () {
 		
-		LogHelper.info ("", LogHelper.accentColor + "Running command: CREATE\x1b[0m");
+		Log.info ("", Log.accentColor + "Running command: CREATE\x1b[0m");
 		
 		if (words.length > 0) {
 			
@@ -714,7 +714,7 @@ class CommandLineTools {
 		
 		if (words.length == 0) {
 			
-			LogHelper.println (File.getContent (ConfigHelper.getConfigPath ()));
+			Log.println (File.getContent (ConfigHelper.getConfigPath ()));
 			
 		} else if (words.length == 1) {
 			
@@ -722,11 +722,11 @@ class CommandLineTools {
 			
 			if (value != null) {
 				
-				LogHelper.println (value);
+				Log.println (value);
 				
 			} else {
 				
-				LogHelper.error ("\"" + words[0] + "\" is undefined");
+				Log.error ("\"" + words[0] + "\" is undefined");
 				
 			}
 			
@@ -781,8 +781,8 @@ class CommandLineTools {
 		
 		if (commands.exists (command)) {
 			
-			LogHelper.println ("\x1b[1m" + commands.get (command) + "\x1b[0m");
-			LogHelper.println ("");
+			Log.println ("\x1b[1m" + commands.get (command) + "\x1b[0m");
+			Log.println ("");
 			
 		}
 		
@@ -790,66 +790,66 @@ class CommandLineTools {
 			
 			case "setup":
 				
-				LogHelper.println (" " + LogHelper.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " setup\x1b[0m \x1b[3;37m(target)\x1b[0m \x1b[3;37m[options]\x1b[0m");
+				Log.println (" " + Log.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " setup\x1b[0m \x1b[3;37m(target)\x1b[0m \x1b[3;37m[options]\x1b[0m");
 			
 			case "clean", "update", "build", "run", "test", "display", "deploy", "trace":
 				
-				LogHelper.println (" " + LogHelper.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " " + command + "\x1b[0m \x1b[3;37m(project)\x1b[0m \x1b[1m<target>\x1b[0m \x1b[3;37m[options]\x1b[0m");
+				Log.println (" " + Log.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " " + command + "\x1b[0m \x1b[3;37m(project)\x1b[0m \x1b[1m<target>\x1b[0m \x1b[3;37m[options]\x1b[0m");
 				isProjectCommand = true;
 				isBuildCommand = true;
 			
 			case "create":
 				
-				LogHelper.println (" " + LogHelper.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " create\x1b[0m \x1b[3;37m(library)\x1b[0m \x1b[1mproject\x1b[0m \x1b[3;37m(directory)\x1b[0m \x1b[3;37m[options]\x1b[0m");
-				LogHelper.println (" " + LogHelper.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " create\x1b[0m \x1b[3;37m(library)\x1b[0m \x1b[1mextension\x1b[0m \x1b[3;37m(directory)\x1b[0m \x1b[3;37m[options]\x1b[0m");
-				LogHelper.println (" " + LogHelper.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " create\x1b[0m \x1b[3;37m(library)\x1b[0m \x1b[1m<sample>\x1b[0m \x1b[3;37m(directory)\x1b[0m \x1b[3;37m[options]\x1b[0m");
+				Log.println (" " + Log.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " create\x1b[0m \x1b[3;37m(library)\x1b[0m \x1b[1mproject\x1b[0m \x1b[3;37m(directory)\x1b[0m \x1b[3;37m[options]\x1b[0m");
+				Log.println (" " + Log.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " create\x1b[0m \x1b[3;37m(library)\x1b[0m \x1b[1mextension\x1b[0m \x1b[3;37m(directory)\x1b[0m \x1b[3;37m[options]\x1b[0m");
+				Log.println (" " + Log.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " create\x1b[0m \x1b[3;37m(library)\x1b[0m \x1b[1m<sample>\x1b[0m \x1b[3;37m(directory)\x1b[0m \x1b[3;37m[options]\x1b[0m");
 			
 			case "rebuild":
 				
-				LogHelper.println (" " + LogHelper.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " rebuild\x1b[0m \x1b[3;37m(library)\x1b[0m \x1b[3;37m(target)\x1b[0m \x1b[3;37m[options]\x1b[0m");
+				Log.println (" " + Log.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " rebuild\x1b[0m \x1b[3;37m(library)\x1b[0m \x1b[3;37m(target)\x1b[0m \x1b[3;37m[options]\x1b[0m");
 				isBuildCommand = true;
 			
 			case "config":
 				
-				LogHelper.println (" " + LogHelper.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " config\x1b[0m \x1b[3;37m(name)\x1b[0m \x1b[3;37m(value)\x1b[0m \x1b[3;37m[options]\x1b[0m");
-				LogHelper.println (" " + LogHelper.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " config remove <name>\x1b[0m \x1b[3;37m[options]\x1b[0m");
+				Log.println (" " + Log.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " config\x1b[0m \x1b[3;37m(name)\x1b[0m \x1b[3;37m(value)\x1b[0m \x1b[3;37m[options]\x1b[0m");
+				Log.println (" " + Log.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " config remove <name>\x1b[0m \x1b[3;37m[options]\x1b[0m");
 			
 			case "install", "remove", "upgrade":
 				
-				LogHelper.println (" " + LogHelper.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " " + command + "\x1b[0m \x1b[3;37m(library)\x1b[0m \x1b[3;37m[options]\x1b[0m");
+				Log.println (" " + Log.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " " + command + "\x1b[0m \x1b[3;37m(library)\x1b[0m \x1b[3;37m[options]\x1b[0m");
 			
 			case "process":
 				
-				LogHelper.println (" " + LogHelper.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " process <file>\x1b[0m \x1b[3;37m(directory)\x1b[0m \x1b[3;37m[options]\x1b[0m");
+				Log.println (" " + Log.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " process <file>\x1b[0m \x1b[3;37m(directory)\x1b[0m \x1b[3;37m[options]\x1b[0m");
 			
 			default:
 				
 				displayInfo ();
 				
-				LogHelper.println ("");
-				LogHelper.println (" " + LogHelper.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " <command>\x1b[0m \x1b[3;37m[arguments]\x1b[0m");
-				LogHelper.println ("");
-				LogHelper.println (" " + LogHelper.accentColor + "Basic Commands:" + LogHelper.resetColor);
-				LogHelper.println ("");
+				Log.println ("");
+				Log.println (" " + Log.accentColor + "Usage:\x1b[0m \x1b[1m" + commandName + " <command>\x1b[0m \x1b[3;37m[arguments]\x1b[0m");
+				Log.println ("");
+				Log.println (" " + Log.accentColor + "Basic Commands:" + Log.resetColor);
+				Log.println ("");
 				
 				for (command in basicCommands) {
 					
-					LogHelper.println ("  \x1b[1m" + command + "\x1b[0m -- " + commands.get (command));
+					Log.println ("  \x1b[1m" + command + "\x1b[0m -- " + commands.get (command));
 					
 				}
 				
-				LogHelper.println ("");
-				LogHelper.println (" " + LogHelper.accentColor + "Additional Commands:" + LogHelper.resetColor);
-				LogHelper.println ("");
+				Log.println ("");
+				Log.println (" " + Log.accentColor + "Additional Commands:" + Log.resetColor);
+				Log.println ("");
 				
 				for (command in additionalCommands) {
 					
-					LogHelper.println ("  \x1b[1m" + command + "\x1b[0m -- " + commands.get (command));
+					Log.println ("  \x1b[1m" + command + "\x1b[0m -- " + commands.get (command));
 					
 				}
 				
-				LogHelper.println ("");
-				LogHelper.println ("For additional help, run \x1b[1m" + commandName + " help <command>\x1b[0m");
+				Log.println ("");
+				Log.println ("For additional help, run \x1b[1m" + commandName + " help <command>\x1b[0m");
 				
 				return;
 			
@@ -857,107 +857,107 @@ class CommandLineTools {
 		
 		if (isBuildCommand || command == "setup") {
 			
-			LogHelper.println ("");
-			LogHelper.println (" " + LogHelper.accentColor + "Targets:" + LogHelper.resetColor);
-			LogHelper.println ("");
-			LogHelper.println ("  \x1b[1mair\x1b[0m -- Create an AIR application");
-			LogHelper.println ("  \x1b[1mandroid\x1b[0m -- Create an Android application");
-			//LogHelper.println ("  \x1b[1mblackberry\x1b[0m -- Create a BlackBerry application");
-			LogHelper.println ("  \x1b[1memscripten\x1b[0m -- Create an Emscripten application");
-			LogHelper.println ("  \x1b[1mflash\x1b[0m -- Create a Flash SWF application");
-			LogHelper.println ("  \x1b[1mhtml5\x1b[0m -- Create an HTML5 application");
-			LogHelper.println ("  \x1b[1mios\x1b[0m -- Create an iOS application");
-			LogHelper.println ("  \x1b[1mlinux\x1b[0m -- Create a Linux application");
-			LogHelper.println ("  \x1b[1mmac\x1b[0m -- Create a macOS application");
-			//LogHelper.println ("  \x1b[1mtizen\x1b[0m -- Create a Tizen application");
-			LogHelper.println ("  \x1b[1mtvos\x1b[0m -- Create a tvOS application");
-			//LogHelper.println ("  \x1b[1mwebos\x1b[0m -- Create a webOS application");
-			LogHelper.println ("  \x1b[1mwindows\x1b[0m -- Create a Windows application");
+			Log.println ("");
+			Log.println (" " + Log.accentColor + "Targets:" + Log.resetColor);
+			Log.println ("");
+			Log.println ("  \x1b[1mair\x1b[0m -- Create an AIR application");
+			Log.println ("  \x1b[1mandroid\x1b[0m -- Create an Android application");
+			//Log.println ("  \x1b[1mblackberry\x1b[0m -- Create a BlackBerry application");
+			Log.println ("  \x1b[1memscripten\x1b[0m -- Create an Emscripten application");
+			Log.println ("  \x1b[1mflash\x1b[0m -- Create a Flash SWF application");
+			Log.println ("  \x1b[1mhtml5\x1b[0m -- Create an HTML5 application");
+			Log.println ("  \x1b[1mios\x1b[0m -- Create an iOS application");
+			Log.println ("  \x1b[1mlinux\x1b[0m -- Create a Linux application");
+			Log.println ("  \x1b[1mmac\x1b[0m -- Create a macOS application");
+			//Log.println ("  \x1b[1mtizen\x1b[0m -- Create a Tizen application");
+			Log.println ("  \x1b[1mtvos\x1b[0m -- Create a tvOS application");
+			//Log.println ("  \x1b[1mwebos\x1b[0m -- Create a webOS application");
+			Log.println ("  \x1b[1mwindows\x1b[0m -- Create a Windows application");
 			
-			LogHelper.println ("");
-			LogHelper.println (" " + LogHelper.accentColor + "Target Aliases:" + LogHelper.resetColor);
-			LogHelper.println ("");
-			LogHelper.println ("  \x1b[1mcpp\x1b[0m -- Alias for host platform (using \x1b[1m-cpp\x1b[0m)");
-			LogHelper.println ("  \x1b[1mneko\x1b[0m -- Alias for host platform (using \x1b[1m-neko\x1b[0m)");
-			LogHelper.println ("  \x1b[1mmacos\x1b[0m -- Alias for \x1b[1mmac\x1b[0m");
-			LogHelper.println ("  \x1b[1mnodejs\x1b[0m -- Alias for host platform (using \x1b[1m-nodejs\x1b[0m)");
-			LogHelper.println ("  \x1b[1mjava\x1b[0m -- Alias for host platform (using \x1b[1m-java\x1b[0m)");
-			LogHelper.println ("  \x1b[1mcs\x1b[0m -- Alias for host platform (using \x1b[1m-cs\x1b[0m)");
-			LogHelper.println ("  \x1b[1muwp\x1b[0;3m/\x1b[0m\x1b[1mwinjs\x1b[0m -- Alias for \x1b[1mwindows -uwp\x1b[0m");
-			// LogHelper.println ("  \x1b[1miphone\x1b[0;3m/\x1b[0m\x1b[1miphoneos\x1b[0m -- \x1b[1mios\x1b[0m");
-			// LogHelper.println ("  \x1b[1miphonesim\x1b[0m -- Alias for \x1b[1mios -simulator\x1b[0m");
-			// LogHelper.println ("  \x1b[1mappletv\x1b[0;3m/\x1b[0m\x1b[1mappletvos\x1b[0m -- Alias for \x1b[1mtvos\x1b[0m");
-			// LogHelper.println ("  \x1b[1mappletvsim\x1b[0m -- Alias for \x1b[1mtvos -simulator\x1b[0m");
-			LogHelper.println ("  \x1b[1mrpi\x1b[0;3m/\x1b[0m\x1b[1mraspberrypi\x1b[0m -- Alias for \x1b[1mlinux -rpi\x1b[0m");
-			LogHelper.println ("  \x1b[1mwebassembly\x1b[0;3m/\x1b[0m\x1b[1mwasm\x1b[0m -- Alias for \x1b[1memscripten -webassembly\x1b[0m");
+			Log.println ("");
+			Log.println (" " + Log.accentColor + "Target Aliases:" + Log.resetColor);
+			Log.println ("");
+			Log.println ("  \x1b[1mcpp\x1b[0m -- Alias for host platform (using \x1b[1m-cpp\x1b[0m)");
+			Log.println ("  \x1b[1mneko\x1b[0m -- Alias for host platform (using \x1b[1m-neko\x1b[0m)");
+			Log.println ("  \x1b[1mmacos\x1b[0m -- Alias for \x1b[1mmac\x1b[0m");
+			Log.println ("  \x1b[1mnodejs\x1b[0m -- Alias for host platform (using \x1b[1m-nodejs\x1b[0m)");
+			Log.println ("  \x1b[1mjava\x1b[0m -- Alias for host platform (using \x1b[1m-java\x1b[0m)");
+			Log.println ("  \x1b[1mcs\x1b[0m -- Alias for host platform (using \x1b[1m-cs\x1b[0m)");
+			Log.println ("  \x1b[1muwp\x1b[0;3m/\x1b[0m\x1b[1mwinjs\x1b[0m -- Alias for \x1b[1mwindows -uwp\x1b[0m");
+			// Log.println ("  \x1b[1miphone\x1b[0;3m/\x1b[0m\x1b[1miphoneos\x1b[0m -- \x1b[1mios\x1b[0m");
+			// Log.println ("  \x1b[1miphonesim\x1b[0m -- Alias for \x1b[1mios -simulator\x1b[0m");
+			// Log.println ("  \x1b[1mappletv\x1b[0;3m/\x1b[0m\x1b[1mappletvos\x1b[0m -- Alias for \x1b[1mtvos\x1b[0m");
+			// Log.println ("  \x1b[1mappletvsim\x1b[0m -- Alias for \x1b[1mtvos -simulator\x1b[0m");
+			Log.println ("  \x1b[1mrpi\x1b[0;3m/\x1b[0m\x1b[1mraspberrypi\x1b[0m -- Alias for \x1b[1mlinux -rpi\x1b[0m");
+			Log.println ("  \x1b[1mwebassembly\x1b[0;3m/\x1b[0m\x1b[1mwasm\x1b[0m -- Alias for \x1b[1memscripten -webassembly\x1b[0m");
 			
 		}
 		
-		LogHelper.println ("");
-		LogHelper.println (" " + LogHelper.accentColor + "Options:" + LogHelper.resetColor);
-		LogHelper.println ("");
+		Log.println ("");
+		Log.println (" " + Log.accentColor + "Options:" + Log.resetColor);
+		Log.println ("");
 		
 		if (isBuildCommand) {
 			
-			LogHelper.println ("  \x1b[1m-D\x1b[0;3mvalue\x1b[0m -- Specify a define to use when processing other commands");
-			LogHelper.println ("  \x1b[1m-debug\x1b[0m -- Use debug configuration instead of release");
-			LogHelper.println ("  \x1b[1m-final\x1b[0m -- Use final configuration instead of release");
+			Log.println ("  \x1b[1m-D\x1b[0;3mvalue\x1b[0m -- Specify a define to use when processing other commands");
+			Log.println ("  \x1b[1m-debug\x1b[0m -- Use debug configuration instead of release");
+			Log.println ("  \x1b[1m-final\x1b[0m -- Use final configuration instead of release");
 			
 		}
 		
-		LogHelper.println ("  \x1b[1m-v\x1b[0;3m/\x1b[0m\x1b[1m-verbose\x1b[0m -- Print additional information (when available)");
+		Log.println ("  \x1b[1m-v\x1b[0;3m/\x1b[0m\x1b[1m-verbose\x1b[0m -- Print additional information (when available)");
 		
 		if (isBuildCommand && command != "run" && command != "trace") {
 			
-			LogHelper.println ("  \x1b[1m-clean\x1b[0m -- Add a \"clean\" action before running the current command");
+			Log.println ("  \x1b[1m-clean\x1b[0m -- Add a \"clean\" action before running the current command");
 			
 		}
 		
-		LogHelper.println ("  \x1b[1m-nocolor\x1b[0m -- Disable ANSI format codes in output");
+		Log.println ("  \x1b[1m-nocolor\x1b[0m -- Disable ANSI format codes in output");
 		
 		if (command == "run" || command == "test") {
 			
-			LogHelper.println ("  \x1b[1m-notrace\x1b[0m -- Disable trace output during run or test command");
+			Log.println ("  \x1b[1m-notrace\x1b[0m -- Disable trace output during run or test command");
 			
 		}
 		
-		LogHelper.println ("  \x1b[1m-dryrun\x1b[0m -- Execute the requested command without making changes");		
+		Log.println ("  \x1b[1m-dryrun\x1b[0m -- Execute the requested command without making changes");		
 		
 		if (isProjectCommand && command != "run" && command != "trace") {
 			
-			LogHelper.println ("  \x1b[1m-xml\x1b[0m -- Generate XML type information, useful for documentation");
+			Log.println ("  \x1b[1m-xml\x1b[0m -- Generate XML type information, useful for documentation");
 			
 		}
 		
 		if (command == "run" || command == "test") {
 			
-			LogHelper.println ("  \x1b[1m--\x1b[0;3m/\x1b[0m\x1b[1m-args\x1b[0m ... -- Pass additional arguments at launch");
+			Log.println ("  \x1b[1m--\x1b[0;3m/\x1b[0m\x1b[1m-args\x1b[0m ... -- Pass additional arguments at launch");
 			
 		}
 		
 		if (isProjectCommand) {
 			
-			LogHelper.println ("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-cpp\x1b[0m -- Build with C++ (default behavior)");
-			LogHelper.println ("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-neko\x1b[0m -- Build with Neko instead of C++");
-			LogHelper.println ("  \x1b[3m(windows|mac|ios|android)\x1b[0m \x1b[1m-air\x1b[0m -- Build with AIR instead of C++");
+			Log.println ("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-cpp\x1b[0m -- Build with C++ (default behavior)");
+			Log.println ("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-neko\x1b[0m -- Build with Neko instead of C++");
+			Log.println ("  \x1b[3m(windows|mac|ios|android)\x1b[0m \x1b[1m-air\x1b[0m -- Build with AIR instead of C++");
 			
 		}
 		
 		if (isBuildCommand) {
 			
-			LogHelper.println ("  \x1b[3m(windows|mac|linux|android)\x1b[0m \x1b[1m-static\x1b[0m -- Compile as a static C++ executable");
-			LogHelper.println ("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-32\x1b[0m -- Compile for 32-bit instead of the OS default");
-			LogHelper.println ("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-64\x1b[0m -- Compile for 64-bit instead of the OS default");
-			LogHelper.println ("  \x1b[3m(ios|android)\x1b[0m \x1b[1m-armv6\x1b[0m -- Compile for ARMv6 instead of the OS defaults");
-			LogHelper.println ("  \x1b[3m(ios|android)\x1b[0m \x1b[1m-armv7\x1b[0m -- Compile for ARMv7 instead of the OS defaults");
-			LogHelper.println ("  \x1b[3m(ios|android)\x1b[0m \x1b[1m-armv7s\x1b[0m -- Compile for ARMv7s instead of the OS defaults");
-			LogHelper.println ("  \x1b[3m(ios)\x1b[0m \x1b[1m-arm64\x1b[0m -- Compile for ARM64 instead of the OS defaults");
+			Log.println ("  \x1b[3m(windows|mac|linux|android)\x1b[0m \x1b[1m-static\x1b[0m -- Compile as a static C++ executable");
+			Log.println ("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-32\x1b[0m -- Compile for 32-bit instead of the OS default");
+			Log.println ("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-64\x1b[0m -- Compile for 64-bit instead of the OS default");
+			Log.println ("  \x1b[3m(ios|android)\x1b[0m \x1b[1m-armv6\x1b[0m -- Compile for ARMv6 instead of the OS defaults");
+			Log.println ("  \x1b[3m(ios|android)\x1b[0m \x1b[1m-armv7\x1b[0m -- Compile for ARMv7 instead of the OS defaults");
+			Log.println ("  \x1b[3m(ios|android)\x1b[0m \x1b[1m-armv7s\x1b[0m -- Compile for ARMv7s instead of the OS defaults");
+			Log.println ("  \x1b[3m(ios)\x1b[0m \x1b[1m-arm64\x1b[0m -- Compile for ARM64 instead of the OS defaults");
 			
 		}
 		
 		if (isProjectCommand) {
 			
-			LogHelper.println ("  \x1b[3m(ios)\x1b[0m \x1b[1m-archive\x1b[0m -- Generate iOS archive during build");
+			Log.println ("  \x1b[3m(ios)\x1b[0m \x1b[1m-archive\x1b[0m -- Generate iOS archive during build");
 			
 		}
 		
@@ -965,61 +965,61 @@ class CommandLineTools {
 			
 			if (command != "run" && command != "trace") {
 				
-				LogHelper.println ("  \x1b[3m(ios)\x1b[0m \x1b[1m-xcode\x1b[0m -- Launch the generated Xcode project");
+				Log.println ("  \x1b[3m(ios)\x1b[0m \x1b[1m-xcode\x1b[0m -- Launch the generated Xcode project");
 				
 			}
 			
-			//LogHelper.println ("  \x1b[3m(ios|blackberry|tizen|tvos|webos)\x1b[0m \x1b[1m-simulator\x1b[0m -- Target the device simulator");
-			LogHelper.println ("  \x1b[3m(ios|tvos)\x1b[0m \x1b[1m-simulator\x1b[0m -- Target the device simulator");
-			LogHelper.println ("  \x1b[3m(ios)\x1b[0m \x1b[1m-simulator -ipad\x1b[0m -- Build/test for the iPad Simulator");
-			LogHelper.println ("  \x1b[3m(android)\x1b[0m \x1b[1m-emulator\x1b[0m -- Target the device emulator");
-			LogHelper.println ("  \x1b[3m(flash)\x1b[0m \x1b[1m-web\x1b[0m -- Test Flash target using a web template");
-			LogHelper.println ("  \x1b[3m(air)\x1b[0m \x1b[1m-ios\x1b[0m -- Target iOS instead of AIR desktop");
-			LogHelper.println ("  \x1b[3m(air)\x1b[0m \x1b[1m-android\x1b[0m -- Target Android instead of AIR desktop");
+			//Log.println ("  \x1b[3m(ios|blackberry|tizen|tvos|webos)\x1b[0m \x1b[1m-simulator\x1b[0m -- Target the device simulator");
+			Log.println ("  \x1b[3m(ios|tvos)\x1b[0m \x1b[1m-simulator\x1b[0m -- Target the device simulator");
+			Log.println ("  \x1b[3m(ios)\x1b[0m \x1b[1m-simulator -ipad\x1b[0m -- Build/test for the iPad Simulator");
+			Log.println ("  \x1b[3m(android)\x1b[0m \x1b[1m-emulator\x1b[0m -- Target the device emulator");
+			Log.println ("  \x1b[3m(flash)\x1b[0m \x1b[1m-web\x1b[0m -- Test Flash target using a web template");
+			Log.println ("  \x1b[3m(air)\x1b[0m \x1b[1m-ios\x1b[0m -- Target iOS instead of AIR desktop");
+			Log.println ("  \x1b[3m(air)\x1b[0m \x1b[1m-android\x1b[0m -- Target Android instead of AIR desktop");
 			
 			if (command == "run" || command == "test") {
 				
-				LogHelper.println ("  \x1b[3m(emscripten|html5|flash)\x1b[0m \x1b[1m-nolaunch\x1b[0m -- Begin test server without launching");
-				//LogHelper.println ("  \x1b[3m(html5)\x1b[0m \x1b[1m-minify\x1b[0m -- Minify output using the Google Closure compiler");
-				LogHelper.println ("  \x1b[3m(emscripten|html5)\x1b[0m \x1b[1m-minify\x1b[0m -- Minify application file");
-				//LogHelper.println ("  \x1b[3m(html5)\x1b[0m \x1b[1m-minify -yui\x1b[0m -- Minify output using the YUI compressor");
-				LogHelper.println ("  \x1b[3m(emscripten|html5|flash)\x1b[0m \x1b[1m--port=\x1b[0;3mvalue\x1b[0m -- Set port for test server");
+				Log.println ("  \x1b[3m(emscripten|html5|flash)\x1b[0m \x1b[1m-nolaunch\x1b[0m -- Begin test server without launching");
+				//Log.println ("  \x1b[3m(html5)\x1b[0m \x1b[1m-minify\x1b[0m -- Minify output using the Google Closure compiler");
+				Log.println ("  \x1b[3m(emscripten|html5)\x1b[0m \x1b[1m-minify\x1b[0m -- Minify application file");
+				//Log.println ("  \x1b[3m(html5)\x1b[0m \x1b[1m-minify -yui\x1b[0m -- Minify output using the YUI compressor");
+				Log.println ("  \x1b[3m(emscripten|html5|flash)\x1b[0m \x1b[1m--port=\x1b[0;3mvalue\x1b[0m -- Set port for test server");
 				
 			}
 			
 			if (command != "run" && command != "trace") {
 				
-				LogHelper.println ("  \x1b[3m(emscripten)\x1b[0m \x1b[1m-webassembly\x1b[0m -- Compile for WebAssembly instead of asm.js");
+				Log.println ("  \x1b[3m(emscripten)\x1b[0m \x1b[1m-webassembly\x1b[0m -- Compile for WebAssembly instead of asm.js");
 				
 			}
 			
-			LogHelper.println ("");
-			LogHelper.println (" " + LogHelper.accentColor + "Experimental Options:" + LogHelper.resetColor);
-			LogHelper.println ("");
-			LogHelper.println ("  \x1b[1m-watch\x1b[0m -- Execute the current command when the source changes");
-			LogHelper.println ("  \x1b[3m(linux)\x1b[0m \x1b[1m-rpi\x1b[0m -- Build for Raspberry Pi");
-			LogHelper.println ("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-java\x1b[0m -- Build for Java instead of C++");
-			LogHelper.println ("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-nodejs\x1b[0m -- Build for Node.js instead of C++");
-			LogHelper.println ("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-cs\x1b[0m -- Build for C# instead of C++");
-			LogHelper.println ("  \x1b[3m(windows)\x1b[0m \x1b[1m-winjs\x1b[0m -- Build for WinJS instead of C++ (implies UWP)");
-			LogHelper.println ("  \x1b[3m(windows)\x1b[0m \x1b[1m-uwp\x1b[0m -- Build for Universal Windows Platform");
+			Log.println ("");
+			Log.println (" " + Log.accentColor + "Experimental Options:" + Log.resetColor);
+			Log.println ("");
+			Log.println ("  \x1b[1m-watch\x1b[0m -- Execute the current command when the source changes");
+			Log.println ("  \x1b[3m(linux)\x1b[0m \x1b[1m-rpi\x1b[0m -- Build for Raspberry Pi");
+			Log.println ("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-java\x1b[0m -- Build for Java instead of C++");
+			Log.println ("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-nodejs\x1b[0m -- Build for Node.js instead of C++");
+			Log.println ("  \x1b[3m(windows|mac|linux)\x1b[0m \x1b[1m-cs\x1b[0m -- Build for C# instead of C++");
+			Log.println ("  \x1b[3m(windows)\x1b[0m \x1b[1m-winjs\x1b[0m -- Build for WinJS instead of C++ (implies UWP)");
+			Log.println ("  \x1b[3m(windows)\x1b[0m \x1b[1m-uwp\x1b[0m -- Build for Universal Windows Platform");
 			
 			
 			if (command != "run" && command != "trace") {
 				
-				LogHelper.println ("");
-				LogHelper.println (" " + LogHelper.accentColor + "Project Overrides:" + LogHelper.resetColor);
-				LogHelper.println ("");
-				LogHelper.println ("  \x1b[1m--app-\x1b[0;3moption=value\x1b[0m -- Override a project <app/> setting");
-				LogHelper.println ("  \x1b[1m--meta-\x1b[0;3moption=value\x1b[0m -- Override a project <meta/> setting");
-				LogHelper.println ("  \x1b[1m--window-\x1b[0;3moption=value\x1b[0m -- Override a project <window/> setting");
-				LogHelper.println ("  \x1b[1m--dependency\x1b[0;3m=value\x1b[0m -- Add an additional <dependency/> value");
-				LogHelper.println ("  \x1b[1m--haxedef\x1b[0;3m=value\x1b[0m -- Add an additional <haxedef/> value");
-				LogHelper.println ("  \x1b[1m--haxeflag\x1b[0;3m=value\x1b[0m -- Add an additional <haxeflag/> value");
-				LogHelper.println ("  \x1b[1m--haxelib\x1b[0;3m=value\x1b[0m -- Add an additional <haxelib/> value");
-				LogHelper.println ("  \x1b[1m--haxelib-\x1b[0;3mname=value\x1b[0m -- Override the path to a haxelib");
-				LogHelper.println ("  \x1b[1m--source\x1b[0;3m=value\x1b[0m -- Add an additional <source/> value");
-				LogHelper.println ("  \x1b[1m--certificate-\x1b[0;3moption=value\x1b[0m -- Override a project <certificate/> setting");
+				Log.println ("");
+				Log.println (" " + Log.accentColor + "Project Overrides:" + Log.resetColor);
+				Log.println ("");
+				Log.println ("  \x1b[1m--app-\x1b[0;3moption=value\x1b[0m -- Override a project <app/> setting");
+				Log.println ("  \x1b[1m--meta-\x1b[0;3moption=value\x1b[0m -- Override a project <meta/> setting");
+				Log.println ("  \x1b[1m--window-\x1b[0;3moption=value\x1b[0m -- Override a project <window/> setting");
+				Log.println ("  \x1b[1m--dependency\x1b[0;3m=value\x1b[0m -- Add an additional <dependency/> value");
+				Log.println ("  \x1b[1m--haxedef\x1b[0;3m=value\x1b[0m -- Add an additional <haxedef/> value");
+				Log.println ("  \x1b[1m--haxeflag\x1b[0;3m=value\x1b[0m -- Add an additional <haxeflag/> value");
+				Log.println ("  \x1b[1m--haxelib\x1b[0;3m=value\x1b[0m -- Add an additional <haxelib/> value");
+				Log.println ("  \x1b[1m--haxelib-\x1b[0;3mname=value\x1b[0m -- Override the path to a haxelib");
+				Log.println ("  \x1b[1m--source\x1b[0;3m=value\x1b[0m -- Add an additional <source/> value");
+				Log.println ("  \x1b[1m--certificate-\x1b[0;3moption=value\x1b[0m -- Override a project <certificate/> setting");
 				
 			}
 			
@@ -1030,30 +1030,30 @@ class CommandLineTools {
 	
 	private function displayInfo (showHint:Bool = false):Void {
 		
-		if (PlatformHelper.hostPlatform == Platform.WINDOWS) {
+		if (PlatformHelper.hostPlatform == WINDOWS) {
 			
-			LogHelper.println ("");
+			Log.println ("");
 			
 		}
 		
-		LogHelper.println ("\x1b[36;1m ,dPb,                              \x1b[0m");
-		LogHelper.println ("\x1b[36;1m IP`Yb                              \x1b[0m");
-		LogHelper.println ("\x1b[36;1m I8 8I                              \x1b[0m");
-		LogHelper.println ("\x1b[36;1m I8 8'                              \x1b[0m");
-		LogHelper.println ("\x1b[36;1m I8d8Pgg,       ,gg,   ,gg gg,gggg,   \x1b[0m");
-		LogHelper.println ("\x1b[36;1m I8dP\" \"8I    d8\"\"8b,dP\"  I8P\"  \"Yb  \x1b[0m");
-		LogHelper.println ("\x1b[36;1m I8P    I8   dP   ,88\"    I8'    ,8i \x1b[0m");
-		LogHelper.println ("\x1b[36;1m,d8     I8,,dP  ,dP\"Y8,  ,I8 _  ,d8' \x1b[0m");
-		LogHelper.println ("\x1b[36;1md8P     `Y88\"  dP\"   \"Y88PI8 YY88P\x1b[0m");
-		LogHelper.println ("\x1b[36;1m                          I8         \x1b[0m");
-		LogHelper.println ("\x1b[36;1m                          I8         \x1b[0m");
+		Log.println ("\x1b[36;1m ,dPb,                              \x1b[0m");
+		Log.println ("\x1b[36;1m IP`Yb                              \x1b[0m");
+		Log.println ("\x1b[36;1m I8 8I                              \x1b[0m");
+		Log.println ("\x1b[36;1m I8 8'                              \x1b[0m");
+		Log.println ("\x1b[36;1m I8d8Pgg,       ,gg,   ,gg gg,gggg,   \x1b[0m");
+		Log.println ("\x1b[36;1m I8dP\" \"8I    d8\"\"8b,dP\"  I8P\"  \"Yb  \x1b[0m");
+		Log.println ("\x1b[36;1m I8P    I8   dP   ,88\"    I8'    ,8i \x1b[0m");
+		Log.println ("\x1b[36;1m,d8     I8,,dP  ,dP\"Y8,  ,I8 _  ,d8' \x1b[0m");
+		Log.println ("\x1b[36;1md8P     `Y88\"  dP\"   \"Y88PI8 YY88P\x1b[0m");
+		Log.println ("\x1b[36;1m                          I8         \x1b[0m");
+		Log.println ("\x1b[36;1m                          I8         \x1b[0m");
 		
-		LogHelper.println ("");
-		LogHelper.println ("\x1b[1mHXP Command-Line Tools\x1b[0;1m (" + getToolsVersion () + ")\x1b[0m");
+		Log.println ("");
+		Log.println ("\x1b[1mHXP Command-Line Tools\x1b[0;1m (" + getToolsVersion () + ")\x1b[0m");
 		
 		if (showHint) {
 			
-			LogHelper.println ("Use \x1b[3m" + commandName + " setup\x1b[0m to configure platforms or \x1b[3m" + commandName + " help\x1b[0m for more commands");
+			Log.println ("Use \x1b[3m" + commandName + " setup\x1b[0m to configure platforms or \x1b[3m" + commandName + " help\x1b[0m for more commands");
 			
 		}
 		
@@ -1062,7 +1062,7 @@ class CommandLineTools {
 	
 	private function executeScript (path:String):Void {
 		
-		LogHelper.info ("", LogHelper.accentColor + "Executing script: " + path + LogHelper.resetColor);
+		Log.info ("", Log.accentColor + "Executing script: " + path + Log.resetColor);
 		
 		var dir = Path.directory (path);
 		var file = Path.withoutDirectory (path);
@@ -1072,8 +1072,8 @@ class CommandLineTools {
 		var buildArgs = [ className, "-main", "hxp.Script", "-D", "hxp="+ version, "-cp", PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("hxp")), "src") ];
 		var runArgs = [ className ];
 		
-		if (LogHelper.verbose) runArgs.push ("-verbose");
-		if (!LogHelper.enableColor) runArgs.push ("-nocolor");
+		if (Log.verbose) runArgs.push ("-verbose");
+		if (!Log.enableColor) runArgs.push ("-nocolor");
 		if (!traceEnabled) runArgs.push ("-notrace");
 		
 		if (additionalArguments.length > 0) {
@@ -1230,12 +1230,12 @@ class CommandLineTools {
 	
 	private function getBuildNumber_GIT (project:Project, increment:Bool = true):String {
 		
-		var cache = LogHelper.mute;
-		LogHelper.mute = true;
+		var cache = Log.mute;
+		Log.mute = true;
 		
 		var output = ProcessHelper.runProcess ("", "git", [ "rev-list", "HEAD", "--count" ], true, true, true);
 		
-		LogHelper.mute = cache;
+		Log.mute = cache;
 		
 		if (output != null) {
 			
@@ -1270,12 +1270,12 @@ class CommandLineTools {
 	
 	private function getBuildNumber_SVN (project:Project, increment:Bool = true):String {
 		
-		var cache = LogHelper.mute;
-		LogHelper.mute = true;
+		var cache = Log.mute;
+		Log.mute = true;
 		
 		var output = ProcessHelper.runProcess ("", "svn", [ "info" ], true, true, true);
 		
-		LogHelper.mute = cache;
+		Log.mute = cache;
 		
 		if (output != null) {
 			
@@ -1325,7 +1325,7 @@ class CommandLineTools {
 	
 	private function initializeProject (project:Project = null, targetName:String = ""):Project {
 		
-		LogHelper.info ("", LogHelper.accentColor + "Initializing project..." + LogHelper.resetColor);
+		Log.info ("", Log.accentColor + "Initializing project..." + Log.resetColor);
 		
 		var projectFile = "";
 		
@@ -1367,12 +1367,12 @@ class CommandLineTools {
 			
 			if (projectFile == "") {
 				
-				LogHelper.error ("You must have a \"project.xml\" file or specify another valid project file when using the '" + command + "' command");
+				Log.error ("You must have a \"project.xml\" file or specify another valid project file when using the '" + command + "' command");
 				return null;
 				
 			} else {
 				
-				LogHelper.info ("", LogHelper.accentColor + "Using project file: " + projectFile + LogHelper.resetColor);
+				Log.info ("", Log.accentColor + "Using project file: " + projectFile + Log.resetColor);
 				
 			}
 			
@@ -1402,7 +1402,7 @@ class CommandLineTools {
 					
 					if (!StringTools.startsWith (toolsPath, limePath)) {
 						
-						LogHelper.info ("", LogHelper.accentColor + "Requesting alternate tools from .haxelib repository...\x1b[0m\n\n");
+						Log.info ("", Log.accentColor + "Requesting alternate tools from .haxelib repository...\x1b[0m\n\n");
 						
 						var args = Sys.args ();
 						args.pop ();
@@ -1504,12 +1504,12 @@ class CommandLineTools {
 			
 			case "mac", "macos":
 				
-				target = Platform.MAC;
+				target = MAC;
 				overrides.haxedefs.set ("macos", "");
 			
 			case "rpi", "raspberrypi":
 				
-				target = Platform.LINUX;
+				target = LINUX;
 				targetFlags.set ("rpi", "");
 			
 			case "webassembly", "wasm":
@@ -1519,13 +1519,13 @@ class CommandLineTools {
 			
 			case "winjs", "uwp":
 				
-				target = Platform.WINDOWS;
+				target = WINDOWS;
 				targetFlags.set ("uwp", "");
 				targetFlags.set ("winjs", "");
 			
 			case "winrt":
 				
-				target = Platform.WINDOWS;
+				target = WINDOWS;
 				targetFlags.set ("winrt", "");
 			
 			default:
@@ -1587,14 +1587,14 @@ class CommandLineTools {
 			
 		}
 		
-		if (PlatformHelper.hostPlatform == Platform.WINDOWS) {
+		if (PlatformHelper.hostPlatform == WINDOWS) {
 			
 			if (environment.get ("JAVA_HOME") != null) {
 				
 				var javaPath = PathHelper.combine (environment.get ("JAVA_HOME"), "bin");
 				var value;
 				
-				if (PlatformHelper.hostPlatform == Platform.WINDOWS) {
+				if (PlatformHelper.hostPlatform == WINDOWS) {
 					
 					value = javaPath + ";" + Sys.getEnv ("PATH");
 					
@@ -1633,7 +1633,7 @@ class CommandLineTools {
 		
 		if (!environment.exists ("HAXE_STD_PATH")) {
 			
-			if (PlatformHelper.hostPlatform == Platform.WINDOWS) {
+			if (PlatformHelper.hostPlatform == WINDOWS) {
 				
 				environment.set ("HAXE_STD_PATH", "C:\\HaxeToolkit\\haxe\\std\\");
 				
@@ -1685,7 +1685,7 @@ class CommandLineTools {
 					
 				} else {
 					
-					LogHelper.error ("Could not process \"" + projectFile + "\"");
+					Log.error ("Could not process \"" + projectFile + "\"");
 					return null;
 					
 				}
@@ -1701,7 +1701,7 @@ class CommandLineTools {
 			var limePath = HaxelibHelper.getPath (new Haxelib ("lime"), true, true);
 			Sys.setCwd (workingDirectory);
 			
-			LogHelper.info ("", LogHelper.accentColor + "Requesting alternate tools from custom haxelib path...\x1b[0m\n\n");
+			Log.info ("", Log.accentColor + "Requesting alternate tools from custom haxelib path...\x1b[0m\n\n");
 			
 			var args = Sys.args ();
 			args.pop ();
@@ -1720,7 +1720,7 @@ class CommandLineTools {
 		
 		if (project == null || (command != "rebuild" && project.sources.length == 0 && !FileSystem.exists (project.app.main + ".hx"))) {
 			
-			LogHelper.error ("You must have a \"project.xml\" file or specify another valid project file when using the '" + command + "' command");
+			Log.error ("You must have a \"project.xml\" file or specify another valid project file when using the '" + command + "' command");
 			return null;
 			
 		}
@@ -1754,7 +1754,7 @@ class CommandLineTools {
 				
 				if (!project.targetFlags.exists ("notoolscheck")) {
 					
-					LogHelper.info ("", LogHelper.accentColor + "Requesting tools version " + getToolsVersion (haxelib.version) + "...\x1b[0m\n\n");
+					Log.info ("", Log.accentColor + "Requesting tools version " + getToolsVersion (haxelib.version) + "...\x1b[0m\n\n");
 					
 					HaxelibHelper.pathOverrides.remove ("lime");
 					var path = HaxelibHelper.getPath (haxelib);
@@ -1784,7 +1784,7 @@ class CommandLineTools {
 					
 					if (Std.string (version) != Std.string (HaxelibHelper.getVersion (haxelib))) {
 						
-						LogHelper.warn ("", LogHelper.accentColor + "Could not switch to requested tools version\x1b[0m");
+						Log.warn ("", Log.accentColor + "Could not switch to requested tools version\x1b[0m");
 						
 					}
 					
@@ -1879,7 +1879,7 @@ class CommandLineTools {
 	
 	private function platformSetup ():Void {
 		
-		LogHelper.info ("", LogHelper.accentColor + "Running command: SETUP" + LogHelper.resetColor);
+		Log.info ("", Log.accentColor + "Running command: SETUP" + Log.resetColor);
 		
 		if (words.length == 0) {
 			
@@ -1891,7 +1891,7 @@ class CommandLineTools {
 			
 		} else {
 			
-			LogHelper.error ("Incorrect number of arguments for command 'setup'");
+			Log.error ("Incorrect number of arguments for command 'setup'");
 			return;
 			
 		}
@@ -1962,7 +1962,7 @@ class CommandLineTools {
 				
 		// 	} else {
 				
-		// 		LogHelper.error ("Could not run Lime tools from this directory");
+		// 		Log.error ("Could not run Lime tools from this directory");
 				
 		// 	}
 			
@@ -2209,11 +2209,11 @@ class CommandLineTools {
 						
 					} else if (argument == "-64") {
 						
-						overrides.architectures.push (Architecture.X64);
+						overrides.architectures.push (X64);
 						
 					} else if (argument == "-32") {
 						
-						overrides.architectures.push (Architecture.X86);
+						overrides.architectures.push (X86);
 						
 					} else if (argument == "-v" || argument == "-verbose") {
 						
@@ -2221,13 +2221,13 @@ class CommandLineTools {
 						
 						if (command != "display") {
 							
-							LogHelper.verbose = true;
+							Log.verbose = true;
 							
 						}
 						
 					} else if (argument == "-force-verbose") {
 						
-						LogHelper.verbose = true;
+						Log.verbose = true;
 						
 					} else if (argument == "-dryrun") {
 						
@@ -2243,7 +2243,7 @@ class CommandLineTools {
 						
 					} else if (argument == "-nocolor") {
 						
-						LogHelper.enableColor = false;
+						Log.enableColor = false;
 						
 					}
 					
@@ -2274,13 +2274,13 @@ class CommandLineTools {
 				
 				var project = initializeProject (null, "firefox");
 				
-				LogHelper.info ("", LogHelper.accentColor + "Using publishing target: FIREFOX MARKETPLACE" + LogHelper.resetColor);
+				Log.info ("", Log.accentColor + "Using publishing target: FIREFOX MARKETPLACE" + Log.resetColor);
 				
 				//if (FirefoxMarketplace.isValid (project)) {
 					//
 					//buildProject (project, "build");
 					//
-					//LogHelper.info ("", "\n" + LogHelper.accentColor + "Running command: PUBLISH" + LogHelper.resetColor);
+					//Log.info ("", "\n" + Log.accentColor + "Running command: PUBLISH" + Log.resetColor);
 					//
 					//FirefoxMarketplace.publish (project);
 					//
@@ -2295,12 +2295,12 @@ class CommandLineTools {
 		
 		if ((words.length < 1 && command != "upgrade") || words.length > 1) {
 			
-			LogHelper.error ("Incorrect number of arguments for command '" + command + "'");
+			Log.error ("Incorrect number of arguments for command '" + command + "'");
 			return;
 			
 		}
 		
-		LogHelper.info ("", LogHelper.accentColor + "Running command: " + command.toUpperCase () + LogHelper.resetColor);
+		Log.info ("", Log.accentColor + "Running command: " + command.toUpperCase () + Log.resetColor);
 		
 		var name = defaultLibrary;
 		
@@ -2346,7 +2346,7 @@ class CommandLineTools {
 					
 				} else {
 					
-					LogHelper.warn ("\"" + haxelib.name + "\" is not a valid haxelib, or has not been installed");
+					Log.warn ("\"" + haxelib.name + "\" is not a valid haxelib, or has not been installed");
 					
 				}
 			

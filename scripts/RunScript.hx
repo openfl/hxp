@@ -2,7 +2,7 @@ package;
 
 
 import hxp.InterpHelper;
-import hxp.LogHelper;
+import hxp.Log;
 
 
 class RunScript {
@@ -22,7 +22,7 @@ class RunScript {
 				
 			} catch (e:Dynamic) {
 				
-				LogHelper.error ("Cannot set current working directory to \"" + path + "\"");
+				Log.error ("Cannot set current working directory to \"" + path + "\"");
 				
 			}
 			
@@ -52,7 +52,7 @@ class RunScript {
 		Sys.exit (InterpHelper.run ([
 			
 			"-main",
-			"CommandLineTools",
+			"MainScript",
 			"-cp", "src",
 			"-cp", "scripts",
 			

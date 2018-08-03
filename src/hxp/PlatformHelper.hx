@@ -1,8 +1,6 @@
 package hxp;
 
 
-import hxp.Architecture;
-import hxp.Platform;
 import sys.io.Process;
 
 
@@ -28,11 +26,11 @@ class PlatformHelper {
 					
 					if (architecture != null && architecture.indexOf ("64") > -1) {
 						
-						_hostArchitecture = Architecture.X64;
+						_hostArchitecture = X64;
 						
 					} else {
 						
-						_hostArchitecture = Architecture.X86;
+						_hostArchitecture = X86;
 						
 					}
 					
@@ -48,11 +46,11 @@ class PlatformHelper {
 						
 						case "x64":
 							
-							_hostArchitecture = Architecture.X64;
+							_hostArchitecture = X64;
 						
 						default:
 							
-							_hostArchitecture = Architecture.X86;
+							_hostArchitecture = X86;
 						
 					}
 					
@@ -74,11 +72,11 @@ class PlatformHelper {
 						
 					} else if (output.indexOf ("64") > -1) {
 						
-						_hostArchitecture = Architecture.X64;
+						_hostArchitecture = X64;
 						
 					} else {
 						
-						_hostArchitecture = Architecture.X86;
+						_hostArchitecture = X86;
 						
 					}
 					
@@ -90,7 +88,7 @@ class PlatformHelper {
 				
 			}
 			
-			LogHelper.info ("", " - \x1b[1mDetected host architecture:\x1b[0m " + Std.string (_hostArchitecture).toUpperCase ());
+			Log.info ("", " - \x1b[1mDetected host architecture:\x1b[0m " + Std.string (_hostArchitecture).toUpperCase ());
 			
 		}
 		
@@ -105,19 +103,19 @@ class PlatformHelper {
 			
 			if (new EReg ("window", "i").match (Sys.systemName ())) {
 				
-				_hostPlatform = Platform.WINDOWS;
+				_hostPlatform = WINDOWS;
 				
 			} else if (new EReg ("linux", "i").match (Sys.systemName ())) {
 				
-				_hostPlatform = Platform.LINUX;
+				_hostPlatform = LINUX;
 				
 			} else if (new EReg ("mac", "i").match (Sys.systemName ())) {
 				
-				_hostPlatform = Platform.MAC;
+				_hostPlatform = MAC;
 				
 			}
 			
-			LogHelper.info ("", " - \x1b[1mDetected host platform:\x1b[0m " + Std.string (_hostPlatform).toUpperCase ());
+			Log.info ("", " - \x1b[1mDetected host platform:\x1b[0m " + Std.string (_hostPlatform).toUpperCase ());
 			
 		}
 		
@@ -125,5 +123,24 @@ class PlatformHelper {
 		
 	}
 	
+	
+}
+
+
+private enum Architecture {
+	
+	ARMV6;
+	ARMV7;
+	X86;
+	X64;
+	
+}
+
+
+@:enum private abstract Platform(String) from String to String {
+	
+	public var WINDOWS = "windows";
+	public var MAC = "mac";
+	public var LINUX = "linux";
 	
 }

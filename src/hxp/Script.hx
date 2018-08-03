@@ -2,7 +2,7 @@ package hxp;
 
 
 import haxe.io.Path;
-import hxp.LogHelper;
+import hxp.Log;
 import sys.FileSystem;
 
 
@@ -47,8 +47,8 @@ class Script {
 		
 		for (arg in args) {
 			switch (arg) {
-				case "-v", "-verbose": LogHelper.verbose = true;
-				case "-nocolor": LogHelper.enableColor = false;
+				case "-v", "-verbose": Log.verbose = true;
+				case "-nocolor": Log.enableColor = false;
 				default:
 			}
 		}
@@ -64,7 +64,7 @@ class Script {
 				
 			} catch (e:Dynamic) {
 				
-				LogHelper.error (e);
+				Log.error (e);
 				
 			}
 			

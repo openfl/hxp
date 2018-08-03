@@ -4,7 +4,6 @@ package hxp;
 import haxe.io.BytesOutput;
 import haxe.io.Eof;
 import haxe.io.Path;
-import hxp.Platform;
 import sys.io.Process;
 import sys.FileSystem;
 
@@ -26,7 +25,7 @@ class ProcessHelper {
 			
 		}
 		
-		if (PlatformHelper.hostPlatform == Platform.WINDOWS) {
+		if (PlatformHelper.hostPlatform == WINDOWS) {
 			
 			var args = [];
 			
@@ -47,7 +46,7 @@ class ProcessHelper {
 				
 			}
 			
-		} else if (PlatformHelper.hostPlatform == Platform.MAC) {
+		} else if (PlatformHelper.hostPlatform == MAC) {
 			
 			if (executable == "") {
 				
@@ -90,11 +89,11 @@ class ProcessHelper {
 	
 	public static function openURL (url:String):Void {
 		
-		if (PlatformHelper.hostPlatform == Platform.WINDOWS) {
+		if (PlatformHelper.hostPlatform == WINDOWS) {
 			
 			runCommand ("", "start", [ url ]);
 			
-		} else if (PlatformHelper.hostPlatform == Platform.MAC) {
+		} else if (PlatformHelper.hostPlatform == MAC) {
 			
 			runCommand ("", "/usr/bin/open", [ url ]);
 			
@@ -136,7 +135,7 @@ class ProcessHelper {
 		}
 		
 		#if (haxe_ver < "3.3.0")
-		if (args != null && PlatformHelper.hostPlatform == Platform.WINDOWS) {
+		if (args != null && PlatformHelper.hostPlatform == WINDOWS) {
 			
 			command = PathHelper.escape (command);
 			
@@ -149,7 +148,7 @@ class ProcessHelper {
 				
 				if (path != null && path != "" && !FileSystem.exists (FileSystem.fullPath (path)) && !FileSystem.exists (FileSystem.fullPath (new Path (path).dir))) {
 					
-					LogHelper.error ("The specified target path \"" + path + "\" does not exist");
+					Log.error ("The specified target path \"" + path + "\" does not exist");
 					return 1;
 					
 				}
@@ -160,7 +159,7 @@ class ProcessHelper {
 				
 				if (!ignoreErrors) {
 					
-					LogHelper.error ("", e);
+					Log.error ("", e);
 					return 1;
 					
 				}
@@ -184,7 +183,7 @@ class ProcessHelper {
 		
 		if (path != null && path != "") {
 			
-			LogHelper.info ("", " - \x1b[1mChanging directory:\x1b[0m " + path + "");
+			Log.info ("", " - \x1b[1mChanging directory:\x1b[0m " + path + "");
 			
 			if (!dryRun) {
 				
@@ -215,7 +214,7 @@ class ProcessHelper {
 			
 		}
 		
-		LogHelper.info ("", " - \x1b[1mRunning command:\x1b[0m " + command + argString);
+		Log.info ("", " - \x1b[1mRunning command:\x1b[0m " + command + argString);
 		
 		var result = 0;
 		
@@ -284,7 +283,7 @@ class ProcessHelper {
 				
 				if (path != null && path != "" && !FileSystem.exists (FileSystem.fullPath (path)) && !FileSystem.exists (FileSystem.fullPath (new Path (path).dir))) {
 					
-					LogHelper.error ("The specified target path \"" + path + "\" does not exist");
+					Log.error ("The specified target path \"" + path + "\" does not exist");
 					
 				}
 				
@@ -294,7 +293,7 @@ class ProcessHelper {
 				
 				if (!ignoreErrors) {
 					
-					LogHelper.error ("", e);
+					Log.error ("", e);
 					
 				}
 				
@@ -317,7 +316,7 @@ class ProcessHelper {
 		
 		if (path != null && path != "") {
 			
-			LogHelper.info ("", " - \x1b[1mChanging directory:\x1b[0m " + path + "");
+			Log.info ("", " - \x1b[1mChanging directory:\x1b[0m " + path + "");
 			
 			if (!dryRun) {
 				
@@ -344,7 +343,7 @@ class ProcessHelper {
 			
 		}
 		
-		LogHelper.info ("", " - \x1b[1mRunning process:\x1b[0m " + command + argString);
+		Log.info ("", " - \x1b[1mRunning process:\x1b[0m " + command + argString);
 		
 		var output = "";
 		var result = 0;
@@ -400,7 +399,7 @@ class ProcessHelper {
 							
 						} else {
 							
-							LogHelper.error (error);
+							Log.error (error);
 							
 						}
 						
@@ -418,7 +417,7 @@ class ProcessHelper {
 					
 					/*if (error != "") {
 						
-						LogHelper.error (error);
+						Log.error (error);
 						
 					}*/
 					
@@ -459,7 +458,7 @@ class ProcessHelper {
 			
 			var result = null;
 			
-			if (PlatformHelper.hostPlatform == Platform.WINDOWS) {
+			if (PlatformHelper.hostPlatform == WINDOWS) {
 				
 				var env = Sys.getEnv ("NUMBER_OF_PROCESSORS");
 				
@@ -469,7 +468,7 @@ class ProcessHelper {
 					
 				}
 				
-			} else if (PlatformHelper.hostPlatform == Platform.LINUX) {
+			} else if (PlatformHelper.hostPlatform == LINUX) {
 				
 				result = runProcess ("", "nproc", [], true, true, true);
 				
@@ -486,7 +485,7 @@ class ProcessHelper {
 					
 				}
 				
-			} else if (PlatformHelper.hostPlatform == Platform.MAC) {
+			} else if (PlatformHelper.hostPlatform == MAC) {
 				
 				var cores = ~/Total Number of Cores: (\d+)/;
 				var output = runProcess ("", "/usr/sbin/system_profiler", [ "-detailLevel", "full", "SPHardwareDataType" ]);

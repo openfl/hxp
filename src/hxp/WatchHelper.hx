@@ -1,42 +1,17 @@
 package hxp;
 
 
-import hxp.Architecture;
 import hxp.Haxelib;
-import hxp.Project;
-import hxp.Platform;
 import sys.FileSystem;
 
 
 class WatchHelper {
 	
 	
-	public static function getCurrentCommand ():String {
-		
-		var args = Sys.args ();
-		args.remove ("-watch");
-		
-		if (HaxelibHelper.pathOverrides.exists ("lime-tools")) {
-			
-			var tools = HaxelibHelper.pathOverrides.get ("lime-tools");
-			
-			return "neko " + tools + "/tools.n " + args.join (" ");
-			
-		} else {
-			
-			args.pop ();
-			
-			return "lime " + args.join (" ");
-			
-		}
-		
-	}
-	
-	
-	public static function processHXML (project:Project, hxml:String):Array<String> {
+	public static function processHXML (hxml:String, outputPath:String = null):Array<String> {
 		
 		var directories = [];
-		var outputPath = PathHelper.tryFullPath (project.app.path);
+		var outputPath = PathHelper.tryFullPath (outputPath);
 		var dir, fullPath = null;
 		
 		for (line in hxml.split ("\n")) {
@@ -49,7 +24,7 @@ class WatchHelper {
 					
 					fullPath = PathHelper.tryFullPath (dir);
 					
-					if (!StringTools.startsWith (fullPath, outputPath)) {
+					if (outputPath == null || !StringTools.startsWith (fullPath, outputPath)) {
 						
 						// directories.push (fullPath);
 						directories.push (dir);
@@ -67,20 +42,20 @@ class WatchHelper {
 	}
 	
 	
-	public static function watch (project:Project, command:String, directories:Array<String>):Void {
+	public static function watch (command:String, directories:Array<String>):Void {
 		
 		var suffix = switch (PlatformHelper.hostPlatform) {
 			
-			case Platform.WINDOWS: "-windows.exe";
-			case Platform.MAC: "-mac";
-			case Platform.LINUX: "-linux";
+			case WINDOWS: "-windows.exe";
+			case MAC: "-mac";
+			case LINUX: "-linux";
 			default: return;
 			
 		}
 		
 		if (suffix == "-linux") {
 			
-			if (PlatformHelper.hostArchitecture == Architecture.X86) {
+			if (PlatformHelper.hostArchitecture == X86) {
 				
 				suffix += "32";
 				
@@ -92,11 +67,11 @@ class WatchHelper {
 			
 		}
 		
-		var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), #if lime "templates" #else "" #end) ].concat (project.templatePaths);
+		var templatePaths = [ PathHelper.combine (PathHelper.getHaxelib (new Haxelib (#if lime "lime" #else "hxp" #end)), #if lime "templates" #else "" #end) ];
 		var node = PathHelper.findTemplate (templatePaths, "bin/node/node" + suffix);
 		var bin = PathHelper.findTemplate (templatePaths, "bin/node/watch/cli-custom.js");
 		
-		if (PlatformHelper.hostPlatform != Platform.WINDOWS) {
+		if (PlatformHelper.hostPlatform != WINDOWS) {
 			
 			Sys.command ("chmod", [ "+x", node ]);
 			

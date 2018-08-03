@@ -1,32 +1,16 @@
 package hxp;
 
 
-import haxe.io.Bytes;
 import haxe.io.Path;
 import haxe.Template;
-import hxp.PlatformHelper;
-import hxp.StringHelper;
-import hxp.Asset;
-import hxp.AssetEncoding;
-import hxp.AssetType;
-import hxp.Project;
-import hxp.NDLL;
-import hxp.Platform;
 import sys.io.File;
-import sys.io.FileOutput;
 import sys.FileSystem;
-
-#if neko
-import neko.Lib;
-#elseif cpp
-import cpp.Lib;
-#end
 
 
 class FileHelper {
 	
 	
-	private static var knownExtensions:Map<String, AssetType>;
+	private static var knownExtensions:Map<String, FileType>;
 	
 	
 	private static function __init__ ():Void {
@@ -90,84 +74,6 @@ class FileHelper {
 	}
 	
 	
-	public static function copyAsset (asset:Asset, destination:String, context:Dynamic = null) {
-		
-		if (asset.sourcePath != "") {
-			
-			copyFile (asset.sourcePath, destination, context, asset.type == TEMPLATE);
-			
-		} else {
-			
-			try {
-				
-				if (asset.encoding == AssetEncoding.BASE64) {
-					
-					File.saveBytes (destination, StringHelper.base64Decode (asset.data));
-					
-				} else if (Std.is (asset.data, Bytes)) {
-					
-					File.saveBytes (destination, cast asset.data);
-					
-				} else {
-					
-					File.saveContent (destination, Std.string (asset.data));
-					
-				}
-				
-			} catch (e:Dynamic) {
-				
-				LogHelper.error ("Cannot write to file \"" + destination + "\"");
-				
-			}
-			
-		}
-		
-	}
-	
-	
-	public static function copyAssetIfNewer (asset:Asset, destination:String) {
-		
-		if (asset.sourcePath != "") {
-			
-			if (isNewer (asset.sourcePath, destination)) {
-				
-				copyFile (asset.sourcePath, destination, null, asset.type == TEMPLATE);
-				
-			}
-			
-		} else {
-			
-			PathHelper.mkdir (Path.directory (destination));
-			
-			LogHelper.info ("", " - \x1b[1mWriting file:\x1b[0m " + destination);
-			
-			try {
-				
-				if (asset.encoding == AssetEncoding.BASE64) {
-					
-					File.saveBytes (destination, StringHelper.base64Decode (asset.data));
-					
-				} else if (Std.is (asset.data, Bytes)) {
-					
-					File.saveBytes (destination, cast asset.data);
-					
-				} else {
-					
-					File.saveContent (destination, Std.string (asset.data));
-					
-				}
-				
-			} catch (e:Dynamic) {
-				
-				LogHelper.error ("Cannot write to file \"" + destination + "\"");
-				
-			}
-			
-		}
-		
-	}
-	
-	
 	public static function copyFile (source:String, destination:String, context:Dynamic = null, process:Bool = true) {
 		
 		var extension = Path.extension (source);
@@ -195,7 +101,7 @@ class FileHelper {
 			
 			if (_isText) {
 				
-				//LogHelper.info ("", " - \x1b[1mProcessing template file:\x1b[0m " + source + " \x1b[3;37m->\x1b[0m " + destination);
+				//Log.info ("", " - \x1b[1mProcessing template file:\x1b[0m " + source + " \x1b[3;37m->\x1b[0m " + destination);
 				
 				var fileContents:String = File.getContent (source);
 				var template:Template = new Template (fileContents);
@@ -218,7 +124,7 @@ class FileHelper {
 				
 				PathHelper.mkdir (Path.directory (destination));
 				
-				LogHelper.info ("", " - \x1b[1mCopying template file:\x1b[0m " + source + " \x1b[3;37m->\x1b[0m " + destination);
+				Log.info ("", " - \x1b[1mCopying template file:\x1b[0m " + source + " \x1b[3;37m->\x1b[0m " + destination);
 				
 				try {
 					
@@ -226,7 +132,7 @@ class FileHelper {
 					
 				} catch (e:Dynamic) {
 					
-					LogHelper.error ("Cannot write to file \"" + destination + "\"");
+					Log.error ("Cannot write to file \"" + destination + "\"");
 					
 				}
 				
@@ -266,7 +172,7 @@ class FileHelper {
 		
 		PathHelper.mkdir (Path.directory (destination));
 		
-		LogHelper.info ("", " - \x1b[1mCopying file:\x1b[0m " + source + " \x1b[3;37m->\x1b[0m " + destination);
+		Log.info ("", " - \x1b[1mCopying file:\x1b[0m " + source + " \x1b[3;37m->\x1b[0m " + destination);
 		
 		try {
 			
@@ -278,63 +184,14 @@ class FileHelper {
 				
 				if (FileSystem.exists (destination)) {
 					
-					LogHelper.error ("Cannot copy to \"" + destination + "\", is the file in use?");
+					Log.error ("Cannot copy to \"" + destination + "\", is the file in use?");
 					return;
 					
 				} else {}
 				
 			} catch (e:Dynamic) {}
 			
-			LogHelper.error ("Cannot open \"" + destination + "\" for writing, do you have correct access permissions?");
-			
-		}
-		
-	}
-	
-	
-	public static function copyLibrary (project:Project, ndll:NDLL, directoryName:String, namePrefix:String, nameSuffix:String, targetDirectory:String, allowDebug:Bool = false, targetSuffix:String = null) {
-		
-		var path = PathHelper.getLibraryPath (ndll, directoryName, namePrefix, nameSuffix, allowDebug);
-		
-		if (FileSystem.exists (path)) {
-			
-			var targetPath = PathHelper.combine (targetDirectory, namePrefix + ndll.name);
-			
-			if (targetSuffix != null) {
-				
-				targetPath += targetSuffix;
-				
-			} else {
-				
-				targetPath += nameSuffix;
-				
-			}
-			
-			if (project.config.getBool ("tools.copy-ndlls")) {
-				
-				LogHelper.info ("", " - \x1b[1mCopying library file:\x1b[0m " + path + " \x1b[3;37m->\x1b[0m " + targetPath);
-				
-				PathHelper.mkdir (targetDirectory);
-				
-				try {
-					
-					File.copy (path, targetPath);
-					
-				} catch (e:Dynamic) {
-					
-					LogHelper.error ("Cannot copy to \"" + targetPath + "\", is the file in use?");
-					
-				}
-				
-			} else {
-				
-				LogHelper.info ("", " - \x1b[1mSkipping library file:\x1b[0m " + path + " \x1b[3;37m->\x1b[0m " + targetPath);
-				
-			}
-			
-		} else {
-			
-			LogHelper.error ("Source path \"" + path + "\" does not exist");
+			Log.error ("Cannot open \"" + destination + "\" for writing, do you have correct access permissions?");
 			
 		}
 		
@@ -411,7 +268,7 @@ class FileHelper {
 			
 		} catch (e:Dynamic) {
 			
-			LogHelper.error ("Could not find source directory \"" + source + "\"");
+			Log.error ("Could not find source directory \"" + source + "\"");
 			
 		}
 		
@@ -461,28 +318,6 @@ class FileHelper {
 	}
 	
 	
-	public static function recursiveSmartCopyTemplate (project:Project, source:String, destination:String, context:Dynamic = null, process:Bool = true, warnIfNotFound:Bool = true) {
-		
-		var destinations = [];
-		var paths = PathHelper.findTemplateRecursive (project.templatePaths, source, warnIfNotFound, destinations);
-		
-		if (paths != null) {
-			
-			PathHelper.mkdir (destination);
-			var itemDestination;
-			
-			for (i in 0...paths.length) {
-				
-				itemDestination = PathHelper.combine (destination, PathHelper.substitutePath (project, destinations[i]));
-				copyFile (paths[i], itemDestination, context, process);
-				
-			}
-			
-		}
-		
-	}
-	
-	
 	public static function replaceText (source:String, replaceString:String, replacement:String) {
 		
 		if (FileSystem.exists (source)) {
@@ -507,7 +342,7 @@ class FileHelper {
 		
 		if (source == null || !FileSystem.exists (source)) {
 			
-			LogHelper.error ("Source path \"" + source + "\" does not exist");
+			Log.error ("Source path \"" + source + "\" does not exist");
 			return false;
 			
 		}
@@ -592,4 +427,16 @@ class FileHelper {
 	}
 	
 	
+}
+
+
+private enum FileType {
+
+	BINARY;
+	FONT;
+	IMAGE;
+	MUSIC;
+	SOUND;
+	TEXT;
+
 }

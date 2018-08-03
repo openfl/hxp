@@ -3,7 +3,6 @@ package hxp;
 
 import haxe.io.Bytes;
 import hxp.PlatformHelper;
-import hxp.Platform;
 #if (lime && lime_cffi && !macro)
 import lime.system.CFFI;
 #end
@@ -18,7 +17,7 @@ import cs.Lib;
 #end
 
 
-class LogHelper {
+class Log {
 	
 	
 	public static var accentColor = #if (lime && !hxp_interp) "\x1b[32;1m"; #else "\x1b[36;1m"; #end
@@ -104,7 +103,7 @@ class LogHelper {
 		
 		if (colorSupported == null) {
 			
-			if (PlatformHelper.hostPlatform != Platform.WINDOWS) {
+			if (PlatformHelper.hostPlatform != WINDOWS) {
 				
 				var result = -1;
 				
