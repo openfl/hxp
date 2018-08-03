@@ -2,81 +2,55 @@ package hxp;
 
 
 import haxe.io.Path;
-// import haxe.Unserializer;
-// import hxp.project.Haxelib;
-// import hxp.helpers.HaxelibHelper;
-import hxp.helpers.LogHelper;
-// import hxp.helpers.PathHelper;
-// import sys.io.File;
+import hxp.LogHelper;
 import sys.FileSystem;
 
 
 class Script {
 	
 	
-	@:noCompletion private static var additionalArguments = new Array<String> ();
-	@:noCompletion private static var targetFlags = new Map<String, String> ();
-	@:noCompletion private static var traceEnabled:Bool = true;
+	@:noCompletion private static var __args:Array<String>;
+	
+	public var args:Array<String>;
+	public var command:String;
+	public var commandArgs:Array<String>;
+	public var defines:Map<String, String>;
+	public var flags:Map<String, Bool>;
+	public var options:Map<String, Array<String>>;
 	
 	
 	public function new () {
 		
+		if (__args != null) {
+			args = __args;
+			__args = null;
+		} else {
+			args = new Array ();
+		}
 		
+		command = "";
+		commandArgs = new Array ();
+		defines = new Map ();
+		flags = new Map ();
+		options = new Map ();
+		
+		processArguments ();
 		
 	}
 	
 	
 	public static function main () {
 		
-		var arguments = Sys.args ();
-		var additionalArguments = [];
-		var catchArguments = false;
-		var className = "";
-		// var command = "";
-		var words = [];
+		var args = Sys.args ();
+		var className = args.shift ();
+		__args = args;
 		
-		for (argument in arguments) {
-			
-			var equals = argument.indexOf ("=");
-			
-			if (catchArguments) {
-				
-				additionalArguments.push (argument);
-				
-			} else if (argument == "-v" || argument == "-verbose") {
-				
-				LogHelper.verbose = true;
-				
-			} else if (argument == "-args") {
-				
-				catchArguments = true;
-				
-			} else if (argument == "-notrace") {
-				
-				traceEnabled = false;
-				
-			} else if (argument == "-debug") {
-				
-				//debug = true;
-				
-			} else if (argument == "-nocolor") {
-				
-				LogHelper.enableColor = false;
-				
-			} else if (className.length == 0) {
-				
-				className = argument;
-				
-			// } else if (command.length == 0) {
-				
-			// 	command = argument;
-				
-			} else {
-				
-				words.push (argument);
-				
+		for (arg in args) {
+			switch (arg) {
+				case "-v", "-verbose": LogHelper.verbose = true;
+				case "-nocolor": LogHelper.enableColor = false;
+				default:
 			}
-			
 		}
 		
 		if (className != null) {
@@ -86,9 +60,7 @@ class Script {
 				var classRef = Type.resolveClass (className);
 				if (classRef == null) throw "Cannot find class name \"" + className + "\"";
 				
-				var script = Type.createInstance (classRef, []);
-				// platform.traceEnabled = traceEnabled;
-				// platform.execute (additionalArguments);
+				Type.createInstance (classRef, []);
 				
 			} catch (e:Dynamic) {
 				
@@ -97,6 +69,107 @@ class Script {
 			}
 			
 		}
+		
+	}
+	
+	
+	@:noCompletion private function processArguments ():Void {
+		
+		var catchDefine = false, catchOption = null;
+		var words = [];
+		
+		for (arg in args) {
+			
+			var equals = arg.indexOf ("=");
+			
+			if (catchOption != null) {
+				
+				if (!options.exists (catchOption)) options[catchOption] = [ arg ];
+				else options[catchOption].push (arg);
+				catchOption = null;
+				
+			} else if (arg == "-D") {
+				
+				catchDefine = true;
+				
+			} else if (equals > 0) {
+				
+				var argValue = arg.substr (equals + 1);
+				// if quotes remain on the argValue we need to strip them off
+				// otherwise the compiler really dislikes the result!
+				var r = ~/^['"](.*)['"]$/;
+				if (r.match (arg)) {
+					argValue = r.matched (1);
+				}
+				
+				if (catchDefine) {
+					
+					defines.set (arg, argValue);
+					catchDefine = false;
+					
+				} else if (arg.substr (0, 2) == "-D") {
+					
+					defines.set (arg.substr (2, equals - 2), argValue);
+					
+				} else if (arg.substr (0, 2) == "--") {
+					
+					// this won't work because it assumes there is only ever one of these.
+					//projectDefines.set (argument.substr (2, equals - 2), argValue);
+					
+					var field = arg.substr (2, equals - 2);
+					if (!options.exists (field)) options[field] = [ argValue ];
+					else options[field].push (argValue);
+					
+				} else if (arg.substr (0, 1) == "-") {
+					
+					flags.set (arg, true);
+					
+				} else {
+					
+					words.push (arg);
+					
+				}
+				
+			} else if (catchDefine) {
+				
+				defines.set (arg, "");
+				catchDefine = false;
+				
+			} else if (arg.substr (0, 2) == "-D") {
+				
+				defines.set (arg.substr (2), "");
+				
+			} else if (arg.substr (0, 1) == "-") {
+				
+				if (arg == "-dce" || arg.substr (1, 1) == "-") {
+					
+					if (arg == "--remap" || arg == "--connect" || arg == "-dce") {
+						
+						catchOption = arg;
+						
+					} else {
+						
+						if (!options.exists (arg)) options[arg] = [ "" ];
+						else options[arg].push ("");
+						
+					}
+					
+				} else {
+					
+					flags.set (arg.substr (1), true);
+					
+				}
+				
+			} else {
+				
+				words.push (arg);
+				
+			}
+			
+		}
+		
+		command = words.shift ();
+		commandArgs = words;
 		
 	}
 	

@@ -2,13 +2,13 @@ package;
 
 
 import haxe.io.Path;
-import hxp.helpers.HaxelibHelper;
-import hxp.helpers.InterpHelper;
-import hxp.helpers.LogHelper;
-import hxp.helpers.PathHelper;
-import hxp.helpers.PlatformHelper;
-import hxp.project.Haxelib;
-import hxp.project.Platform;
+import hxp.HaxelibHelper;
+import hxp.InterpHelper;
+import hxp.LogHelper;
+import hxp.PathHelper;
+import hxp.PlatformHelper;
+import hxp.Haxelib;
+import hxp.Platform;
 import sys.FileSystem;
 
 
@@ -29,7 +29,7 @@ class MainScript {
 		for (argument in arguments) {
 			
 			if (argument == "-v" || argument == "-verbose") {
-
+				
 				LogHelper.verbose = true;
 				
 			} else if (argument == "-nocolor") {
@@ -51,7 +51,7 @@ class MainScript {
 		if (words.length > 0) {
 			
 			if (words[0].indexOf (".") > -1) {
-
+				
 				command = "build";
 				scriptFile = words.shift ();
 				
@@ -73,7 +73,7 @@ class MainScript {
 		if (scriptFile == null) {
 			
 			if (words.length > 0 && words[0].indexOf (".") > -1) {
-					
+				
 				scriptFile = words.shift ();
 				
 			} else {
@@ -107,7 +107,17 @@ class MainScript {
 			
 		}
 		
-		executeScript (scriptFile, command, words.concat (otherArguments));
+		var ext = Path.extension (scriptFile).toLowerCase ();
+		
+		if (ext == "hx" || ext == "hxp") {
+			
+			executeScript (scriptFile, command, words.concat (otherArguments));
+			
+		} else {
+			
+			// TODO: Exec hxp.Project, move project init code there
+			
+		}
 		
 	}
 	
@@ -450,7 +460,7 @@ class MainScript {
 			
 		// }
 		
-		InterpHelper.run (buildArgs, runArgs);
+		InterpHelper.run (buildArgs, runArgs, dir);
 		
 	}
 	

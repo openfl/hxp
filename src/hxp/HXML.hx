@@ -1,7 +1,7 @@
 package hxp;
 
 
-import hxp.helpers.ProcessHelper;
+import hxp.ProcessHelper;
 
 @:structInit
 

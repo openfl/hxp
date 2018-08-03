@@ -5,18 +5,18 @@ import haxe.Http;
 import haxe.io.Eof;
 import haxe.io.Path;
 import haxe.zip.Reader;
-import hxp.project.Haxelib;
-import hxp.project.HXProject;
-import hxp.project.Platform;
-import hxp.project.Version;
-import hxp.helpers.CLIHelper;
-import hxp.helpers.ConfigHelper;
-import hxp.helpers.FileHelper;
-import hxp.helpers.HaxelibHelper;
-import hxp.helpers.LogHelper;
-import hxp.helpers.PathHelper;
-import hxp.helpers.PlatformHelper;
-import hxp.helpers.ProcessHelper;
+import hxp.Haxelib;
+import hxp.Project;
+import hxp.Platform;
+import hxp.Version;
+import hxp.CLIHelper;
+import hxp.ConfigHelper;
+import hxp.FileHelper;
+import hxp.HaxelibHelper;
+import hxp.LogHelper;
+import hxp.PathHelper;
+import hxp.PlatformHelper;
+import hxp.ProcessHelper;
 import sys.io.File;
 import sys.io.Process;
 import sys.FileSystem;
@@ -797,7 +797,7 @@ class PlatformSetup {
 			
 		}
 		
-		var project = HXProject.fromHaxelib (haxelib, defines, true);
+		var project = Project.fromHaxelib (haxelib, defines, true);
 		
 		if (project != null && project.haxelibs.length > 0) {
 			
@@ -1277,7 +1277,7 @@ class PlatformSetup {
 		
 		try {
 			
-			project = HXProject.fromHaxelib (new Haxelib ("openfl"));
+			project = Project.fromHaxelib (new Haxelib ("openfl"));
 			
 		} catch (e:Dynamic) {}
 		

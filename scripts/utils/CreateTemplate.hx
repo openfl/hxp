@@ -1,15 +1,15 @@
 package utils;
 
 
-import hxp.helpers.FileHelper;
-import hxp.helpers.HaxelibHelper;
-import hxp.helpers.LogHelper;
-import hxp.helpers.PathHelper;
-import hxp.project.Haxelib;
-import hxp.project.HXProject;
+import hxp.FileHelper;
+import hxp.HaxelibHelper;
+import hxp.LogHelper;
+import hxp.PathHelper;
+import hxp.Haxelib;
+import hxp.Project;
 import sys.FileSystem;
 
-@:access(hxp.project.HXProject)
+@:access(hxp.Project)
 
 
 class CreateTemplate {
@@ -82,7 +82,7 @@ class CreateTemplate {
 	}
 	
 	
-	public static function createProject (words:Array<String>, userDefines:Map<String, Dynamic>, overrides:HXProject):Void {
+	public static function createProject (words:Array<String>, userDefines:Map<String, Dynamic>, overrides:Project):Void {
 		
 		var colonIndex = words[0].indexOf (":");
 		
@@ -141,7 +141,7 @@ class CreateTemplate {
 			
 			var defines = new Map<String, Dynamic> ();
 			defines.set ("create", 1);
-			var project = HXProject.fromHaxelib (new Haxelib (projectName), defines);
+			var project = Project.fromHaxelib (new Haxelib (projectName), defines);
 			
 			if (project != null) {
 				
@@ -361,14 +361,14 @@ class CreateTemplate {
 		
 		var defines = new Map<String, Dynamic> ();
 		defines.set ("create", 1);
-		var project = HXProject.fromHaxelib (new Haxelib (projectName), defines);
+		var project = Project.fromHaxelib (new Haxelib (projectName), defines);
 		
 		if (project == null && outputPath == null) {
 			
 			outputPath = sampleName;
 			sampleName = projectName;
 			projectName = CommandLineTools.defaultLibrary;
-			project = HXProject.fromHaxelib (new Haxelib (projectName), defines);
+			project = Project.fromHaxelib (new Haxelib (projectName), defines);
 			
 		}
 		
@@ -412,7 +412,7 @@ class CreateTemplate {
 			
 			var defines = new Map<String, Dynamic> ();
 			defines.set ("create", 1);
-			var project = HXProject.fromHaxelib (new Haxelib (projectName), defines);
+			var project = Project.fromHaxelib (new Haxelib (projectName), defines);
 			
 			if (project != null) {
 				

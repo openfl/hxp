@@ -4,7 +4,7 @@
 	"license": "MIT",
 	"tags": [],
 	"description": "Cross-platform build tools for desktop, mobile, web and consoles",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"releasenote": "Initial release",
 	"contributors": [ "singmajesty" ],
 	"classPath": "src"

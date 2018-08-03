@@ -1,8 +1,8 @@
 package;
 
 
-import hxp.helpers.InterpHelper;
-import hxp.helpers.LogHelper;
+import hxp.InterpHelper;
+import hxp.LogHelper;
 
 
 class RunScript {
