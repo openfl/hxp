@@ -20,7 +20,7 @@ class MainScript {
 		
 		var words = [];
 		var otherArguments = [];
-		var command = "";
+		var command = "build";
 		var scriptFile = null;
 		
 		handleLastArgument (arguments);
@@ -60,11 +60,6 @@ class MainScript {
 				
 			}
 			
-		} else {
-			
-			displayInfo (true);
-			return;
-			
 		}
 		
 		// TODO: Handle "config" or other non-script commands
@@ -77,7 +72,7 @@ class MainScript {
 				
 			} else {
 				
-				scriptFile = findScriptFile (Sys.getCwd ());
+				scriptFile = findScriptFile (Sys.getCwd (), command);
 				
 			}
 			
@@ -102,21 +97,11 @@ class MainScript {
 				
 			}
 			
-			Log.error ("You must have a \"project.xml\" file or specify another valid project file when using the '" + command + "' command");
+			Log.error ("No valid script file found");
 			
 		}
 		
-		var ext = Path.extension (scriptFile).toLowerCase ();
-		
-		if (ext == "hx" || ext == "hxp") {
-			
-			executeScript (scriptFile, command, words.concat (otherArguments));
-			
-		} else {
-			
-			// TODO: Exec hxp.Project, move project init code there
-			
-		}
+		executeScript (scriptFile, command, words.concat (otherArguments));
 		
 	}
 	
@@ -550,32 +535,38 @@ class MainScript {
 	}
 	
 	
-	private static function findScriptFile (path:String):String {
+	private static function findScriptFile (path:String, command:String = null):String {
 		
-		if (FileSystem.exists (PathHelper.combine (path, "project.hxp"))) {
+		if (command != null && FileSystem.exists (PathHelper.combine (path, command + ".hxp"))) {
+			
+			return PathHelper.combine (path, command + ".hxp");
+			
+		} else if (command != null && FileSystem.exists (PathHelper.combine (path, command + ".hx"))) {
+			
+			return PathHelper.combine (path, command + ".hx");
+			
+		} else if (FileSystem.exists (PathHelper.combine (path, "script.hxp"))) {
+			
+			return PathHelper.combine (path, "script.hxp");
+			
+		} else if (FileSystem.exists (PathHelper.combine (path, "script.lime"))) {
+			
+			return PathHelper.combine (path, "script.lime");
+			
+		} else if (FileSystem.exists (PathHelper.combine (path, "project.hxp"))) {
 			
 			return PathHelper.combine (path, "project.hxp");
 			
-		} else if (FileSystem.exists (PathHelper.combine (path, "project.lime"))) {
+		} else if (FileSystem.exists (PathHelper.combine (path, "project.hx"))) {
 			
-			return PathHelper.combine (path, "project.lime");
-			
-		} else if (FileSystem.exists (PathHelper.combine (path, "project.xml"))) {
-			
-			return PathHelper.combine (path, "project.xml");
-			
-		} else if (FileSystem.exists (PathHelper.combine (path, "project.nmml"))) {
-			
-			return PathHelper.combine (path, "project.nmml");
+			return PathHelper.combine (path, "project.hx");
 			
 		} else {
 			
 			var files = FileSystem.readDirectory (path);
 			var matches = new Map<String, Array<String>> ();
 			matches.set ("hxp", []);
-			matches.set ("lime", []);
-			matches.set ("nmml", []);
-			matches.set ("xml", []);
+			matches.set ("hx", []);
 			
 			for (file in files) {
 				
@@ -585,7 +576,7 @@ class MainScript {
 					
 					var extension = Path.extension (file);
 					
-					if ((extension == "lime" && file != "include.lime") || (extension == "nmml" && file != "include.nmml") || (extension == "xml" && file != "include.xml") || extension == "hxp") {
+					if (matches.exists (extension)) {
 						
 						matches.get (extension).push (path);
 						
@@ -601,21 +592,13 @@ class MainScript {
 				
 			}
 			
-			if (matches.get ("lime").length > 0) {
+			if (matches.get ("hx").length == 1) {
 				
-				return matches.get ("lime")[0];
+				return matches.get ("hx")[0];
 				
-			}
-			
-			if (matches.get ("nmml").length > 0) {
+			} else if (matches.get ("hx").length > 1) {
 				
-				return matches.get ("nmml")[0];
-				
-			}
-			
-			if (matches.get ("xml").length > 0) {
-				
-				return matches.get ("xml")[0];
+				Log.error ("Please use 'hxp filename.hx' to specify which script you wish to run");
 				
 			}
 			
