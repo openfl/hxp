@@ -1,7 +1,7 @@
 package hxp;
 
 
-class ArrayHelper {
+class ArrayTools {
 	
 	
 	public static function addUnique<T> (array:Array<T>, value:T):T {
@@ -94,7 +94,7 @@ class ArrayHelper {
 	}
 	
 	
-	public static function containsValue<T> (array:Array< T > , value:T):Bool {
+	public static function containsValue<T> (array:Array<T>, value:T):Bool {
 		
 		for (arrayValue in array) {
 			

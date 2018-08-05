@@ -12,15 +12,15 @@ class NDLL {
 	public var name:String;
 	public var path:String;
 	public var registerStatics:Bool;
+	public var staticLink:Null<Bool>;
 	public var subdirectory:String;
-	public var type:NDLLType;
 
 
-	public function new (name:String, haxelib:Haxelib = null, type:NDLLType = null, registerStatics:Bool = true) {
+	public function new (name:String, haxelib:Haxelib = null, staticLink:Null<Bool> = null, registerStatics:Bool = true) {
 
 		this.name = name;
 		this.haxelib = haxelib;
-		this.type = type == null ? NDLLType.AUTO : type;
+		this.staticLink = staticLink;
 		this.registerStatics = registerStatics;
 
 	}
@@ -28,12 +28,108 @@ class NDLL {
 
 	public function clone ():NDLL {
 
-		var ndll = new NDLL (name, haxelib, type, registerStatics);
+		var ndll = new NDLL (name, haxelib, staticLink, registerStatics);
 		ndll.path = path;
 		ndll.extensionPath = extensionPath;
 		ndll.subdirectory = subdirectory;
 		return ndll;
 
+	}
+	
+	
+	public static function getLibraryPath (ndll:NDLL, directoryName:String, namePrefix:String = "", nameSuffix:String = ".ndll", allowDebug:Bool = false):String {
+		
+		var usingDebug = false;
+		var path = "";
+		
+		if (allowDebug) {
+			
+			path = searchForLibrary (ndll, directoryName, namePrefix + ndll.name + "-debug" + nameSuffix);
+			usingDebug = FileSystem.exists (path);
+			
+		}
+		
+		if (!usingDebug) {
+			
+			path = searchForLibrary (ndll, directoryName, namePrefix + ndll.name + nameSuffix);
+			
+		}
+		
+		return path;
+		
+	}
+	
+	
+	private static function searchForLibrary (ndll:NDLL, directoryName:String, filename:String):String {
+		
+		if (ndll.path != null && ndll.path != "") {
+			
+			return ndll.path;
+			
+		} else if (ndll.haxelib == null) {
+			
+			if (ndll.extensionPath != null && ndll.extensionPath != "") {
+				
+				var subdirectory = "ndll/";
+				
+				if (ndll.subdirectory != null) {
+					
+					if (ndll.subdirectory != "") {
+						
+						subdirectory = ndll.subdirectory + "/";
+						
+					} else {
+						
+						subdirectory = "";
+						
+					}
+					
+				}
+				
+				return combine (ndll.extensionPath, subdirectory + directoryName + "/" + filename);
+				
+			} else {
+				
+				return filename;
+				
+			}
+			
+		} else if (ndll.haxelib.name == "hxcpp") {
+			
+			var extension = Path.extension (filename);
+			
+			if (extension == "a" || extension == "lib") {
+				
+				return combine (getHaxelib (ndll.haxelib, true), "lib/" + directoryName + "/" + filename);
+				
+			} else {
+				
+				return combine (getHaxelib (ndll.haxelib, true), "bin/" + directoryName + "/" + filename);
+				
+			}
+			
+		} else {
+			
+			var subdirectory = "ndll/";
+			
+			if (ndll.subdirectory != null) {
+				
+				if (ndll.subdirectory != "") {
+					
+					subdirectory = ndll.subdirectory + "/";
+					
+				} else {
+					
+					subdirectory = "";
+					
+				}
+				
+			}
+			
+			return combine (getHaxelib (ndll.haxelib, true), subdirectory + directoryName + "/" + filename);
+			
+		}
+		
 	}
 
 

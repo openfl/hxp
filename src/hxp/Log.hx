@@ -2,7 +2,7 @@ package hxp;
 
 
 import haxe.io.Bytes;
-import hxp.PlatformHelper;
+import hxp.System;
 #if (lime && lime_cffi && !macro)
 import lime.system.CFFI;
 #end
@@ -103,7 +103,7 @@ class Log {
 		
 		if (colorSupported == null) {
 			
-			if (PlatformHelper.hostPlatform != WINDOWS) {
+			if (System.hostPlatform != WINDOWS) {
 				
 				var result = -1;
 				

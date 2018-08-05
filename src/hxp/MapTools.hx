@@ -1,15 +1,15 @@
 package hxp;
 
 
-import haxe.ds.StringMap;
+import haxe.Constraints.IMap;
 
 
-class StringMapHelper {
+class MapTools {
 	
 	
-	public static function copy <T> (source:StringMap<T>):StringMap<T> {
+	@:generic public static function copy<K, V> (source:IMap<K, V>):IMap<K, V> {
 		
-		var target = new StringMap<T> ();
+		var target = new Map<K, V> ();
 		
 		for (key in source.keys ()) {
 			
@@ -22,7 +22,7 @@ class StringMapHelper {
 	}
 	
 	
-	public static function copyKeys <T> (source:StringMap<T>, target:StringMap<T>):Void {
+	@:generic public static function copyKeys<K, V> (source:IMap<K, V>, target:IMap<K, V>):Void {
 		
 		for (key in source.keys ()) {
 			
@@ -33,7 +33,7 @@ class StringMapHelper {
 	}
 	
 	
-	public static function copyUniqueKeys <T> (source:StringMap<T>, target:StringMap<T>):Void {
+	@:generic public static function copyUniqueKeys<K, V> (source:IMap<K, V>, target:IMap<K, V>):Void {
 		
 		for (key in source.keys ()) {
 			

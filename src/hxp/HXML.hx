@@ -1,7 +1,7 @@
 package hxp;
 
 
-import hxp.ProcessHelper;
+import hxp.System;
 
 @:structInit
 
@@ -316,7 +316,7 @@ abstract HXML(Array<String>) {
 	**/
 	public function build ():Int {
 		
-		return ProcessHelper.runCommand ("", "haxe " + this.join (" "), null);
+		return System.runCommand ("", "haxe " + this.join (" "), null);
 		
 	}
 	

@@ -5,7 +5,7 @@ import haxe.ds.IntMap;
 import haxe.ds.StringMap;
 
 
-@:generic class ObjectHelper {
+@:generic class ObjectTools {
 	
 	
 	public static function copyFields<T> (source:T, destination:T):T {

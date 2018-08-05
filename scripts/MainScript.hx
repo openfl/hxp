@@ -1,13 +1,10 @@
 package;
 
 
-import haxe.io.Path;
-import hxp.HaxelibHelper;
-import hxp.InterpHelper;
 import hxp.Log;
-import hxp.PathHelper;
-import hxp.PlatformHelper;
 import hxp.Haxelib;
+import hxp.Path;
+import hxp.System;
 import sys.FileSystem;
 
 
@@ -388,7 +385,7 @@ class MainScript {
 	
 	private static function displayInfo (showHint:Bool = false):Void {
 		
-		if (PlatformHelper.hostPlatform == WINDOWS) {
+		if (System.hostPlatform == WINDOWS) {
 			
 			Log.println ("");
 			
@@ -429,7 +426,7 @@ class MainScript {
 		className = className.substr (0, 1).toUpperCase () + className.substr (1);
 		
 		var version = "0.0.0";
-		var buildArgs = [ className, "-main", "hxp.Script", "-D", "hxp="+ version, "-cp", PathHelper.combine (HaxelibHelper.getPath (new Haxelib ("hxp")), "src") ];
+		var buildArgs = [ className, "-main", "hxp.Script", "-D", "hxp="+ version, "-cp", Path.combine (Haxelib.getPath (new Haxelib ("hxp")), "src") ];
 		var runArgs = [ className, command == "" ? "build" : command ];
 		runArgs = runArgs.concat (arguments);
 		
@@ -444,7 +441,7 @@ class MainScript {
 			
 		// }
 		
-		InterpHelper.run (buildArgs, runArgs, dir);
+		System.runScript (path, buildArgs, runArgs, dir);
 		
 	}
 	
@@ -480,7 +477,7 @@ class MainScript {
 			lastArgument = new Path (lastArgument).toString ();
 			var isRootDirectory = false;
 			
-			if (PlatformHelper.hostPlatform == WINDOWS) {
+			if (System.hostPlatform == WINDOWS) {
 				
 				isRootDirectory = (lastArgument.length == 3 && lastArgument.charAt (1) == ":" && (lastArgument.charAt (2) == "/" || lastArgument.charAt (2) == "\\"));
 				
@@ -492,7 +489,7 @@ class MainScript {
 			
 			if (FileSystem.exists (lastArgument) && FileSystem.isDirectory (lastArgument)) {
 				
-				// HaxelibHelper.setOverridePath (new Haxelib ("lime-tools"), PathHelper.combine (Sys.getCwd (), "tools"));
+				// Haxelib.setOverridePath (new Haxelib ("lime-tools"), Path.combine (Sys.getCwd (), "tools"));
 				
 				Sys.setCwd (lastArgument);
 				runFromHaxelib = true;
@@ -503,7 +500,7 @@ class MainScript {
 				
 			}
 			
-			// HaxelibHelper.workingDirectory = Sys.getCwd ();
+			// Haxelib.workingDirectory = Sys.getCwd ();
 			
 		}
 		
@@ -515,7 +512,7 @@ class MainScript {
 				
 			// 	if (FileSystem.exists ("tools.n")) {
 					
-			// 		path = PathHelper.combine (Sys.getCwd (), "../");
+			// 		path = Path.combine (Sys.getCwd (), "../");
 					
 			// 	} else if (FileSystem.exists ("run.n")) {
 					
@@ -527,8 +524,8 @@ class MainScript {
 					
 			// 	}
 				
-			// 	HaxelibHelper.setOverridePath (new Haxelib ("lime"), path);
-			// 	HaxelibHelper.setOverridePath (new Haxelib ("lime-tools"), PathHelper.combine (path, "tools"));
+			// 	Haxelib.setOverridePath (new Haxelib ("lime"), path);
+			// 	Haxelib.setOverridePath (new Haxelib ("lime-tools"), Path.combine (path, "tools"));
 			
 		}
 		
@@ -537,29 +534,29 @@ class MainScript {
 	
 	private static function findScriptFile (path:String, command:String = null):String {
 		
-		if (command != null && FileSystem.exists (PathHelper.combine (path, command + ".hxp"))) {
+		if (command != null && FileSystem.exists (Path.combine (path, command + ".hxp"))) {
 			
-			return PathHelper.combine (path, command + ".hxp");
+			return Path.combine (path, command + ".hxp");
 			
-		} else if (command != null && FileSystem.exists (PathHelper.combine (path, command + ".hx"))) {
+		} else if (command != null && FileSystem.exists (Path.combine (path, command + ".hx"))) {
 			
-			return PathHelper.combine (path, command + ".hx");
+			return Path.combine (path, command + ".hx");
 			
-		} else if (FileSystem.exists (PathHelper.combine (path, "script.hxp"))) {
+		} else if (FileSystem.exists (Path.combine (path, "script.hxp"))) {
 			
-			return PathHelper.combine (path, "script.hxp");
+			return Path.combine (path, "script.hxp");
 			
-		} else if (FileSystem.exists (PathHelper.combine (path, "script.lime"))) {
+		} else if (FileSystem.exists (Path.combine (path, "script.lime"))) {
 			
-			return PathHelper.combine (path, "script.lime");
+			return Path.combine (path, "script.lime");
 			
-		} else if (FileSystem.exists (PathHelper.combine (path, "project.hxp"))) {
+		} else if (FileSystem.exists (Path.combine (path, "project.hxp"))) {
 			
-			return PathHelper.combine (path, "project.hxp");
+			return Path.combine (path, "project.hxp");
 			
-		} else if (FileSystem.exists (PathHelper.combine (path, "project.hx"))) {
+		} else if (FileSystem.exists (Path.combine (path, "project.hx"))) {
 			
-			return PathHelper.combine (path, "project.hx");
+			return Path.combine (path, "project.hx");
 			
 		} else {
 			
@@ -570,7 +567,7 @@ class MainScript {
 			
 			for (file in files) {
 				
-				var path = PathHelper.combine (path, file);
+				var path = Path.combine (path, file);
 				
 				if (FileSystem.exists (path) && !FileSystem.isDirectory (path)) {
 					

@@ -3,10 +3,13 @@ package hxp;
 
 import haxe.crypto.BaseCode;
 import haxe.io.Bytes;
+import StringTools in HaxeStringTools;
 
 
-class StringHelper {
+class StringTools extends HaxeStringTools {
 	
+	
+	public static var winMetaCharacters (get, set):Array<Int>;
 	
 	private static var seedNumber = 0;
 	private static var base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -49,6 +52,20 @@ class StringHelper {
 		}
 		
 		return base64Encoder.encodeBytes (bytes).toString () + extension;
+		
+	}
+	
+	
+	public static function endsWith (s:String, end:String):Bool {
+		
+		return HaxeStringTools.endsWith (s, end);
+		
+	}
+	
+	
+	public static function fastCodeAt (s:String, index:Int):Int {
+		
+		return HaxeStringTools.fastCodeAt (s, index);
 		
 	}
 	
@@ -270,7 +287,6 @@ class StringHelper {
 	}
 	
 	
-	
 	public static function getFlatName (name:String):String {
 		
 		var chars = name.toLowerCase ();
@@ -335,9 +351,133 @@ class StringHelper {
 	}
 	
 	
+	public static function hex (n:Int, ?digits:Int):String {
+		
+		return HaxeStringTools.hex (n, digits);
+		
+	}
+	
+	
+	public static function htmlEscape (s:String, ?quotes:Bool):String {
+		
+		return HaxeStringTools.htmlEscape (s, quotes);
+		
+	}
+	
+	
+	public static function htmlUnescape (s:String):String {
+		
+		return HaxeStringTools.htmlUnescape (s);
+		
+	}
+	
+	
+	@:noUsing public static function isEof (c:Int):Bool {
+		
+		return HaxeStringTools.isEof (c);
+		
+	}
+
+	public static function isSpace (s:String, pos:Int):Bool {
+		
+		return HaxeStringTools.isSpace (s, pos);
+		
+	}
+
+	public static function lpad (s:String, c:String, l:Int):String {
+		
+		return HaxeStringTools.lpad (s, c, l);
+		
+	}
+
+	public static function ltrim (s:String):String {
+		
+		return HaxeStringTools.ltrim (s);
+		
+	}
+
+	public static function quoteUnixArg (argument:String):String {
+		
+		return HaxeStringTools.quoteUnixArg (argument);
+		
+	}
+
+	public static function quoteWinArg (argument:String, escapeMetaCharacters:Bool):String {
+		
+		return HaxeStringTools.quoteWinArg (argument, escapeMetaCharacters);
+		
+	}
+
+	public static function replace (s:String, sub:String, by:String):String {
+		
+		return HaxeStringTools.replace (s, sub, by);
+		
+	}
+
+	public static function rpad (s:String, c:String, l:Int):String {
+		
+		return HaxeStringTools.rpad (s, c, l);
+		
+	}
+
+	public static function rtrim (s:String):String {
+		
+		return HaxeStringTools.rtrim (s);
+		
+	}
+
+	public static function startsWith (s:String, start:String):Bool {
+		
+		return HaxeStringTools.startsWith (s, start);
+		
+	}
+	
+	
+	public static function trim (s:String):String {
+		
+		return HaxeStringTools.trim (s);
+		
+	}
+	
+	
 	public static function underline (string:String, character = "="):String {
 		
 		return string + "\n" + StringTools.lpad ("", character, string.length);
+		
+	}
+	
+	
+	public static function urlDecode (s:String):String {
+		
+		return HaxeStringTools.urlDecode (s);
+		
+	}
+	
+	
+	public static function urlEncode (s:String):String {
+		
+		return HaxeStringTools.urlEncode (s);
+		
+	}
+	
+	
+	
+	
+	// Get & Set Methods
+	
+	
+	
+	
+	private static function get_winMetaCharacters ():Array<Int> {
+		
+		return HaxeStringTools.winMetaCharacters;
+		
+	}
+	
+	
+	private static function set_winMetaCharacters (value:Array<Int>):Array<Int> {
+		
+		return HaxeStringTools.winMetaCharacters = value;
 		
 	}
 	
