@@ -379,6 +379,13 @@ abstract HXML(Array<String>) {
 	}
 	
 	
+	public static function fromFile (path:String):HXML {
+		
+		
+		
+	}
+	
+	
 	@:from public static function fromString (hxml:String):HXML {
 		
 		var value = new Array<String> ();

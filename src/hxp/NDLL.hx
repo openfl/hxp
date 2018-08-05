@@ -86,7 +86,7 @@ class NDLL {
 					
 				}
 				
-				return combine (ndll.extensionPath, subdirectory + directoryName + "/" + filename);
+				return Path.combine (ndll.extensionPath, subdirectory + directoryName + "/" + filename);
 				
 			} else {
 				
@@ -100,11 +100,11 @@ class NDLL {
 			
 			if (extension == "a" || extension == "lib") {
 				
-				return combine (getHaxelib (ndll.haxelib, true), "lib/" + directoryName + "/" + filename);
+				return Path.combine (Haxelib.getPath (ndll.haxelib, true), "lib/" + directoryName + "/" + filename);
 				
 			} else {
 				
-				return combine (getHaxelib (ndll.haxelib, true), "bin/" + directoryName + "/" + filename);
+				return Path.combine (Haxelib.getPath (ndll.haxelib, true), "bin/" + directoryName + "/" + filename);
 				
 			}
 			
@@ -126,7 +126,7 @@ class NDLL {
 				
 			}
 			
-			return combine (getHaxelib (ndll.haxelib, true), subdirectory + directoryName + "/" + filename);
+			return Path.combine (Haxelib.getPath (ndll.haxelib, true), subdirectory + directoryName + "/" + filename);
 			
 		}
 		
