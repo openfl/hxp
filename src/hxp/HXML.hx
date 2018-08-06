@@ -2,6 +2,8 @@ package hxp;
 
 
 import hxp.System;
+import sys.io.File;
+import sys.FileSystem;
 
 @:structInit
 
@@ -381,7 +383,13 @@ abstract HXML(Array<String>) {
 	
 	public static function fromFile (path:String):HXML {
 		
+		if (FileSystem.exists (path)) {
+			
+			return HXML.fromString (File.getContent (path));
+			
+		}
 		
+		return null;
 		
 	}
 	
