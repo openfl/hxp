@@ -10,6 +10,7 @@ class Script {
 	
 	
 	@:noCompletion private static var __args:Array<String>;
+	@:noCompletion private static var __workingDirectory:String;
 	
 	public var args:Array<String>;
 	public var command:String;
@@ -17,6 +18,7 @@ class Script {
 	public var defines:Map<String, String>;
 	public var flags:Map<String, Bool>;
 	public var options:Map<String, Array<String>>;
+	public var workingDirectory:String;
 	
 	
 	public function new () {
@@ -26,6 +28,13 @@ class Script {
 			__args = null;
 		} else {
 			args = new Array ();
+		}
+		
+		if (__workingDirectory != null) {
+			workingDirectory = __workingDirectory;
+			__workingDirectory = null;
+		} else {
+			workingDirectory = Sys.getCwd ();
 		}
 		
 		command = "";
@@ -42,7 +51,8 @@ class Script {
 	public static function main () {
 		
 		var args = Sys.args ();
-		var className = args.shift ();
+		__workingDirectory = args.pop ();
+		var className = args.pop ();
 		__args = args;
 		
 		for (arg in args) {

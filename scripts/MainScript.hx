@@ -172,11 +172,15 @@ class MainScript {
 		
 		var version = "0.0.0";
 		var buildArgs = [ className, "-main", "hxp.Script", "-D", "hxp="+ version, "-cp", Path.combine (Haxelib.getPath (new Haxelib ("hxp")), "src") ];
-		var runArgs = [ className, command == "" ? "build" : command ];
+		var runArgs = [ command == "" ? "build" : command ];
 		runArgs = runArgs.concat (arguments);
 		
 		if (Log.verbose) runArgs.push ("-verbose");
 		if (!Log.enableColor) runArgs.push ("-nocolor");
+		
+		runArgs.push (className);
+		runArgs.push (Sys.getCwd ());
+		
 		// if (!traceEnabled) runArgs.push ("-notrace");
 		
 		// if (additionalArguments.length > 0) {
