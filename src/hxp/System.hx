@@ -91,6 +91,12 @@ class System {
 	
 	public static function compress (path:String, targetPath:String = ""):Void {
 		
+		#if nodejs
+		
+		throw "Unimplemented File.write";
+		
+		#else
+		
 		if (targetPath == "") {
 			
 			targetPath = path;
@@ -146,6 +152,8 @@ class System {
 			runCommand (path, "zip", [ "-r", Path.relocatePath (targetPath, path), "./" ]);
 			
 		}
+		
+		#end
 		
 	}
 	
@@ -1376,7 +1384,7 @@ class System {
 		
 		#else
 		
-		var tempDirectory = Path.getTemporaryDirectory ();
+		var tempDirectory = System.getTemporaryDirectory ();
 		var nekoOutput = Path.combine (tempDirectory, "script.n");
 		
 		buildArgs = buildArgs.concat ([ "-D", "hxp-interp", "-neko", nekoOutput ]);
