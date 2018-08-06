@@ -104,7 +104,7 @@ class PlatformTools {
 
 		});*/
 
-		var args = [ server, Path.directory (path), "-p", Std.string (port), "-c-1", "--cors" ];
+		var args = [ server, path, "-p", Std.string (port), "-c-1", "--cors" ];
 
 		if (!openBrowser && !Log.verbose) {
 
