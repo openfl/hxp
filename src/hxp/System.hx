@@ -1348,54 +1348,58 @@ class System {
 	
 	public static function runScript (path:String, buildArgs:Array<String>, runArgs:Array<String> = null, workingDirectory = null):Int {
 		
-		// TODO: Support @:compiler() meta for additional arguments, determined by the script?
+		var tempDirectory = System.getTemporaryDirectory ();
+		System.mkdir (tempDirectory);
 		
-		// var input = File.read (classFile, false);
-		// var tag = "@:compiler(";
+		var script = Path.withoutExtension (Path.withoutDirectory (path));
+		script = script.substr (0, 1).toUpperCase () + script.substr (1);
+		var scriptFile = Path.combine (tempDirectory, script + ".hx");
 		
-		// try {
+		var sourcePath = Path.directory (path);
+		var args = [ "-cp", tempDirectory, "-cp", Path.tryFullPath (sourcePath), script ].concat (buildArgs);
+		var input = File.read (path, false);
+		var tag = "@:compiler(";
+		
+		try {
 			
-		// 	while (true) {
+			while (true) {
 				
-		// 		var line = input.readLine ();
+				var line = input.readLine ();
 				
-		// 		if (StringTools.startsWith (line, tag)) {
+				if (StringTools.startsWith (line, tag)) {
 					
-		// 			args.push (line.substring (tag.length + 1, line.length - 2));
+					args.push (line.substring (tag.length + 1, line.length - 2));
 					
-		// 		}
+				}
 				
-		// 	}
+			}
 			
-		// } catch (ex:Eof) {}
+		} catch (ex:Eof) {}
 		
-		// input.close ();
+		input.close ();
 		
-		// TODO: Make this dependent on runtime Haxe version?
+		System.copyFile (path, scriptFile);
 		
 		#if (haxe_ver >= "4.0.0")
 		
-		buildArgs = buildArgs.concat ([ "-D", "hxp-interp", "--interp" ]);
+		args = args.concat ([ "-D", "hxp-interp", "--interp" ]);
 		if (runArgs != null) {
-			buildArgs.push ("--");
-			buildArgs = buildArgs.concat (runArgs);
+			args.push ("--");
+			args = args.concat (runArgs);
 		}
-		return runCommand (workingDirectory, "haxe", buildArgs);
+		return runCommand (workingDirectory, "haxe", args);
 		
 		#else
 		
-		var tempDirectory = System.getTemporaryDirectory ();
 		var nekoOutput = Path.combine (tempDirectory, "script.n");
 		
-		buildArgs = buildArgs.concat ([ "-D", "hxp-interp", "-neko", nekoOutput ]);
-		var result = runCommand (workingDirectory, "haxe", buildArgs);
+		args = args.concat ([ "-D", "hxp-interp", "-neko", nekoOutput ]);
+		var result = runCommand (workingDirectory, "haxe", args);
 		
 		if (result != 0) return result;
 		
 		if (FileSystem.exists (nekoOutput)) {
-			
 			result = runCommand (workingDirectory, "neko", [ nekoOutput ].concat (runArgs != null ? runArgs : []));
-			
 		}
 		
 		return result;
