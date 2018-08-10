@@ -25,7 +25,7 @@ class Script {
 }
 ```
 
-### Running the Script
+### Running a Script
 
 `hxp` looks for a script file in the current directory, or optionally, you can pass a directory or script path
 
@@ -33,6 +33,15 @@ class Script {
 cd path/with/script && hxp
 hxp script.hx
 hxp path/with/script
+```
+
+If you prefer to use multiple script files, HXP will prefer files which match the command name you are executing.
+
+For example:
+
+```bash
+hxp build  # prefers "build.hx"
+hxp run    # prefers "run.hx"
 ```
 
 ## Example with Arguments
