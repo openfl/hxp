@@ -5,6 +5,7 @@ import hxp.Log;
 import hxp.Haxelib;
 import hxp.Path;
 import hxp.System;
+import sys.io.File;
 import sys.FileSystem;
 
 
@@ -38,6 +39,11 @@ class MainScript {
 				
 				Log.enableColor = false;
 				
+			} else if (argument == "--install-hxp-alias") {
+				
+				installHXPAlias ();
+				otherArguments.push (argument);
+				
 			} else if (!StringTools.startsWith (argument, "-")) {
 				
 				words.push (argument);
@@ -52,32 +58,46 @@ class MainScript {
 		
 		if (words.length > 0) {
 			
-			if (words[0].indexOf (".") > -1) {
+			var firstArgument = words.shift ();
+			var fileExists = false;
+			
+			try { if (FileSystem.exists (firstArgument)) fileExists = true; } catch (e:Dynamic) {}
+			
+			if (fileExists) {
 				
-				command = "build";
-				scriptFile = words.shift ();
+				if (FileSystem.isDirectory (firstArgument)) {
+					
+					scriptFile = findScriptFile (firstArgument);
+					
+				} else {
+					
+					scriptFile = firstArgument;
+					
+				}
 				
-			} else {
-				
-				command = words.shift ();
+				if (scriptFile != null) {
+					
+					if (words.length > 0) {
+						
+						command = words.shift ();
+						
+					} else {
+						
+						command = "build";
+						
+					}
+					
+				}
 				
 			}
+			
+			if (scriptFile == null) command = firstArgument;
 			
 		}
 		
-		// TODO: Handle "config" or other non-script commands
-		
 		if (scriptFile == null) {
 			
-			if (words.length > 0 && words[0].indexOf (".") > -1) {
-				
-				scriptFile = words.shift ();
-				
-			} else {
-				
-				scriptFile = findScriptFile (Sys.getCwd (), command);
-				
-			}
+			scriptFile = findScriptFile (Sys.getCwd (), command);
 			
 		}
 		
@@ -86,6 +106,10 @@ class MainScript {
 			if (command == "help" || otherArguments.indexOf ("-h") != -1 || otherArguments.indexOf ("-help") != -1 || otherArguments.indexOf ("--help") != -1) {
 				
 				displayHelp ();
+				return;
+				
+			} else if (otherArguments.indexOf ("--install-hxp-alias") > -1) {
+				
 				return;
 				
 			} else {
@@ -108,7 +132,7 @@ class MainScript {
 		displayInfo (true);
 		
 		Log.println ("");
-		Log.println (" " + Log.accentColor + "Usage:\x1b[0m \x1b[1mhxp\x1b[0m \x1b[3;37m(command) (script)\x1b[0m \x1b[3;37m[arguments...]\x1b[0m");
+		Log.println (" " + Log.accentColor + "Usage:\x1b[0m \x1b[1mhxp\x1b[0m \x1b[3;37m(script) (command)\x1b[0m \x1b[3;37m[arguments...]\x1b[0m");
 		
 		Log.println ("");
 		Log.println (" " + Log.accentColor + "Flags:" + Log.resetColor);
@@ -117,6 +141,13 @@ class MainScript {
 		Log.println ("  \x1b[1m-v\x1b[0;3m/\x1b[0m\x1b[1m-verbose\x1b[0m -- Print additional information (when available)");
 		Log.println ("  \x1b[1m-h\x1b[0m/\x1b[0m\x1b[1m-help\x1b[0m -- Display help information (if available)");
 		Log.println ("  \x1b[1m-nocolor\x1b[0m -- Disable ANSI format codes in output");
+		
+		Log.println ("");
+		Log.println (" " + Log.accentColor + "Options:" + Log.resetColor);
+		Log.println ("");
+		
+		Log.println ("  \x1b[1m--install-hxp-alias\x1b[0m -- Installs the 'hxp' command alias");
+		
 		
 	}
 	
@@ -191,6 +222,76 @@ class MainScript {
 		// }
 		
 		System.runScript (path, buildArgs, runArgs, dir);
+		
+	}
+	
+	
+	private static function findScriptFile (path:String, command:String = null):String {
+		
+		if (command != null && FileSystem.exists (Path.combine (path, command + ".hxp"))) {
+			
+			return Path.combine (path, command + ".hxp");
+			
+		} else if (command != null && FileSystem.exists (Path.combine (path, command + ".hx"))) {
+			
+			return Path.combine (path, command + ".hx");
+			
+		} else if (FileSystem.exists (Path.combine (path, "script.hxp"))) {
+			
+			return Path.combine (path, "script.hxp");
+			
+		} else if (FileSystem.exists (Path.combine (path, "project.hxp"))) {
+			
+			return Path.combine (path, "project.hxp");
+			
+		} else if (FileSystem.exists (Path.combine (path, "project.hx"))) {
+			
+			return Path.combine (path, "project.hx");
+			
+		} else {
+			
+			var files = FileSystem.readDirectory (path);
+			var matches = new Map<String, Array<String>> ();
+			matches.set ("hxp", []);
+			matches.set ("hx", []);
+			
+			for (file in files) {
+				
+				var path = Path.combine (path, file);
+				
+				if (FileSystem.exists (path) && !FileSystem.isDirectory (path)) {
+					
+					var extension = Path.extension (file);
+					
+					if (matches.exists (extension)) {
+						
+						matches.get (extension).push (path);
+						
+					}
+					
+				}
+				
+			}
+			
+			if (matches.get ("hxp").length > 0) {
+				
+				return matches.get ("hxp")[0];
+				
+			}
+			
+			if (matches.get ("hx").length == 1) {
+				
+				return matches.get ("hx")[0];
+				
+			} else if (matches.get ("hx").length > 1) {
+				
+				Log.error ("Please use 'hxp filename.hx' to specify which script you wish to run");
+				
+			}
+			
+		}
+		
+		return null;
 		
 	}
 	
@@ -279,76 +380,54 @@ class MainScript {
 	}
 	
 	
-	private static function findScriptFile (path:String, command:String = null):String {
+	private static function installHXPAlias ():Void {
 		
-		if (command != null && FileSystem.exists (Path.combine (path, command + ".hxp"))) {
+		var haxePath = Sys.getEnv ("HAXEPATH");
+		
+		if (System.hostPlatform == WINDOWS) {
 			
-			return Path.combine (path, command + ".hxp");
+			if (haxePath == null || haxePath == "") {
+				
+				haxePath = "C:\\HaxeToolkit\\haxe\\";
+				
+			}
 			
-		} else if (command != null && FileSystem.exists (Path.combine (path, command + ".hx"))) {
-			
-			return Path.combine (path, command + ".hx");
-			
-		} else if (FileSystem.exists (Path.combine (path, "script.hxp"))) {
-			
-			return Path.combine (path, "script.hxp");
-			
-		} else if (FileSystem.exists (Path.combine (path, "script.lime"))) {
-			
-			return Path.combine (path, "script.lime");
-			
-		} else if (FileSystem.exists (Path.combine (path, "project.hxp"))) {
-			
-			return Path.combine (path, "project.hxp");
-			
-		} else if (FileSystem.exists (Path.combine (path, "project.hx"))) {
-			
-			return Path.combine (path, "project.hx");
+			try { File.copy (Haxelib.getPath (new Haxelib ("hxp")) + "\\bin\\hxp.exe", haxePath + "\\hxp.exe"); } catch (e:Dynamic) {}
+			try { File.copy (Haxelib.getPath (new Haxelib ("hxp")) + "\\bin\\hxp.sh", haxePath + "\\hxp"); } catch (e:Dynamic) {}
 			
 		} else {
 			
-			var files = FileSystem.readDirectory (path);
-			var matches = new Map<String, Array<String>> ();
-			matches.set ("hxp", []);
-			matches.set ("hx", []);
-			
-			for (file in files) {
+			if (haxePath == null || haxePath == "") {
 				
-				var path = Path.combine (path, file);
-				
-				if (FileSystem.exists (path) && !FileSystem.isDirectory (path)) {
-					
-					var extension = Path.extension (file);
-					
-					if (matches.exists (extension)) {
-						
-						matches.get (extension).push (path);
-						
-					}
-					
-				}
+				haxePath = "/usr/lib/haxe";
 				
 			}
 			
-			if (matches.get ("hxp").length > 0) {
-				
-				return matches.get ("hxp")[0];
-				
-			}
+			var installedCommand = false;
 			
-			if (matches.get ("hx").length == 1) {
+			try {
 				
-				return matches.get ("hx")[0];
+				System.runCommand ("", "sudo", [ "cp", "-f", Haxelib.getPath (new Haxelib ("hxp")) + "/bin/hxp.sh", "/usr/local/bin/hxp" ], false);
+				System.runCommand ("", "sudo", [ "chmod", "755", "/usr/local/bin/hxp" ], false);
+				installedCommand = true;
 				
-			} else if (matches.get ("hx").length > 1) {
+			} catch (e:Dynamic) {}
+			
+			if (!installedCommand) {
 				
-				Log.error ("Please use 'hxp filename.hx' to specify which script you wish to run");
+				Sys.println ("");
+				Sys.println ("To finish setup, we recommend you either...");
+				Sys.println ("");
+				Sys.println (" a) Manually add an alias called \"hxp\" to run \"haxelib run hxp\"");
+				Sys.println (" b) Run the following commands:");
+				Sys.println ("");
+				Sys.println ("sudo cp \"" + Path.combine (Haxelib.getPath (new Haxelib ("hxp")), "bin/hxp.sh") + "\" /usr/local/bin/hxp");
+				Sys.println ("sudo chmod 755 /usr/local/bin/hxp");
+				Sys.println ("");
 				
 			}
 			
 		}
-		
-		return null;
 		
 	}
 	
