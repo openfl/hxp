@@ -21,7 +21,7 @@ class MainScript {
 		
 		var words = [];
 		var otherArguments = [];
-		var command = "build";
+		var command = null;
 		var scriptFile = null;
 		
 		version = Haxelib.getPathVersion ("");
@@ -80,10 +80,6 @@ class MainScript {
 					if (words.length > 0) {
 						
 						command = words.shift ();
-						
-					} else {
-						
-						command = "build";
 						
 					}
 					
@@ -203,7 +199,7 @@ class MainScript {
 		
 		var version = "0.0.0";
 		var buildArgs = [ className, "-main", "hxp.Script", "-D", "hxp="+ version, "-cp", Path.combine (Haxelib.getPath (new Haxelib ("hxp")), "src") ];
-		var runArgs = [ command == "" ? "build" : command ];
+		var runArgs = [ (command == null || command == "") ? "default" : command ];
 		runArgs = runArgs.concat (arguments);
 		
 		if (Log.verbose) runArgs.push ("-verbose");
@@ -211,15 +207,6 @@ class MainScript {
 		
 		runArgs.push (className);
 		runArgs.push (Sys.getCwd ());
-		
-		// if (!traceEnabled) runArgs.push ("-notrace");
-		
-		// if (additionalArguments.length > 0) {
-			
-		// 	runArgs.push ("-args");
-		// 	runArgs = runArgs.concat (additionalArguments);
-			
-		// }
 		
 		System.runScript (path, buildArgs, runArgs, dir);
 		
@@ -236,9 +223,21 @@ class MainScript {
 			
 			return Path.combine (path, command + ".hx");
 			
+		} else if (command == null && FileSystem.exists (Path.combine (path, "default.hxp"))) {
+			
+			return Path.combine (path, "default.hxp");
+			
+		} else if (command == null && FileSystem.exists (Path.combine (path, "default.hx"))) {
+			
+			return Path.combine (path, "default.hx");
+			
 		} else if (FileSystem.exists (Path.combine (path, "script.hxp"))) {
 			
 			return Path.combine (path, "script.hxp");
+			
+		} else if (FileSystem.exists (Path.combine (path, "script.hx"))) {
+			
+			return Path.combine (path, "script.hx");
 			
 		} else if (FileSystem.exists (Path.combine (path, "project.hxp"))) {
 			
@@ -247,6 +246,14 @@ class MainScript {
 		} else if (FileSystem.exists (Path.combine (path, "project.hx"))) {
 			
 			return Path.combine (path, "project.hx");
+			
+		} else if (command == null && FileSystem.exists (Path.combine (path, "build.hxp"))) {
+			
+			return Path.combine (path, "build.hxp");
+			
+		} else if (command == null && FileSystem.exists (Path.combine (path, "build.hx"))) {
+			
+			return Path.combine (path, "build.hx");
 			
 		} else {
 			
