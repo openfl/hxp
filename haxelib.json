@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": [],
 	"description": "Cross-platform build tools for desktop, mobile, web and consoles",
-	"version": "1.0.1",
-	"releasenote": "Make script path first optional argument, add support for installing command alias",
+	"version": "1.0.2",
+	"releasenote": "Change default command name to 'default' instead of 'build' when unspecified",
 	"contributors": [ "singmajesty" ],
 	"classPath": "src"
 }
