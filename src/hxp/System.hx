@@ -21,6 +21,7 @@ class System {
 	public static var hostPlatform (get, never):HostPlatform;
 	public static var processorCores (get, never):Int;
 	
+	private static var _haxeVersion:String;
 	private static var _hostArchitecture:HostArchitecture;
 	private static var _hostPlatform:HostPlatform;
 	private static var _isText:Map<String, Bool>;
@@ -1380,31 +1381,54 @@ class System {
 		
 		System.copyFile (path, scriptFile);
 		
-		#if (haxe_ver >= "4.0.0")
-		
-		args = args.concat ([ "-D", "hxp-interp", "--interp" ]);
-		if (runArgs != null) {
-			args.push ("--");
-			args = args.concat (runArgs);
+		if (_haxeVersion == null) {
+			
+			try {
+				
+				var process = new Process ("haxe", [ "-version" ]);
+				_haxeVersion = StringTools.trim (process.stderr.readAll ().toString ());
+				
+				if (_haxeVersion == "") {
+					
+					_haxeVersion = StringTools.trim (process.stdout.readAll ().toString ());
+					
+				}
+				
+				process.close ();
+				
+			} catch (e:Dynamic) {
+				
+				_haxeVersion = "";
+				
+			}
+			
 		}
-		return runCommand (workingDirectory, "haxe", args);
 		
-		#else
-		
-		var nekoOutput = Path.combine (tempDirectory, "script.n");
-		
-		args = args.concat ([ "-D", "hxp-interp", "-neko", nekoOutput ]);
-		var result = runCommand (workingDirectory, "haxe", args);
-		
-		if (result != 0) return result;
-		
-		if (FileSystem.exists (nekoOutput)) {
-			result = runCommand (workingDirectory, "neko", [ nekoOutput ].concat (runArgs != null ? runArgs : []));
+		if (Std.parseFloat (_haxeVersion) >= 4) {
+			
+			args = args.concat ([ "-D", "hxp-interp", "--interp" ]);
+			if (runArgs != null) {
+				args.push ("--");
+				args = args.concat (runArgs);
+			}
+			return runCommand (workingDirectory, "haxe", args);
+			
+		} else {
+			
+			var nekoOutput = Path.combine (tempDirectory, "script.n");
+			
+			args = args.concat ([ "-D", "hxp-interp", "-neko", nekoOutput ]);
+			var result = runCommand (workingDirectory, "haxe", args);
+			
+			if (result != 0) return result;
+			
+			if (FileSystem.exists (nekoOutput)) {
+				result = runCommand (workingDirectory, "neko", [ nekoOutput ].concat (runArgs != null ? runArgs : []));
+			}
+			
+			return result;
+			
 		}
-		
-		return result;
-		
-		#end
 		
 	}
 	
