@@ -437,7 +437,7 @@ abstract HXML(Array<String>) {
 	**/
 	public function hasDefine (name:String):Bool {
 		
-		return __getLine ("-lib " + name) != null;
+		return __getLine ("-D " + name) != null;
 		
 	}
 	
@@ -860,7 +860,10 @@ abstract HXML(Array<String>) {
 	@:noCompletion private function set_noInline (value:Bool):Bool {
 		
 		__trimLines ([ "--no-inline" ]);
-		this.push ("--no-inline");
+		if (value)
+		{
+			this.push ("--no-inline");
+		}
 		return value;
 		
 	}
@@ -876,7 +879,10 @@ abstract HXML(Array<String>) {
 	@:noCompletion private function set_noOpt (value:Bool):Bool {
 		
 		__trimLines ([ "--no-opt" ]);
-		this.push ("--no-opt");
+		if (value)
+		{
+			this.push ("--no-opt");
+		}
 		return value;
 		
 	}
@@ -892,7 +898,10 @@ abstract HXML(Array<String>) {
 	@:noCompletion private function set_noOutput (value:Bool):Bool {
 		
 		__trimLines ([ "--no-output" ]);
-		this.push ("--no-output");
+		if (value)
+		{
+			this.push ("--no-output");
+		}
 		return value;
 		
 	}
@@ -908,7 +917,10 @@ abstract HXML(Array<String>) {
 	@:noCompletion private function set_noTraces (value:Bool):Bool {
 		
 		__trimLines ([ "--no-traces" ]);
-		this.push ("--no-traces");
+		if (value)
+		{
+			this.push ("--no-traces");
+		}
 		return value;
 		
 	}
@@ -988,7 +1000,10 @@ abstract HXML(Array<String>) {
 	@:noCompletion private function set_prompt (value:Bool):Bool {
 		
 		__trimLines ([ "-prompt" ]);
-		this.push ("-prompt");
+		if (value)
+		{
+			this.push ("-prompt");
+		}
 		return value;
 		
 	}
@@ -1068,7 +1083,10 @@ abstract HXML(Array<String>) {
 	@:noCompletion private function set_times (value:Bool):Bool {
 		
 		__trimLines ([ "--times" ]);
-		this.push ("--times");
+		if (value)
+		{
+			this.push ("--times");
+		}
 		return value;
 		
 	}
@@ -1084,7 +1102,10 @@ abstract HXML(Array<String>) {
 	@:noCompletion private function set_verbose (value:Bool):Bool {
 		
 		__trimLines ([ "-v" ]);
-		this.push ("-v");
+		if (value)
+		{
+			this.push ("-v");
+		}
 		return value;
 		
 	}
