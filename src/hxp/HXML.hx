@@ -420,7 +420,7 @@ abstract HXML(Array<String>) {
 	**/
 	public function getDefine (name:String):String {
 		
-		var line = __getLine ("-lib " + name);
+		var line = __getLine ("-D " + name);
 		if (line != null) {
 			var equals = line.indexOf ("=");
 			if (equals > -1) {
