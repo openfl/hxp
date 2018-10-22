@@ -420,14 +420,28 @@ abstract HXML(Array<String>) {
 	**/
 	public function getDefine (name:String):String {
 		
-		var line = __getLine ("-D " + name);
-		if (line != null) {
-			var equals = line.indexOf ("=");
-			if (equals > -1) {
-				return line.substr (equals + 1);
+		var prefix = "-D " + name;
+		var value = null;
+		
+		for (line in this) {
+			
+			if (StringTools.startsWith (line, prefix)) {
+				
+				if (line.length == prefix.length) {
+					
+					value = null;
+					
+				} else if (line.indexOf ("=") == prefix.length) {
+					
+					value = line.substr (prefix.length + 1);
+					
+				}
+				
 			}
+			
 		}
-		return null;
+		
+		return value;
 		
 	}
 	
@@ -437,7 +451,23 @@ abstract HXML(Array<String>) {
 	**/
 	public function hasDefine (name:String):Bool {
 		
-		return __getLine ("-D " + name) != null;
+		var prefix = "-D " + name;
+		
+		for (line in this) {
+			
+			if (StringTools.startsWith (line, prefix)) {
+				
+				if (line.length == prefix.length || line.indexOf ("=") == prefix.length) {
+					
+					return true;
+					
+				}
+				
+			}
+			
+		}
+		
+		return false;
 		
 	}
 	
@@ -535,7 +565,7 @@ abstract HXML(Array<String>) {
 			
 			if (StringTools.startsWith (line, prefix)) {
 				
-				return line.substr (6);
+				return line.substr (prefix.length);
 				
 			}
 			
