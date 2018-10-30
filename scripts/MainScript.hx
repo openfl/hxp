@@ -422,6 +422,18 @@ class MainScript {
 			
 			if (!installedCommand) {
 				
+				try {
+					
+					System.runCommand ("", "cp", [ "-f", Haxelib.getPath (new Haxelib ("hxp")) + "/bin/hxp.sh", "/usr/local/bin/hxp" ], false);
+					System.runCommand ("", "chmod", [ "755", "/usr/local/bin/hxp" ], false);
+					installedCommand = true;
+					
+				} catch (e:Dynamic) {}
+				
+			}
+			
+			if (!installedCommand) {
+				
 				Sys.println ("");
 				Sys.println ("To finish setup, we recommend you either...");
 				Sys.println ("");
