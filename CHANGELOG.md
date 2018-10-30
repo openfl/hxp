@@ -1,3 +1,10 @@
+1.0.5 (10/30/2018)
+------------------
+
+* Fixed a remaining issue in Haxe 4 preview 5
+* Removed Node binaries, moved to `http-server` project
+
+
 1.0.4 (10/30/2018)
 ------------------
 
