@@ -52,6 +52,12 @@ class Script {
 		
 		var args = Sys.args ();
 		__workingDirectory = args.pop ();
+		
+		// Patch Haxe 4 preview 5 behavior
+		if (args.indexOf ("--") > -1) {
+			args = args.slice (args.indexOf ("--") + 1);
+		}
+		
 		var className = args.pop ();
 		__args = args;
 		
