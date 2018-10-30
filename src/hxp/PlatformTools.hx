@@ -55,56 +55,10 @@ class PlatformTools {
 	
 	
 	public static function launchWebServer (path:String, port:Int = 3000, openBrowser:Bool = true):Int {
-
-		var suffix = switch (System.hostPlatform) {
-
-			case WINDOWS: "-windows.exe";
-			case MAC: "-mac";
-			case LINUX: "-linux";
-			default: return 1;
-
-		}
-
-		if (suffix == "-linux") {
-
-			if (System.hostArchitecture == X86) {
-
-				suffix += "32";
-
-			} else {
-
-				suffix += "64";
-
-			}
-
-		}
-
-		var templatePaths = [ Path.combine (Haxelib.getPath (new Haxelib (#if lime "lime" #else "hxp" #end)), #if lime "templates" #else "" #end) ];
-		var node = System.findTemplate (templatePaths, "bin/node/node" + suffix);
-		var server = System.findTemplate (templatePaths, "bin/node/http-server/bin/http-server");
-
-		if (System.hostPlatform != WINDOWS) {
-
-			Sys.command ("chmod", [ "+x", node ]);
-
-		}
-
-		// if (project.targetFlags.exists ("port")) {
-
-			// port = Std.parseInt (project.targetFlags.get ("port"));
-
-		// }
-
+		
 		Log.info ("", " - \x1b[1mStarting local web server:\x1b[0m http://localhost:" + port);
 
-		/*Thread.create (function () {
-
-			Sys.sleep (0.5);
-			System.openURL ("http://localhost:" + port);
-
-		});*/
-
-		var args = [ server, path, "-p", Std.string (port), "-c-1", "--cors" ];
+		var args = [ "run", "http-server", path, "-p", Std.string (port), "-c-1", "--cors" ];
 
 		if (!openBrowser && !Log.verbose) {
 
@@ -122,8 +76,8 @@ class PlatformTools {
 
 		}
 		
-		return System.runCommand ("", node, args);
-
+		return Haxelib.runCommand ("", args);
+		
 	}
 	
 	

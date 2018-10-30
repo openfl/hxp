@@ -1,6 +1,7 @@
 package hxp;
 
 
+import haxe.MainLoop.MainEvent;
 import haxe.io.Bytes;
 import haxe.io.BytesOutput;
 import haxe.io.Eof;
@@ -1458,9 +1459,17 @@ class System {
 			
 		}
 		
-		var templatePaths = [ Path.combine (Haxelib.getPath (new Haxelib (#if lime "lime" #else "hxp" #end)), #if lime "templates" #else "" #end) ];
+		#if lime
+		var templatePaths = [ Path.combine (Haxelib.getPath (new Haxelib ("lime")), "templates") ];
 		var node = System.findTemplate (templatePaths, "bin/node/node" + suffix);
 		var bin = System.findTemplate (templatePaths, "bin/node/watch/cli-custom.js");
+		#else
+		// TODO: Move to separate lib?
+		var nodeTemplatePath = [ Path.combine (Haxelib.getPath (new Haxelib ("http-server")), "bin") ];
+		var watchTemplatePath = [ Path.combine (Haxelib.getPath (new Haxelib ("hxp")), "bin") ];
+		var node = System.findTemplate (nodeTemplatePath, "node" + suffix);
+		var bin = System.findTemplate (watchTemplatePath, "node/watch/cli-custom.js");
+		#end
 		
 		if (System.hostPlatform != WINDOWS) {
 			

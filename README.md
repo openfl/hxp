@@ -15,10 +15,9 @@ class Script {
     
         trace ("Hello from my script");
         
-        System.mkdir ("bin");
-        var hxml = new HXML ({ cp: ["src"], main: "Main.hx", js: "bin/index.js" });
+        var hxml = new HXML ({ cp: ["src"], main: "Main", js: "bin/index.js" });
         hxml.build ();
-        PlatformTools.startWebServer ("bin");
+        PlatformTools.launchWebServer ("bin");
         
     }
     

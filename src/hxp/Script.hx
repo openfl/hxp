@@ -56,6 +56,12 @@ class Script {
 		// Patch Haxe 4 preview 5 behavior
 		if (args.indexOf ("--") > -1) {
 			args = args.slice (args.indexOf ("--") + 1);
+			// Worse than I thought
+			var firstArg = args[0];
+			if (args.indexOf (firstArg, 1) != -1) {
+				// Arguments are doubled
+				args = args.slice (Math.floor (args.length / 2) + 1);
+			}
 		}
 		
 		var className = args.pop ();
