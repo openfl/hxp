@@ -9,7 +9,12 @@ import StringTools in HaxeStringTools;
 class StringTools extends HaxeStringTools {
 	
 	
+	#if (haxe_ver >= "3.3")
 	public static var winMetaCharacters (get, set):Array<Int>;
+	#else
+	// https://github.com/HaxeFoundation/haxe/blob/development/std/StringTools.hx
+	public static var winMetaCharacters = [" ".code, "(".code, ")".code, "%".code, "!".code, "^".code, "\"".code, "<".code, ">".code, "&".code, "|".code, "\n".code, "\r".code, ",".code, ";".code];
+	#end
 	
 	private static var seedNumber = 0;
 	private static var base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -398,13 +403,90 @@ class StringTools extends HaxeStringTools {
 
 	public static function quoteUnixArg (argument:String):String {
 		
+		#if (haxe_ver >= "3.3")
 		return HaxeStringTools.quoteUnixArg (argument);
+		#else
+		// https://github.com/HaxeFoundation/haxe/blob/development/std/StringTools.hx
+		if (argument == "")
+			return "''";
+
+		if (!~/[^a-zA-Z0-9_@%+=:,.\/-]/.match(argument))
+			return argument;
+
+		// use single quotes, and put single quotes into double quotes
+		// the string $'b is then quoted as '$'"'"'b'
+		return "'" + replace(argument, "'", "'\"'\"'") + "'";
+		#end
 		
 	}
 
 	public static function quoteWinArg (argument:String, escapeMetaCharacters:Bool):String {
 		
+		#if (haxe_ver >= "3.3")
 		return HaxeStringTools.quoteWinArg (argument, escapeMetaCharacters);
+		#else
+		// https://github.com/HaxeFoundation/haxe/blob/development/std/StringTools.hx
+		// If there is no space, tab, back-slash, or double-quotes, and it is not an empty string.
+		if (!~/^[^ \t\\"]+$/.match(argument)) {
+
+			// Based on cpython's subprocess.list2cmdline().
+			// https://hg.python.org/cpython/file/50741316dd3a/Lib/subprocess.py#l620
+
+			var result = new StringBuf();
+			var needquote = argument.indexOf(" ") != -1 || argument.indexOf("\t") != -1 || argument == "";
+
+			if (needquote)
+				result.add('"');
+
+			var bs_buf = new StringBuf();
+			for (i in 0...argument.length) {
+				switch (argument.charCodeAt(i)) {
+					case "\\".code:
+						// Don't know if we need to double yet.
+						bs_buf.add("\\");
+					case '"'.code:
+						// Double backslashes.
+						var bs = bs_buf.toString();
+						result.add(bs);
+						result.add(bs);
+						bs_buf = new StringBuf();
+						result.add('\\"');
+					//case var c:
+					case c:
+						// Normal char
+						if (bs_buf.length > 0) {
+							result.add(bs_buf.toString());
+							bs_buf = new StringBuf();
+						}
+						result.addChar(c);
+				}
+			}
+
+			// Add remaining backslashes, if any.
+			result.add(bs_buf.toString());
+
+			if (needquote) {
+				result.add(bs_buf.toString());
+				result.add('"');
+			}
+
+			argument = result.toString();
+		}
+
+		if (escapeMetaCharacters) {
+			var result = new StringBuf();
+			for (i in 0...argument.length) {
+				var c = argument.charCodeAt(i);
+				if (winMetaCharacters.indexOf(c) >= 0) {
+					result.addChar("^".code);
+				}
+				result.addChar(c);
+			}
+			return result.toString();
+		} else {
+			return argument;
+		}
+		#end
 		
 	}
 
@@ -468,6 +550,7 @@ class StringTools extends HaxeStringTools {
 	
 	
 	
+	#if (haxe_ver >= "3.3")
 	private static function get_winMetaCharacters ():Array<Int> {
 		
 		return HaxeStringTools.winMetaCharacters;
@@ -480,6 +563,7 @@ class StringTools extends HaxeStringTools {
 		return HaxeStringTools.winMetaCharacters = value;
 		
 	}
+	#end
 	
 	
 }
