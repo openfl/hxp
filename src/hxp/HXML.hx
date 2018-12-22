@@ -308,7 +308,7 @@ abstract HXML(Array<String>) {
 	**/
 	public function addMacro (value:String):Void {
 		
-		this.push ("-macro " + value);
+		this.push ("--macro " + value);
 		
 	}
 	
