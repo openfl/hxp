@@ -208,6 +208,7 @@ class System {
 	}
 	
 	
+	// TODO: Always copy
 	public static function copyFile (source:String, destination:String, context:Dynamic = null, process:Bool = true) {
 		
 		var extension = Path.extension (source);
@@ -377,6 +378,22 @@ class System {
 		}
 		
 		return paths;
+		
+	}
+	
+	
+	public static function deleteFile (path:String) {
+		
+		try {
+			
+			if (FileSystem.exists (path) && !FileSystem.isDirectory (path)) {
+				
+				Log.info ("", " - \x1b[1mDeleting file:\x1b[0m " + path);
+				FileSystem.deleteFile (path);
+				
+			}
+			
+		} catch (e:Dynamic) {}
 		
 	}
 	
@@ -647,6 +664,13 @@ class System {
 	}
 	
 	
+	public static function makeDirectory (directory:String):Void {
+		
+		mkdir (directory);
+		
+	}
+	
+	
 	public static function mkdir (directory:String):Void {
 		
 		directory = StringTools.replace (directory, "\\", "/");
@@ -807,6 +831,13 @@ class System {
 	}
 	
 	
+	public static function readBytes (source:String):Bytes {
+		
+		return File.getBytes (source);
+		
+	}
+	
+	
 	public static function readDirectory (directory:String, ignore:Array<String> = null, paths:Array<String> = null):Array<String> {
 		
 		if (FileSystem.exists (directory)) {
@@ -876,6 +907,13 @@ class System {
 		}
 		
 		return null;
+		
+	}
+	
+	
+	public static function readText (source:String):String {
+		
+		return File.getContent (source);
 		
 	}
 	
@@ -987,6 +1025,39 @@ class System {
 			} catch (e:Dynamic) {}
 			
 		}
+		
+	}
+	
+	
+	public static function renameFile (source:String, destination:String) {
+		
+		System.mkdir (Path.directory (destination));
+		Log.info ("", " - \x1b[1mRenaming file:\x1b[0m " + source + " \x1b[3;37m->\x1b[0m " + destination);
+		
+		try {
+			
+			File.copy (source, destination);
+			
+		} catch (e:Dynamic) {
+			
+			try {
+				
+				if (FileSystem.exists (destination)) {
+					
+					Log.error ("Cannot copy to \"" + destination + "\", is the file in use?");
+					return;
+					
+				}
+				
+			} catch (e:Dynamic) {}
+			
+		}
+		
+		try {
+			
+			FileSystem.deleteFile (source);
+			
+		} catch (e:Dynamic) {}
 		
 	}
 	
@@ -1484,6 +1555,20 @@ class System {
 		args.push ("--ignoreUnreadable");
 		
 		System.runCommand ("", node, args);
+		
+	}
+	
+	
+	public static function writeBytes (bytes:Bytes, path:String):Void {
+		
+		File.saveBytes (path, bytes);
+		
+	}
+	
+	
+	public static function writeText (text:String, path:String):Void {
+		
+		File.saveContent (path, text);
 		
 	}
 	
