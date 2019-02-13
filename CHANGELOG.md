@@ -1,3 +1,12 @@
+1.1.0 (02/12/2019)
+------------------
+
+* Added `System.deleteFile` and `System.renameFile`
+* Added `System.makeDirectory` (alias for `System.mkdir`)
+* Added `System.readBytes`/`System.readText`
+* Added `System.writeBytes`/`System.writeText`
+
+
 1.0.5 (10/30/2018)
 ------------------
 
