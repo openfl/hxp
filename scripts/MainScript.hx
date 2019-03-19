@@ -198,8 +198,8 @@ class MainScript {
 		className = className.substr (0, 1).toUpperCase () + className.substr (1);
 		
 		var version = "0.0.0";
-		var buildArgs = [ className, "-main", "hxp.Script", "-D", "hxp="+ version, "-cp", Path.combine (Haxelib.getPath (new Haxelib ("hxp")), "src") ];
-		var runArgs = [ (command == null || command == "") ? "default" : command ];
+		var buildArgs = [ className, /*"-main", "hxp.Script",*/ "-D", "hxp="+ version, "-cp", Path.combine (Haxelib.getPath (new Haxelib ("hxp")), "src") ];
+		var runArgs = [ "hxp.Script", (command == null || command == "") ? "default" : command ];
 		runArgs = runArgs.concat (arguments);
 		
 		if (Log.verbose) runArgs.push ("-verbose");
