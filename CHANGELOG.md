@@ -1,3 +1,10 @@
+1.1.1 (04/11/2019)
+------------------
+
+* Improved support for Haxe 4
+* Moved internal code style to use the Haxe "formatter" library for consistency
+
+
 1.1.0 (02/12/2019)
 ------------------
 
