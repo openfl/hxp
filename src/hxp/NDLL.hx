@@ -54,35 +54,52 @@ class NDLL
 		{
 			return ndll.path;
 		}
-		else if (ndll.haxelib == null)
+		else if (ndll.haxelib == null && (ndll.extensionPath == null || ndll.extensionPath == ""))
 		{
-			if (ndll.extensionPath != null && ndll.extensionPath != "")
+			return filename;
+		}
+		else if (ndll.haxelib.name != "hxcpp")
+		{
+			var searchPaths = [];
+
+			if (ndll.subdirectory != null)
 			{
-				var subdirectory = "ndll/";
-
-				if (ndll.subdirectory != null)
-				{
-					if (ndll.subdirectory != "")
-					{
-						subdirectory = ndll.subdirectory + "/";
-					}
-					else
-					{
-						subdirectory = "";
-					}
-				}
-
-				return Path.combine(ndll.extensionPath, subdirectory + directoryName + "/" + filename);
+				searchPaths.push(ndll.subdirectory);
 			}
 			else
 			{
-				return filename;
+				searchPaths.push("lib");
+				searchPaths.push("ndll");
 			}
+
+			var path = null;
+
+			for (i in 0...searchPaths.length)
+			{
+				if (ndll.haxelib != null)
+				{
+					path = Haxelib.getPath(ndll.haxelib, true);
+				}
+				else
+				{
+					path = ndll.extensionPath;
+				}
+
+				path = Path.combine(path, searchPaths[i]);
+				path = Path.combine(path, directoryName);
+				path = Path.combine(path, filename);
+
+				if (i < searchPaths.length - 1 && FileSystem.exists(path))
+				{
+					return path;
+				}
+			}
+
+			return path;
 		}
-		else if (ndll.haxelib.name == "hxcpp")
+		else
 		{
 			var extension = Path.extension(filename);
-
 			if (extension == "a" || extension == "lib")
 			{
 				return Path.combine(Haxelib.getPath(ndll.haxelib, true), "lib/" + directoryName + "/" + filename);
@@ -91,24 +108,6 @@ class NDLL
 			{
 				return Path.combine(Haxelib.getPath(ndll.haxelib, true), "bin/" + directoryName + "/" + filename);
 			}
-		}
-		else
-		{
-			var subdirectory = "ndll/";
-
-			if (ndll.subdirectory != null)
-			{
-				if (ndll.subdirectory != "")
-				{
-					subdirectory = ndll.subdirectory + "/";
-				}
-				else
-				{
-					subdirectory = "";
-				}
-			}
-
-			return Path.combine(Haxelib.getPath(ndll.haxelib, true), subdirectory + directoryName + "/" + filename);
 		}
 	}
 }
