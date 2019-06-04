@@ -58,7 +58,7 @@ class NDLL
 		{
 			return filename;
 		}
-		else if (ndll.haxelib.name != "hxcpp")
+		else if (ndll.haxelib == null || ndll.haxelib.name != "hxcpp")
 		{
 			var searchPaths = [];
 
