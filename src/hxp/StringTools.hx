@@ -4,13 +4,18 @@ import haxe.crypto.BaseCode;
 import haxe.io.Bytes;
 import StringTools in HaxeStringTools;
 
+#if (haxe_ver >= "4")
+typedef HaxeSysTools = haxe.SysTools;
+#elseif (haxe_ver >= "3.3")
+typedef HaxeSysTools = HaxeStringTools;
+#end
+
 class StringTools extends HaxeStringTools
 {
-	#if (haxe_ver >= "3.3")
-	public static var winMetaCharacters(get, set):Array<Int>;
-	#else
+	public static var winMetaCharacters(get,never):Array<Int>;
+	#if (haxe_ver < "3.3")
 	// https://github.com/HaxeFoundation/haxe/blob/development/std/StringTools.hx
-	public static var winMetaCharacters = [
+	private static var _winMetaCharacters = [
 		" ".code, "(".code, ")".code, "%".code, "!".code, "^".code, "\"".code, "<".code, ">".code, "&".code, "|".code, "\n".code, "\r".code, ",".code, ";".code
 	];
 	#end
@@ -343,7 +348,7 @@ class StringTools extends HaxeStringTools
 	public static function quoteUnixArg(argument:String):String
 	{
 		#if (haxe_ver >= "3.3")
-		return HaxeStringTools.quoteUnixArg(argument);
+		return HaxeSysTools.quoteUnixArg(argument);
 		#else
 		// https://github.com/HaxeFoundation/haxe/blob/development/std/StringTools.hx
 		if (argument == "") return "''";
@@ -359,7 +364,7 @@ class StringTools extends HaxeStringTools
 	public static function quoteWinArg(argument:String, escapeMetaCharacters:Bool):String
 	{
 		#if (haxe_ver >= "3.3")
-		return HaxeStringTools.quoteWinArg(argument, escapeMetaCharacters);
+		return HaxeSysTools.quoteWinArg(argument, escapeMetaCharacters);
 		#else
 		// https://github.com/HaxeFoundation/haxe/blob/development/std/StringTools.hx
 		// If there is no space, tab, back-slash, or double-quotes, and it is not an empty string.
@@ -472,17 +477,14 @@ class StringTools extends HaxeStringTools
 	{
 		return HaxeStringTools.urlEncode(s);
 	}
-
+	
 	// Get & Set Methods
-	#if (haxe_ver >= "3.3")
 	private static function get_winMetaCharacters():Array<Int>
 	{
-		return HaxeStringTools.winMetaCharacters;
+		#if (haxe_ver < "3.3")
+		return _winMetaCharacters;
+		#else
+		return cast HaxeSysTools.winMetaCharacters;
+		#end
 	}
-
-	private static function set_winMetaCharacters(value:Array<Int>):Array<Int>
-	{
-		return HaxeStringTools.winMetaCharacters = value;
-	}
-	#end
 }
