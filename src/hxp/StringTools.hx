@@ -6,13 +6,15 @@ import StringTools in HaxeStringTools;
 
 class StringTools extends HaxeStringTools
 {
+	#if (haxe_var < "4.0.0")
 	#if (haxe_ver >= "3.3")
-	public static var winMetaCharacters(get, set):Array<Int>;
+	@:noCompletion public static var winMetaCharacters(get, set):Array<Int>;
 	#else
 	// https://github.com/HaxeFoundation/haxe/blob/development/std/StringTools.hx
-	public static var winMetaCharacters = [
+	@:noCompletion public static var winMetaCharacters = [
 		" ".code, "(".code, ")".code, "%".code, "!".code, "^".code, "\"".code, "<".code, ">".code, "&".code, "|".code, "\n".code, "\r".code, ",".code, ";".code
 	];
+	#end
 	#end
 	private static var seedNumber = 0;
 	private static var base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -340,7 +342,8 @@ class StringTools extends HaxeStringTools
 		return HaxeStringTools.ltrim(s);
 	}
 
-	public static function quoteUnixArg(argument:String):String
+	#if (haxe_var < "4.0.0")
+	@:noCompletion public static function quoteUnixArg(argument:String):String
 	{
 		#if (haxe_ver >= "3.3")
 		return HaxeStringTools.quoteUnixArg(argument);
@@ -356,7 +359,7 @@ class StringTools extends HaxeStringTools
 		#end
 	}
 
-	public static function quoteWinArg(argument:String, escapeMetaCharacters:Bool):String
+	@:noCompletion public static function quoteWinArg(argument:String, escapeMetaCharacters:Bool):String
 	{
 		#if (haxe_ver >= "3.3")
 		return HaxeStringTools.quoteWinArg(argument, escapeMetaCharacters);
@@ -432,6 +435,7 @@ class StringTools extends HaxeStringTools
 		}
 		#end
 	}
+	#end
 
 	public static function replace(s:String, sub:String, by:String):String
 	{
@@ -474,6 +478,7 @@ class StringTools extends HaxeStringTools
 	}
 
 	// Get & Set Methods
+	#if (haxe_var < "4.0.0")
 	#if (haxe_ver >= "3.3")
 	private static function get_winMetaCharacters():Array<Int>
 	{
@@ -484,5 +489,6 @@ class StringTools extends HaxeStringTools
 	{
 		return HaxeStringTools.winMetaCharacters = value;
 	}
+	#end
 	#end
 }
