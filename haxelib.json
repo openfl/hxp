@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": [],
 	"description": "Cross-platform build tools for desktop, mobile, web and consoles",
-	"version": "1.0.5",
-	"releasenote": "Reduced package size, Haxe 4 preview 5 fix",
+	"version": "1.1.2",
+	"releasenote": "Add 'lib' to native library search path",
 	"contributors": [ "singmajesty" ],
 	"classPath": "src"
 }

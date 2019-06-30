@@ -1,3 +1,25 @@
+1.1.2 (04/11/2019)
+------------------
+
+* Added 'lib' to native library search path
+
+
+1.1.1 (04/11/2019)
+------------------
+
+* Improved support for Haxe 4
+* Moved internal code style to use the Haxe "formatter" library for consistency
+
+
+1.1.0 (02/12/2019)
+------------------
+
+* Added `System.deleteFile` and `System.renameFile`
+* Added `System.makeDirectory` (alias for `System.mkdir`)
+* Added `System.readBytes`/`System.readText`
+* Added `System.writeBytes`/`System.writeText`
+
+
 1.0.5 (10/30/2018)
 ------------------
 
