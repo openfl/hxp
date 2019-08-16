@@ -594,6 +594,15 @@ class System
 
 	public static function mkdir(directory:String):Void
 	{
+		try
+		{
+			if (FileSystem.exists(directory) && FileSystem.isDirectory(directory))
+			{
+				return;
+			}
+		}
+		catch (e:Dynamic) {}
+
 		directory = StringTools.replace(directory, "\\", "/");
 		var total = "";
 
