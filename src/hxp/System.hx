@@ -463,7 +463,7 @@ class System
 			}
 		}
 
-		path += "/temp_" + Math.round(0xFFFFFF * Math.random()) + extension;
+		path = Path.combine(path, "temp_" + Math.round(0xFFFFFF * Math.random()) + extension);
 
 		if (FileSystem.exists(path))
 		{
