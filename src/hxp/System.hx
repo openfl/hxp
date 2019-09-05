@@ -54,7 +54,7 @@ class System
 			"atf" => false,
 			"psd" => false,
 			"awd" => false,
-			
+
 			"txt" => true,
 			"text" => true,
 			"xml" => true,
@@ -1399,9 +1399,10 @@ class System
 			switch (hostPlatform)
 			{
 				case WINDOWS:
-					var architecture = Sys.getEnv("PROCESSOR_ARCHITEW6432");
+					var architecture = Sys.getEnv("PROCESSOR_ARCHITECTURE");
+					var wow64Architecture = Sys.getEnv("PROCESSOR_ARCHITEW6432");
 
-					if (architecture != null && architecture.indexOf("64") > -1)
+					if (architecture.indexOf("64") > -1 || wow64Architecture != null && wow64Architecture.indexOf("64") > -1)
 					{
 						_hostArchitecture = X64;
 					}
