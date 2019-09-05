@@ -1,3 +1,14 @@
+1.1.3 (09/05/2019)
+------------------
+
+* Removed deprecated `StringTools` methods in Haxe 4
+* Improved `hxml.cp` to quote arguments only if there is a space
+* Improved the performance of `System.mkdir` on existing folders
+* Improved `System.getTemporaryFile` to remove extra slashes
+* Fixed support for NDLLs that do not come from haxelib
+* Fixed `System.hostArchitecture` on Windows in certain environments
+
+
 1.1.2 (04/11/2019)
 ------------------
 
