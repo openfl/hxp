@@ -12,6 +12,8 @@ import neko.Lib;
 import cpp.Lib;
 #elseif cs
 import cs.Lib;
+#elseif hl
+import hl.Api;
 #end
 
 class Log
@@ -47,6 +49,8 @@ class Log
 		{
 			#if (js || eval)
 			throw e;
+			#elseif hl
+			Api.rethrow(e);
 			#elseif !cs
 			Lib.rethrow(e);
 			#end
