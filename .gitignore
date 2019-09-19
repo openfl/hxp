@@ -8,6 +8,7 @@ Export/
 *.iml
 scripts/*.n
 scripts/*.exe
+scripts/obj
 haxedoc.xml
 .vscode/settings.json
 package-lock.json

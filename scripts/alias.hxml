@@ -1,18 +1,4 @@
 -main AliasScript
 -D command=hxp
--neko hxp.n
--cmd nekotools boot hxp.n
-
---next
-
--main AliasScript
--D command=lime
--neko lime.n
--cmd nekotools boot lime.n
-
---next
-
--main AliasScript
--D command=openfl
--neko openfl.n
--cmd nekotools boot openfl.n
+-D HXCPP_M32
+-cpp obj
