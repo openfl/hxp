@@ -1,3 +1,10 @@
+1.1.4 (09/19/2019)
+------------------
+
+* Fixed support for 64-bit Neko on Windows (included in Haxe 4 RC 4)
+* Fixed an issue using `hxp.Log` on the HL target
+
+
 1.1.3 (09/05/2019)
 ------------------
 
