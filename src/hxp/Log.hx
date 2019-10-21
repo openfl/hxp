@@ -57,12 +57,12 @@ class Log
 
 		if (verbose && e != null)
 		{
-			#if (js || eval)
-			throw e;
+			#if (neko || cpp)
+			Lib.rethrow(e);
 			#elseif hl
 			Api.rethrow(e);
-			#elseif !cs
-			Lib.rethrow(e);
+			#else
+			throw e;
 			#end
 		}
 
@@ -215,10 +215,10 @@ class Log
 			}
 
 			sentWarnings.set(output, true);
-			#if (sys && !js)
-			println(output);
-			#else
+			#if (js && !sys)
 			Browser.console.warn(output);
+			#else
+			println(output);
 			#end
 		}
 	}
