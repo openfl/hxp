@@ -1168,7 +1168,7 @@ class System
 
 		if (!dryRun)
 		{
-			var process = allowNonExecutables ? new Process('$command ${args.join(" ")}', null) : new Process(command, args);
+			var process = allowNonExecutables ? new Process(command + " " + args.join(" ")) : new Process(command, args);
 			var buffer = new BytesOutput();
 
 			if (waitForOutput)
