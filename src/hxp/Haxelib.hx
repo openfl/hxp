@@ -128,7 +128,7 @@ class Haxelib
 				var cacheDryRun = System.dryRun;
 				System.dryRun = false;
 
-				output = Haxelib.runProcess(workingDirectory, ["path", name], true, true, true);
+				output = Haxelib.runProcess(workingDirectory, ["path", name], true, true, true, false, false, true);
 				if (output == null) output = "";
 
 				System.dryRun = cacheDryRun;
@@ -432,7 +432,7 @@ class Haxelib
 	}
 
 	public static function runProcess(path:String, args:Array<String>, waitForOutput:Bool = true, safeExecute:Bool = true, ignoreErrors:Bool = false,
-			print:Bool = false, returnErrorValue:Bool = false):String
+			print:Bool = false, returnErrorValue:Bool = false, allowNonExecutables:Bool = false):String
 	{
 		if (pathOverrides.exists("haxelib"))
 		{
@@ -443,7 +443,7 @@ class Haxelib
 				Log.error("Cannot find haxelib script: " + script);
 			}
 
-			return System.runProcess(path, "neko", [script].concat(args), waitForOutput, safeExecute, ignoreErrors, print, returnErrorValue);
+			return System.runProcess(path, "neko", [script].concat(args), waitForOutput, safeExecute, ignoreErrors, print, returnErrorValue, allowNonExecutables);
 		}
 		else
 		{
@@ -456,7 +456,7 @@ class Haxelib
 
 			// }
 
-			return System.runProcess(path, command, args, waitForOutput, safeExecute, ignoreErrors, print, returnErrorValue);
+			return System.runProcess(path, command, args, waitForOutput, safeExecute, ignoreErrors, print, returnErrorValue, allowNonExecutables);
 		}
 	}
 
