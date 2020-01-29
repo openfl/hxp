@@ -1076,7 +1076,7 @@ class System
 	}
 
 	public static function runProcess(path:String, command:String, args:Array<String>, waitForOutput:Bool = true, safeExecute:Bool = true,
-			ignoreErrors:Bool = false, print:Bool = false, returnErrorValue:Bool = false):String
+			ignoreErrors:Bool = false, print:Bool = false, returnErrorValue:Bool = false, allowNonExecutables = false):String
 	{
 		if (print)
 		{
@@ -1113,7 +1113,7 @@ class System
 					Log.error("The specified target path \"" + path + "\" does not exist");
 				}
 
-				return _runProcess(path, command, args, waitForOutput, safeExecute, ignoreErrors, returnErrorValue);
+				return _runProcess(path, command, args, waitForOutput, safeExecute, ignoreErrors, returnErrorValue, allowNonExecutables);
 			}
 			catch (e:Dynamic)
 			{
@@ -1127,12 +1127,12 @@ class System
 		}
 		else
 		{
-			return _runProcess(path, command, args, waitForOutput, safeExecute, ignoreErrors, returnErrorValue);
+			return _runProcess(path, command, args, waitForOutput, safeExecute, ignoreErrors, returnErrorValue, allowNonExecutables);
 		}
 	}
 
 	private static function _runProcess(path:String, command:String, args:Array<String>, waitForOutput:Bool, safeExecute:Bool, ignoreErrors:Bool,
-			returnErrorValue:Bool):String
+			returnErrorValue:Bool, allowNonExecutables:Bool):String
 	{
 		var oldPath:String = "";
 
@@ -1168,7 +1168,7 @@ class System
 
 		if (!dryRun)
 		{
-			var process = new Process(command, args);
+			var process = allowNonExecutables ? new Process('$command ${args.join(" ")}', null) : new Process(command, args);
 			var buffer = new BytesOutput();
 
 			if (waitForOutput)
