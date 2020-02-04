@@ -446,7 +446,8 @@ class Haxelib
 				Log.error("Cannot find haxelib script: " + script);
 			}
 
-			return System.runProcess(path, "neko", [script].concat(args), waitForOutput, safeExecute, ignoreErrors, print, returnErrorValue, allowNonExecutables);
+			return System.runProcess(path, "neko", [script].concat(args), waitForOutput, safeExecute, ignoreErrors, print, returnErrorValue,
+				allowNonExecutables);
 		}
 		else
 		{
