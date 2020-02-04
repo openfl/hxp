@@ -403,8 +403,11 @@ class Haxelib
 		return versions.get(haxelib.name);
 	}
 
-	public static function runCommand(path:String, args:Array<String>, safeExecute:Bool = true, ignoreErrors:Bool = false, print:Bool = false):Int
+	public static function runCommand(path:String, args:Array<String>, safeExecute:Bool = true, ignoreErrors:Bool = false, print:Bool = false,
+			allowNonExecutables:Bool = false):Int
 	{
+		var command:String;
+
 		if (pathOverrides.exists("haxelib"))
 		{
 			var script = Path.combine(pathOverrides.get("haxelib"), "run.n");
@@ -414,21 +417,21 @@ class Haxelib
 				Log.error("Cannot find haxelib script: " + script);
 			}
 
-			return System.runCommand(path, "neko", [script].concat(args), safeExecute, ignoreErrors, print);
+			command = "neko";
+			args = [script].concat(args);
 		}
 		else
 		{
-			// var haxe = Sys.getEnv ("HAXEPATH");
-			var command = "haxelib";
-
-			// if (haxe != null) {
-
-			// 	command = Path.combine (haxe, command);
-
-			// }
-
-			return System.runCommand(path, command, args, safeExecute, ignoreErrors, print);
+			command = "haxelib";
 		}
+
+		if (allowNonExecutables)
+		{
+			command += " " + args.join(" ");
+			args = null;
+		}
+
+		return System.runCommand(path, command, args, safeExecute, ignoreErrors, print);
 	}
 
 	public static function runProcess(path:String, args:Array<String>, waitForOutput:Bool = true, safeExecute:Bool = true, ignoreErrors:Bool = false,
