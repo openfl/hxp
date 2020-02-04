@@ -128,7 +128,7 @@ class Haxelib
 				var cacheDryRun = System.dryRun;
 				System.dryRun = false;
 
-				output = Haxelib.runProcess(workingDirectory, ["path", name], true, true, true, false, false, true);
+				output = Haxelib.runProcess(workingDirectory, ["path", name], true, true, true);
 				if (output == null) output = "";
 
 				System.dryRun = cacheDryRun;

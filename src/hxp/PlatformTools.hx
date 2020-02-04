@@ -50,7 +50,7 @@ class PlatformTools
 	{
 		Log.info("", " - \x1b[1mStarting local web server:\x1b[0m http://localhost:" + port);
 
-		var args = ["run", "http-server", path, "-p", Std.string(port), "-c-1", "--cors"];
+		var args = ["run", "http-server", '"$path"', "-p", Std.string(port), "-c-1", "--cors"];
 
 		if (!openBrowser && !Log.verbose)
 		{
