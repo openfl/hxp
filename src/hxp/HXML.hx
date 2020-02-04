@@ -332,9 +332,9 @@ abstract HXML(Array<String>)
 	/**
 		Builds the current HXML using Haxe.
 	**/
-	public function build():Int
+	public function build(workingDirectory:String = ""):Int
 	{
-		return System.runCommand("", "haxe " + this.join(" "), null);
+		return System.runCommand(workingDirectory, "haxe " + this.join(" "), null);
 	}
 
 	/**
@@ -390,6 +390,38 @@ abstract HXML(Array<String>)
 		this.push("-D " + name + (value == null ? "" : "=" + Std.string(value)));
 	}
 
+	public static function buildFile(path:String, fromDirectory:String = ""):Int
+	{
+		var hxml:HXML = fromFile(path);
+		var hxmlDirectory = Path.directory(path);
+
+		if (fromDirectory != "" && fromDirectory != hxmlDirectory)
+		{
+			var lines:Array<String> = cast hxml;
+
+			for (i in 0...lines.length)
+			{
+				if (lines[i].indexOf("-cp ") == 0)
+				{
+					var quote:Int = lines[i].indexOf('"');
+
+					if (quote > 0)
+					{
+						lines[i] = "-cp \"" + hxmlDirectory + "/" + lines[i].substr(quote + 1);
+					}
+					else
+					{
+						lines[i] = "-cp " + hxmlDirectory + "/" + lines[i].substr(4);
+					}
+				}
+			}
+
+			lines.push('-cp "$hxmlDirectory"');
+		}
+
+		return hxml.build(fromDirectory);
+	}
+
 	public static function fromFile(path:String):HXML
 	{
 		if (FileSystem.exists(path))
@@ -410,7 +442,12 @@ abstract HXML(Array<String>)
 
 			for (line in lines)
 			{
-				value.push(StringTools.trim(line));
+				line = StringTools.trim(line);
+
+				if (!StringTools.startsWith(line, "#"))
+				{
+					value.push(line);
+				}
 			}
 		}
 
