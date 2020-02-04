@@ -1284,7 +1284,7 @@ class System
 
 		// 	try {
 
-		// 		var process = new Process ("haxe", [ "-version" ]);
+		// 		var process = new Process ("haxe -version");
 		// 		_haxeVersion = StringTools.trim (process.stderr.readAll ().toString ());
 
 		// 		if (_haxeVersion == "") {
