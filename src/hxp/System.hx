@@ -1069,7 +1069,7 @@ class System
 
 		if (result != 0)
 		{
-			throw("Error running: " + command + " " + args.join(" ") + " [" + path + "]");
+			throw("Error running: " + command + (args != null ? " " + args.join(" ") : "") + " [" + path + "]");
 		}
 
 		return result;
