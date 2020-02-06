@@ -1517,7 +1517,7 @@ class System
 			}
 			else if (hostPlatform == LINUX)
 			{
-				result = runProcess("", "nproc", [], true, true, true);
+				result = runProcess("", "nproc", null, true, true, true);
 
 				if (result == null)
 				{
