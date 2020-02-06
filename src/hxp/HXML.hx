@@ -334,7 +334,7 @@ abstract HXML(Array<String>)
 	**/
 	public function build():Int
 	{
-		return System.runCommand("", "haxe " + this.join(" "), null);
+		return System.runCommand("", "haxe " + this.join(" "));
 	}
 
 	/**
