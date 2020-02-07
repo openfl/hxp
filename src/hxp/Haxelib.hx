@@ -416,20 +416,21 @@ class Haxelib
 				Log.error("Cannot find haxelib script: " + script);
 			}
 
-			command = "neko";
-			args = ['"$script"'].concat(args);
+			command = 'neko "$script"';
 		}
 		else
 		{
 			command = "haxelib";
 		}
 
-		return System.runCommand(path, command + " " + args.join(" "), null, safeExecute, ignoreErrors, print);
+		return System.runCommand(path, command + " " + args.join(" "), safeExecute, ignoreErrors, print);
 	}
 
 	public static function runProcess(path:String, args:Array<String>, waitForOutput:Bool = true, safeExecute:Bool = true, ignoreErrors:Bool = false,
 			print:Bool = false, returnErrorValue:Bool = false):String
 	{
+		var command:String;
+
 		if (pathOverrides.exists("haxelib"))
 		{
 			var script = Path.combine(pathOverrides.get("haxelib"), "run.n");
@@ -439,21 +440,14 @@ class Haxelib
 				Log.error("Cannot find haxelib script: " + script);
 			}
 
-			return System.runProcess(path, "neko", [script].concat(args), waitForOutput, safeExecute, ignoreErrors, print, returnErrorValue, true);
+			command = 'neko "$script"';
 		}
 		else
 		{
-			// var haxe = Sys.getEnv ("HAXEPATH");
-			var command = "haxelib";
-
-			// if (haxe != null) {
-
-			// 	command = Path.combine (haxe, command);
-
-			// }
-
-			return System.runProcess(path, command, args, waitForOutput, safeExecute, ignoreErrors, print, returnErrorValue, true);
+			command = "haxelib";
 		}
+
+		return System.runProcess(path, command + " " + args.join(" "), waitForOutput, safeExecute, ignoreErrors, print, returnErrorValue);
 	}
 
 	public static function setOverridePath(haxelib:Haxelib, path:String):Void
