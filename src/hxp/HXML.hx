@@ -395,6 +395,11 @@ abstract HXML(Array<String>)
 		var hxml:HXML = fromFile(path);
 		var hxmlDirectory = Path.directory(path);
 
+		if (hxml == null)
+		{
+			Log.error("The specified target path \"" + path + "\" does not exist");
+		}
+
 		if (fromDirectory != "" && fromDirectory != hxmlDirectory)
 		{
 			var lines:Array<String> = cast hxml;
