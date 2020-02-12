@@ -950,7 +950,7 @@ class System
 		}
 	}
 
-	public static function runCommand(path:String, command:String, args:Array<String>, safeExecute:Bool = true, ignoreErrors:Bool = false,
+	public static function runCommand(path:String, command:String, args:Array<String> = null, safeExecute:Bool = true, ignoreErrors:Bool = false,
 			print:Bool = false):Int
 	{
 		if (print)
@@ -1014,7 +1014,7 @@ class System
 		}
 	}
 
-	private static function _runCommand(path:String, command:String, args:Array<String>):Int
+	private static function _runCommand(path:String, command:String, args:Null<Array<String>>):Int
 	{
 		var oldPath:String = "";
 
@@ -1069,28 +1069,31 @@ class System
 
 		if (result != 0)
 		{
-			throw("Error running: " + command + " " + args.join(" ") + " [" + path + "]");
+			throw("Error running: " + command + (args != null ? " " + args.join(" ") : "") + " [" + path + "]");
 		}
 
 		return result;
 	}
 
-	public static function runProcess(path:String, command:String, args:Array<String>, waitForOutput:Bool = true, safeExecute:Bool = true,
+	public static function runProcess(path:String, command:String, args:Array<String> = null, waitForOutput:Bool = true, safeExecute:Bool = true,
 			ignoreErrors:Bool = false, print:Bool = false, returnErrorValue:Bool = false):String
 	{
 		if (print)
 		{
 			var message = command;
 
-			for (arg in args)
+			if (args != null)
 			{
-				if (arg.indexOf(" ") > -1)
+				for (arg in args)
 				{
-					message += " \"" + arg + "\"";
-				}
-				else
-				{
-					message += " " + arg;
+					if (arg.indexOf(" ") > -1)
+					{
+						message += " \"" + arg + "\"";
+					}
+					else
+					{
+						message += " " + arg;
+					}
 				}
 			}
 
@@ -1131,7 +1134,7 @@ class System
 		}
 	}
 
-	private static function _runProcess(path:String, command:String, args:Array<String>, waitForOutput:Bool, safeExecute:Bool, ignoreErrors:Bool,
+	private static function _runProcess(path:String, command:String, args:Null<Array<String>>, waitForOutput:Bool, safeExecute:Bool, ignoreErrors:Bool,
 			returnErrorValue:Bool):String
 	{
 		var oldPath:String = "";
@@ -1149,15 +1152,18 @@ class System
 
 		var argString = "";
 
-		for (arg in args)
+		if (args != null)
 		{
-			if (arg.indexOf(" ") > -1)
+			for (arg in args)
 			{
-				argString += " \"" + arg + "\"";
-			}
-			else
-			{
-				argString += " " + arg;
+				if (arg.indexOf(" ") > -1)
+				{
+					argString += " \"" + arg + "\"";
+				}
+				else
+				{
+					argString += " " + arg;
+				}
 			}
 		}
 
@@ -1168,11 +1174,20 @@ class System
 
 		if (!dryRun)
 		{
-			var process = new Process(command, args);
-			var buffer = new BytesOutput();
+			var process:Process;
+
+			if (args != null && args.length > 0)
+			{
+				process = new Process(command, args);
+			}
+			else
+			{
+				process = new Process(command);
+			}
 
 			if (waitForOutput)
 			{
+				var buffer = new BytesOutput();
 				var waiting = true;
 
 				while (waiting)
@@ -1502,7 +1517,7 @@ class System
 			}
 			else if (hostPlatform == LINUX)
 			{
-				result = runProcess("", "nproc", [], true, true, true);
+				result = runProcess("", "nproc", null, true, true, true);
 
 				if (result == null)
 				{

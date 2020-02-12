@@ -334,7 +334,7 @@ abstract HXML(Array<String>)
 	**/
 	public function build(workingDirectory:String = ""):Int
 	{
-		return System.runCommand(workingDirectory, "haxe " + this.join(" "), null);
+		return System.runCommand(workingDirectory, "haxe " + this.join(" "));
 	}
 
 	/**
