@@ -409,15 +409,18 @@ abstract HXML(Array<String>)
 				if (lines[i].indexOf("-cp ") == 0)
 				{
 					var quote:Int = lines[i].indexOf('"');
+					var cp:String;
 
 					if (quote > 0)
 					{
-						lines[i] = "-cp \"" + hxmlDirectory + "/" + lines[i].substr(quote + 1);
+						cp = lines[i].substring(quote + 1, lines[i].lastIndexOf("\""));
 					}
 					else
 					{
-						lines[i] = "-cp " + hxmlDirectory + "/" + lines[i].substr(4);
+						cp = lines[i].substr("-cp ".length);
 					}
+
+					lines[i] = "-cp \"" + Path.normalize(hxmlDirectory + "/" + cp) + "\"";
 				}
 			}
 
