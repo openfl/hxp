@@ -1273,7 +1273,7 @@ class System
 		var scriptFile = Path.combine(tempDirectory, script + ".hx");
 
 		var sourcePath = Path.directory(path);
-		var args = ["-cp", tempDirectory, "-cp", Path.tryFullPath(sourcePath), script].concat(buildArgs);
+		var args = ["-cp", tempDirectory, "-cp", Path.tryFullPath(sourcePath)].concat(buildArgs);
 		var input = File.read(path, false);
 		var tag = "@:compiler(";
 
@@ -1320,12 +1320,13 @@ class System
 
 		// if (Std.parseFloat (_haxeVersion) >= 4) {
 
-		args = args.concat(["-D", "hxp-interp"]);
+		args = args.concat(["-D", "hxp-interp", "--run", script]);
 		if (runArgs != null)
 		{
-			args.push("--run");
 			args = args.concat(runArgs);
 		}
+
+		// return runCommand(workingDirectory, "haxe", args, true, false, true);
 		return runCommand(workingDirectory, "haxe", args);
 
 		// } else {
