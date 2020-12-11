@@ -1,5 +1,6 @@
 package hxp;
 
+import haxe.display.Display.Package;
 import haxe.io.Bytes;
 import haxe.io.BytesOutput;
 import haxe.io.Eof;
@@ -1320,10 +1321,14 @@ class System
 
 		// if (Std.parseFloat (_haxeVersion) >= 4) {
 
-		args = args.concat(["-D", "hxp-interp", "--run", script]);
+		args = args.concat(["-D", "hxp-interp", "--run"]);
 		if (runArgs != null)
 		{
 			args = args.concat(runArgs);
+		}
+		else
+		{
+			args.push(script);
 		}
 
 		// return runCommand(workingDirectory, "haxe", args, true, false, true);
