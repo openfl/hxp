@@ -1503,7 +1503,7 @@ class System
 		return _hostPlatform;
 	}
 
-	public static function get_processorCores():Int
+	private static function get_processorCores():Int
 	{
 		var cacheDryRun = dryRun;
 		dryRun = false;
