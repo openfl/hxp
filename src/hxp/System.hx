@@ -1,6 +1,5 @@
 package hxp;
 
-import haxe.display.Display.Package;
 import haxe.io.Bytes;
 import haxe.io.BytesOutput;
 import haxe.io.Eof;
