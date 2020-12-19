@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": [],
 	"description": "Cross-platform build tools for desktop, mobile, web and consoles",
-	"version": "1.1.5",
-	"releasenote": "Fixed regression",
+	"version": "1.1.6",
+	"releasenote": "Haxe 3.4 compile fix",
 	"contributors": [ "singmajesty" ],
 	"classPath": "src"
 }
