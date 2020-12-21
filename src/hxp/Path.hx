@@ -234,6 +234,11 @@ class Path extends HaxePath
 		return path;
 	}
 
+	public static function startsWith(path:String, prefix:String):Bool
+	{
+		return StringTools.startsWith(normalize(path), normalize(prefix));
+	}
+
 	public static function tryFullPath(path:String):String
 	{
 		try
