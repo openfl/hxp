@@ -444,6 +444,66 @@ abstract HXML(Array<String>)
 	}
 
 	/**
+		Get the value of all class path arguments, if present.
+
+		@param	makeAbsolute	Whether to return paths as absolute if they are relative (Default: false)
+		@param	workingDirectory	(Optional) A working directory to use for absolute paths (Default: CWD)
+		@returns	An array of paths found
+	**/
+	public function getClassPaths(makeAbsolute:Bool = false, workingDirectory:String = null):Array<String>
+	{
+		// TODO: Regex for better detection
+		var cwd = null;
+		var prefix = "-cwd ";
+
+		for (line in this)
+		{
+			if (StringTools.startsWith(line, prefix))
+			{
+				cwd = StringTools.replace(line.substring(prefix.length, line.length), "\"", "");
+			}
+		}
+
+		// TODO: Allow recursive for getting paths for -lib arguments?
+		if (workingDirectory == null)
+		{
+			workingDirectory = Sys.getCwd();
+		}
+
+		var prefix = "-cp ";
+		var path = null;
+		var paths = [];
+
+		for (line in this)
+		{
+			if (StringTools.startsWith(line, prefix))
+			{
+				path = StringTools.replace(line.substring(prefix.length, line.length), "\"", "");
+
+				if (makeAbsolute)
+				{
+					if (cwd != null)
+					{
+						path = Path.combine(Path.combine(workingDirectory, cwd), path);
+					}
+					else
+					{
+						path = Path.combine(workingDirectory, path);
+					}
+				}
+				else if (cwd != null)
+				{
+					path = Path.combine(cwd, path);
+				}
+
+				paths.push(path);
+			}
+		}
+
+		return paths;
+	}
+
+	/**
 		Return whether a conditional compilation flag has been defined.
 	**/
 	public function hasDefine(name:String):Bool
