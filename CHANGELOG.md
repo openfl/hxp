@@ -1,3 +1,22 @@
+1.2.0 (12/21/2020)
+------------------
+
+* Added `hxml.getClassPaths`
+* Added `Path.startsWith`
+
+
+1.1.6 (12/19/2020)
+------------------
+
+* Fixed a regression in support for Haxe 3
+
+
+1.1.5 (12/11/2020)
+------------------
+
+* Improved the behavior of `System.runScript`
+
+
 1.1.4 (09/19/2019)
 ------------------
 
