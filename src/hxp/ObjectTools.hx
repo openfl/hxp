@@ -50,12 +50,12 @@ import haxe.ds.StringMap;
 
 			return v;
 		}
-		else if (Std.is(v, String))
+		else if (Std.isOfType(v, String))
 		{ // string
 
 			return v;
 		}
-		else if (Std.is(v, Array))
+		else if (Std.isOfType(v, Array))
 		{ // array
 
 			var result = Type.createInstance(Type.getClass(v), []);
@@ -75,7 +75,7 @@ import haxe.ds.StringMap;
 
 			return result;
 		}
-		else if (Std.is(v, StringMap))
+		else if (Std.isOfType(v, StringMap))
 		{ // hashmap
 
 			var result = Type.createInstance(Type.getClass(v), []);
@@ -91,7 +91,7 @@ import haxe.ds.StringMap;
 
 			return result;
 		}
-		else if (Std.is(v, IntMap))
+		else if (Std.isOfType(v, IntMap))
 		{ // integer-indexed hashmap
 
 			var result = Type.createInstance(Type.getClass(v), []);
@@ -107,7 +107,7 @@ import haxe.ds.StringMap;
 
 			return result;
 		}
-		else if (Std.is(v, List))
+		else if (Std.isOfType(v, List))
 		{ // list
 
 			// List would be copied just fine without this special case, but I want to avoid going recursive
