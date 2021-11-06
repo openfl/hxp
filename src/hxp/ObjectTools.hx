@@ -50,12 +50,12 @@ import haxe.ds.StringMap;
 
 			return v;
 		}
-		else if (Std.is(v, String))
+		else if (#if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end (v, String))
 		{ // string
 
 			return v;
 		}
-		else if (Std.is(v, Array))
+		else if (#if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end (v, Array))
 		{ // array
 
 			var result = Type.createInstance(Type.getClass(v), []);
@@ -63,64 +63,64 @@ import haxe.ds.StringMap;
 			if (result != null)
 			{
 				untyped
+				{
+					var copy:Dynamic;
+					for (ii in 0...v.length)
 					{
-						var copy:Dynamic;
-						for (ii in 0...v.length)
-						{
-							copy = deepCopy(v[ii]);
-							result.push(copy);
-						}
+						copy = deepCopy(v[ii]);
+						result.push(copy);
 					}
+				}
 			}
 
 			return result;
 		}
-		else if (Std.is(v, StringMap))
+		else if (#if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end (v, StringMap))
 		{ // hashmap
 
 			var result = Type.createInstance(Type.getClass(v), []);
 
 			untyped
+			{
+				var keys:Iterator<String> = v.keys();
+				for (key in keys)
 				{
-					var keys:Iterator<String> = v.keys();
-					for (key in keys)
-					{
-						result.set(key, deepCopy(v.get(key)));
-					}
+					result.set(key, deepCopy(v.get(key)));
 				}
+			}
 
 			return result;
 		}
-		else if (Std.is(v, IntMap))
+		else if (#if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end (v, IntMap))
 		{ // integer-indexed hashmap
 
 			var result = Type.createInstance(Type.getClass(v), []);
 
 			untyped
+			{
+				var keys:Iterator<Int> = v.keys();
+				for (key in keys)
 				{
-					var keys:Iterator<Int> = v.keys();
-					for (key in keys)
-					{
-						result.set(key, deepCopy(v.get(key)));
-					}
+					result.set(key, deepCopy(v.get(key)));
 				}
+			}
 
 			return result;
 		}
-		else if (Std.is(v, List))
+		else if (#if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end (v, List))
 		{ // list
 
 			// List would be copied just fine without this special case, but I want to avoid going recursive
 			var result = Type.createInstance(Type.getClass(v), []);
 
 			untyped
+			{
+				var iter:Iterator<Dynamic> = v.iterator();
+				for (ii in iter)
 				{
-					var iter:Iterator<Dynamic> = v.iterator();
-					for (ii in iter)
-					{
-						result.add(ii);
-					}
+					result.add(ii);
 				}
+			}
 
 			return result;
 		}
