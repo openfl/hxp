@@ -2,7 +2,7 @@ Notices
 =======
 
 ### HXP
-Copyright (c) 2011-2018 Joshua Granick and other HXP contributors
+Copyright (c) 2011-2021 Joshua Granick and other HXP contributors
 
 This product bundles Closure Compiler v20170806, which is available under an
 "Apache 2.0 License" license. For details, see https://github.com/google/closure-compiler.
