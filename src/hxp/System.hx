@@ -22,6 +22,7 @@ class System
 	private static var _hostPlatform:HostPlatform;
 	private static var _isText:Map<String, Bool>;
 	private static var _processorCores:Int = 0;
+	private static var _untouchedFiles:Map<String, Bool>;
 
 	private static function __init__():Void
 	{
@@ -220,6 +221,8 @@ class System
 
 			if (textFile)
 			{
+				markFileAsTouched(destination);
+
 				// Log.info ("", " - \x1b[1mProcessing template file:\x1b[0m " + source + " \x1b[3;37m->\x1b[0m " + destination);
 
 				var fileContents:String = File.getContent(source);
@@ -276,6 +279,8 @@ class System
 	{
 		// allFiles.push (destination);
 
+		markFileAsTouched(destination);
+
 		if (!isNewer(source, destination))
 		{
 			return;
@@ -304,6 +309,18 @@ class System
 
 			Log.error("Cannot open \"" + destination + "\" for writing, do you have correct access permissions?");
 		}
+	}
+
+	public static function deleteUntouchedFiles():Void
+	{
+		var paths = [for (key in _untouchedFiles.keys()) key];
+		paths.sort((a, b) -> a < b ? -1 : a > b ? 1 : 0);
+		for (path in paths)
+		{
+			Log.info("", " - \x1b[1mDeleting file:\x1b[0m " + path);
+			FileSystem.deleteFile(path);
+		}
+		_untouchedFiles = null;
 	}
 
 	public static function findTemplate(templatePaths:Array<String>, path:String, warnIfNotFound:Bool = true):String
@@ -351,6 +368,8 @@ class System
 
 	public static function deleteFile(path:String)
 	{
+		markFileAsTouched(path);
+
 		try
 		{
 			if (FileSystem.exists(path) && !FileSystem.isDirectory(path))
@@ -551,6 +570,8 @@ class System
 
 	public static function linkFile(source:String, destination:String, symbolic:Bool = true, overwrite:Bool = false)
 	{
+		markFileAsTouched(destination);
+
 		if (!isNewer(source, destination))
 		{
 			return;
@@ -590,6 +611,52 @@ class System
 	public static function makeDirectory(directory:String):Void
 	{
 		mkdir(directory);
+	}
+
+	public static function markAllFilesInFolderAsUntouched(path:String, pathsToIgnore:Array<String> = null):Void
+	{
+		_untouchedFiles = [];
+		var ignoredPathsMap:Map<String, Bool> = null;
+		if (pathsToIgnore != null) ignoredPathsMap = [for (pathToIgnore in pathsToIgnore) path + "/" + pathToIgnore => true];
+		if (FileSystem.exists(path))
+		{
+			_scanFilesRecursively(path, _untouchedFiles, ignoredPathsMap);
+		}
+	}
+
+	private static function _scanFilesRecursively(path:String, map:Map<String, Bool>, ignorePaths:Map<String, Bool>):Void
+	{
+		for (file in FileSystem.readDirectory(path))
+		{
+			if (file.charAt(0) == ".")
+			{
+				continue;
+			}
+			
+			var fullPath = Path.combine(path, file);
+
+			if (ignorePaths.exists(fullPath))
+			{
+				continue;
+			}
+			
+			if (FileSystem.isDirectory(fullPath))
+			{
+				_scanFilesRecursively(fullPath, map, ignorePaths);
+			}
+			else
+			{
+				map.set(fullPath, true);
+			}
+		}
+	}
+
+	public static function markFileAsTouched(path:String):Void
+	{
+		if (_untouchedFiles != null)
+		{
+			_untouchedFiles.remove(path);
+		}
 	}
 
 	public static function mkdir(directory:String):Void
@@ -889,6 +956,7 @@ class System
 					}
 					else
 					{
+						markFileAsTouched(path);
 						FileSystem.deleteFile(path);
 					}
 				}
@@ -945,6 +1013,7 @@ class System
 			if (index > -1)
 			{
 				output = output.substr(0, index) + replacement + output.substr(index + replaceString.length);
+				markFileAsTouched(sourcePath);
 				File.saveContent(sourcePath, output);
 			}
 		}
