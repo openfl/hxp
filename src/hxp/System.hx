@@ -22,6 +22,7 @@ class System
 	private static var _hostPlatform:HostPlatform;
 	private static var _isText:Map<String, Bool>;
 	private static var _processorCores:Int = 0;
+	private static var _unknownFileState:Bool = false;
 	private static var _untouchedFiles:Map<String, Bool>;
 
 	private static function __init__():Void
@@ -313,6 +314,13 @@ class System
 
 	public static function deleteUntouchedFiles():Void
 	{
+		if (_unknownFileState)
+		{
+			_unknownFileState = false;
+			_untouchedFiles = null;
+			return;
+		}
+
 		var paths = [for (key in _untouchedFiles.keys()) key];
 		paths.sort((a, b) -> a < b ? -1 : a > b ? 1 : 0);
 		for (path in paths)
@@ -616,6 +624,7 @@ class System
 	public static function markAllFilesInFolderAsUntouched(path:String, pathsToIgnore:Array<String> = null):Void
 	{
 		_untouchedFiles = [];
+		_unknownFileState = false;
 		var ignoredPathsMap:Map<String, Bool> = null;
 		if (pathsToIgnore != null) ignoredPathsMap = [for (pathToIgnore in pathsToIgnore) path + "/" + pathToIgnore => true];
 		if (FileSystem.exists(path))
@@ -649,6 +658,11 @@ class System
 				map.set(fullPath, true);
 			}
 		}
+	}
+
+	public static function markAllFilesStateAsUnknown():Void
+	{
+		_unknownFileState = true;
 	}
 
 	public static function markFileAsTouched(path:String):Void
