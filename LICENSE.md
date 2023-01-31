@@ -1,7 +1,7 @@
 MIT License
 ===========
 
-Copyright (c) 2011-2021 Joshua Granick and other HXP contributors
+Copyright (c) 2011-2023 Joshua Granick and other HXP contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
