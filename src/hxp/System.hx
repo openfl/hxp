@@ -1422,7 +1422,11 @@ class System
 					var architecture = Sys.getEnv("PROCESSOR_ARCHITECTURE");
 					var wow64Architecture = Sys.getEnv("PROCESSOR_ARCHITEW6432");
 
-					if (architecture.indexOf("64") > -1 || wow64Architecture != null && wow64Architecture.indexOf("64") > -1)
+					if (architecture.indexOf("ARM64") > -1)
+					{
+						_hostArchitecture = ARM64;
+					}
+					else if (architecture.indexOf("64") > -1 || wow64Architecture != null && wow64Architecture.indexOf("64") > -1)
 					{
 						_hostArchitecture = X64;
 					}
@@ -1437,6 +1441,9 @@ class System
 					{
 						case "arm":
 							_hostArchitecture = ARMV7;
+
+						case "arm64":
+							_hostArchitecture = ARM64;
 
 						case "x64":
 							_hostArchitecture = X64;
@@ -1458,6 +1465,10 @@ class System
 					else if (output.indexOf("armv7") > -1)
 					{
 						_hostArchitecture = ARMV7;
+					}
+					else if (output.indexOf("arm64") > -1)
+					{
+						_hostArchitecture = ARM64;
 					}
 					else if (output.indexOf("64") > -1)
 					{

@@ -179,15 +179,20 @@ class Haxelib
 
 						if (System.hostPlatform == WINDOWS)
 						{
-							directoryName = "Windows";
-						}
-						else if (System.hostPlatform == MAC)
-						{
-							directoryName = System.hostArchitecture == X64 ? "Mac64" : "Mac";
+							directoryName = switch System.hostArchitecture
+							{
+								case ARM64: "WindowsArm64";
+								case _: "Windows";
+							};
 						}
 						else
 						{
-							directoryName = System.hostArchitecture == X64 ? "Linux64" : "Linux";
+							directoryName = (System.hostPlatform == MAC ? "Mac" : "Linux") + switch System.hostArchitecture
+							{
+								case ARM64: "Arm64";
+								case X64: "64";
+								case _: "";
+							};
 						}
 
 						Log.error("haxelib \"" + haxelib.name + "\" does not have an \"ndll/" + directoryName + "\" directory");
@@ -198,7 +203,11 @@ class Haxelib
 						var end = output.lastIndexOf("'");
 						var dependencyName = output.substring(start, end);
 
-						Log.error("Could not find haxelib \"" + dependencyName + "\" (dependency of \"" + haxelib.name + "\"), does it need to be installed?");
+						Log.error("Could not find haxelib \""
+							+ dependencyName
+							+ "\" (dependency of \""
+							+ haxelib.name
+							+ "\"), does it need to be installed?");
 					}
 					else
 					{
@@ -332,7 +341,6 @@ class Haxelib
 				paths.set(name, result);
 			}
 		}
-
 		return paths.get(name);
 	}
 
