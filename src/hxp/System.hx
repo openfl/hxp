@@ -1466,7 +1466,7 @@ class System
 					{
 						_hostArchitecture = ARMV7;
 					}
-					else if (output.indexOf("arm64") > -1)
+					else if (output.indexOf("arm64") > -1 || output.indexOf("aarch64") > -1)
 					{
 						_hostArchitecture = ARM64;
 					}
