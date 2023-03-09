@@ -16,11 +16,12 @@ jobs:
             scripts/
             src/
             bin/
+            CHANGELOG.md
             haxelib.json
             hxformat.json
             LICENSE.md
             NOTICE.md
-            README.md
             package.json
+            README.md
             run.n
           if-no-files-found: error
