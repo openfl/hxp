@@ -1,0 +1,26 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+
+  package-haxelib:
+    runs-on: macos-latest
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: hxp-haxelib
+          path: |
+            scripts/
+            src/
+            bin/
+            haxelib.json
+            hxformat.json
+            LICENSE.md
+            NOTICE.md
+            README.md
+            package.json
+            run.n
+          if-no-files-found: error
