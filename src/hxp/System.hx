@@ -16,10 +16,12 @@ class System
 	public static var dryRun:Bool = false;
 	public static var hostArchitecture(get, never):HostArchitecture;
 	public static var hostPlatform(get, never):HostPlatform;
+	public static var cpuInfo(get, never):String;
 	public static var processorCores(get, never):Int;
 	private static var _haxeVersion:String;
 	private static var _hostArchitecture:HostArchitecture;
 	private static var _hostPlatform:HostPlatform;
+	private static var _cpuInfo:String;
 	private static var _isText:Map<String, Bool>;
 	private static var _processorCores:Int = 0;
 
@@ -1501,6 +1503,8 @@ class System
 			else if (new EReg("linux", "i").match(Sys.systemName()))
 			{
 				_hostPlatform = LINUX;
+				_cpuInfo = runProcess("", "cat", ["/proc/cpuinfo"], true, true, true);
+				if (_cpuInfo == null) _cpuInfo = "";
 			}
 			else if (new EReg("mac", "i").match(Sys.systemName()))
 			{
@@ -1511,6 +1515,11 @@ class System
 		}
 
 		return _hostPlatform;
+	}
+
+	private static function get_cpuInfo():String
+	{
+		return _cpuInfo;
 	}
 
 	private static function get_processorCores():Int
@@ -1537,12 +1546,16 @@ class System
 
 				if (result == null)
 				{
-					var cpuinfo = runProcess("", "cat", ["/proc/cpuinfo"], true, true, true);
+					_cpuInfo = runProcess("", "cat", ["/proc/cpuinfo"], true, true, true);
 
-					if (cpuinfo != null)
+					if (_cpuInfo != null)
 					{
-						var split = cpuinfo.split("processor");
+						var split = _cpuInfo.split("processor");
 						result = Std.string(split.length - 1);
+					}
+					else
+					{
+						_cpuInfo = "";
 					}
 				}
 			}
