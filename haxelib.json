@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": [],
 	"description": "Cross-platform build tools for desktop, mobile, web and consoles",
-	"version": "1.2.2",
-	"releasenote": "Fix Std.is warning",
+	"version": "1.3.0",
+	"releasenote": "Added ARM64 to HostArchitecture",
 	"contributors": [
 		"singmajesty",
 		"bowlerhat",
