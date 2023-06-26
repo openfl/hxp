@@ -1,4 +1,4 @@
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE.md) [![Haxelib Version](https://img.shields.io/github/tag/openfl/hxp.svg?style=flat&label=haxelib)](http://lib.haxe.org/p/hxp) [![Build Status](https://img.shields.io/circleci/project/github/openfl/hxp/develop.svg)](https://circleci.com/gh/openfl/hxp)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE.md) [![Haxelib Version](https://img.shields.io/github/tag/openfl/hxp.svg?style=flat&label=haxelib)](http://lib.haxe.org/p/hxp) [![Build Status](https://img.shields.io/github/actions/workflow/status/openfl/hxp/main.yml?branch=master)](https://github.com/openfl/hxp/actions)
 
 HXP
 ===
