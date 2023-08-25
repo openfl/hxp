@@ -1468,7 +1468,19 @@ class System
 					}
 					else if (output.indexOf("arm64") > -1 || output.indexOf("aarch64") > -1)
 					{
-						_hostArchitecture = ARM64;
+						var getconfProcess = new Process("getconf", ["LONG_BIT"]);
+						var getconfOutput = getconfProcess.stdout.readAll().toString();
+						var getconfError = getconfProcess.stderr.readAll().toString();
+						getconfProcess.exitCode();
+						getconfProcess.close();
+						if (StringTools.trim(getconfOutput) == "64")
+						{
+							_hostArchitecture = ARM64;
+						}
+						else
+						{
+							_hostArchitecture = ARMV7;
+						}
 					}
 					else if (output.indexOf("64") > -1)
 					{
