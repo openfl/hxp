@@ -137,7 +137,7 @@ class Haxelib
 
 			Log.verbose = cache;
 
-			var lines = output.split("\n");
+			var lines = ~/\r?\n/g.split(output);
 			var result = "";
 
 			for (i in 1...lines.length)
