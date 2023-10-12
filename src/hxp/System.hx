@@ -22,6 +22,7 @@ class System
 	private static var _hostPlatform:HostPlatform;
 	private static var _isText:Map<String, Bool>;
 	private static var _processorCores:Int = 0;
+	private static var _templates:Array<String> = [];
 
 	private static function __init__():Void
 	{
@@ -201,6 +202,8 @@ class System
 
 		if (process && context != null)
 		{
+			_templates.push(destination);
+
 			if (_isText.exists(extension) && !_isText.get(extension))
 			{
 				copyIfNewer(source, destination);
@@ -360,6 +363,24 @@ class System
 			}
 		}
 		catch (e:Dynamic) {}
+	}
+
+	public static function deleteStaleTemplates(targetDirectory:String)
+	{
+		var templatesFile = Path.combine(targetDirectory, ".templates");
+		if (FileSystem.exists(templatesFile))
+		{
+			for (template in File.getContent(templatesFile).split("\n"))
+			{
+				if (_templates.indexOf(template) < 0)
+				{
+					deleteFile(template);
+				}
+			}
+		}
+
+		File.saveContent(templatesFile, _templates.join("\n"));
+		_templates.resize(0);
 	}
 
 	private static function findTemplateRecursive_(templatePaths:Array<String>, source:String, templateFiles:Array<String>, templateMatched:Map<String, Bool>,
