@@ -21,6 +21,7 @@ class System
 	private static var _hostArchitecture:HostArchitecture;
 	private static var _hostPlatform:HostPlatform;
 	private static var _isText:Map<String, Bool>;
+	private static var _onTouchFile:Array<String -> Bool -> Void> = [];
 	private static var _processorCores:Int = 0;
 
 	private static function __init__():Void
@@ -140,6 +141,8 @@ class System
 		{
 			runCommand(path, "zip", ["-r", Path.relocatePath(targetPath, path), "./"]);
 		}
+
+		dispatchTouch(targetPath);
 		#end
 	}
 
@@ -222,6 +225,8 @@ class System
 			{
 				// Log.info ("", " - \x1b[1mProcessing template file:\x1b[0m " + source + " \x1b[3;37m->\x1b[0m " + destination);
 
+				dispatchTouch(destination, true);
+
 				var fileContents:String = File.getContent(source);
 				var template:Template = new Template(fileContents);
 				var result:String = template.execute(context,
@@ -274,7 +279,7 @@ class System
 
 	public static function copyIfNewer(source:String, destination:String)
 	{
-		// allFiles.push (destination);
+		dispatchTouch(destination);
 
 		if (!isNewer(source, destination))
 		{
@@ -551,6 +556,8 @@ class System
 
 	public static function linkFile(source:String, destination:String, symbolic:Bool = true, overwrite:Bool = false)
 	{
+		dispatchTouch(destination);
+
 		if (!isNewer(source, destination))
 		{
 			return;
@@ -910,6 +917,8 @@ class System
 		System.mkdir(Path.directory(destination));
 		Log.info("", " - \x1b[1mRenaming file:\x1b[0m " + source + " \x1b[3;37m->\x1b[0m " + destination);
 
+		dispatchTouch(destination);
+
 		try
 		{
 			File.copy(source, destination);
@@ -938,6 +947,8 @@ class System
 	{
 		if (FileSystem.exists(sourcePath))
 		{
+			dispatchTouch(sourcePath);
+
 			var output = File.getContent(sourcePath);
 
 			var index = output.indexOf(replaceString);
@@ -1402,12 +1413,37 @@ class System
 
 	public static function writeBytes(bytes:Bytes, path:String):Void
 	{
+		dispatchTouch(path);
+
 		File.saveBytes(path, bytes);
 	}
 
 	public static function writeText(text:String, path:String):Void
 	{
+		dispatchTouch(path);
+
 		File.saveContent(path, text);
+	}
+
+	// Events
+
+	private static function dispatchTouch(path:String, ?isTemplate:Bool = false):Void
+	{
+		for (callback in _onTouchFile)
+		{
+			callback(path, isTemplate);
+		}
+	}
+
+	/**
+		Registers the given callback to be called whenever this class creates or
+		modifies a file. This can be used to build a list of non-stale files.
+		@param callback A callback, taking a file path as its first argument
+		and whether the file is a template as its second.
+	**/
+	public static inline function onTouchFile(callback:String -> Bool -> Void):Void
+	{
+		_onTouchFile.push(callback);
 	}
 
 	// Get & Set Methods
