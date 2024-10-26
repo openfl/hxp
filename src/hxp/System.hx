@@ -1426,6 +1426,10 @@ class System
 					{
 						_hostArchitecture = ARM64;
 					}
+					else if (architecture.indexOf("ARMV7") > -1)
+					{
+						_hostArchitecture = ARMV7;
+					}
 					else if (architecture.indexOf("64") > -1 || wow64Architecture != null && wow64Architecture.indexOf("64") > -1)
 					{
 						_hostArchitecture = X64;
@@ -1462,11 +1466,11 @@ class System
 					{
 						_hostArchitecture = ARMV6;
 					}
-					else if (output.indexOf("armv7") > -1)
+					else if (output.indexOf("armv7") > -1 || output.indexOf("armv7l"))
 					{
 						_hostArchitecture = ARMV7;
 					}
-					else if (output.indexOf("arm64") > -1 || output.indexOf("aarch64") > -1)
+					else if (output.indexOf("arm64") > -1 || output.indexOf("aarch64") || output.indexOf("armv8l") > -1)
 					{
 						var getconfProcess = new Process("getconf", ["LONG_BIT"]);
 						var getconfOutput = getconfProcess.stdout.readAll().toString();
