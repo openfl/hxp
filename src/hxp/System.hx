@@ -1376,6 +1376,12 @@ class System
 		#if lime
 		var templatePaths = [Path.combine(Haxelib.getPath(new Haxelib("lime")), "templates")];
 		var node = System.findTemplate(templatePaths, "bin/node/node" + suffix);
+		if (node == null)
+		{
+			// Lime 9 will no longer bundle Node.js executables, so try to use
+			// the system version of Node.js on the PATH.
+			node = "node";
+		}
 		var bin = System.findTemplate(templatePaths, "bin/node/watch/cli-custom.js");
 		#else
 		// TODO: Move to separate lib?
@@ -1385,7 +1391,7 @@ class System
 		var bin = System.findTemplate(watchTemplatePath, "node/watch/cli-custom.js");
 		#end
 
-		if (System.hostPlatform != WINDOWS)
+		if (node != "node" && System.hostPlatform != WINDOWS)
 		{
 			Sys.command("chmod", ["+x", node]);
 		}
