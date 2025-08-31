@@ -110,6 +110,11 @@ class Path extends HaxePath
 
 	public static function isAbsolute(path:String):Bool
 	{
+		if (System.hostPlatform == WINDOWS && path.indexOf(":") == 1)
+		{
+			return true;
+		}
+		
 		if (StringTools.startsWith(path, "/") || StringTools.startsWith(path, "\\"))
 		{
 			return true;
