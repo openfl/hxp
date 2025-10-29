@@ -1,3 +1,12 @@
+1.3.1 (10/29/2025)
+------------------
+
+* Fix for running 32-bit operating system with 64-bit kernel on Raspberry Pi
+* Fix \r\n line break handling
+* Fix detection of ARMV7 and armv8l strings for host architecture
+* Fix Node.js detection to fall back to system path when Lime doesn't bundle it
+* Fix detection of drive letter on Windows in `Path.isAbsolute()`
+
 1.3.0 (06/26/2023)
 ------------------
 
