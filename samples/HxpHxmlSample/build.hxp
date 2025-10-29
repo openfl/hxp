@@ -1,0 +1,16 @@
+import hxp.*;
+import lime.tools.*;
+
+class Build {
+    public function new() {
+        
+		var hxml = new HXML({
+			cp: ["src"],
+			main: "Main",
+			js: "bin/index.js"
+		});
+		hxml.build();
+        
+    }
+    
+}

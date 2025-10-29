@@ -1,0 +1,16 @@
+import hxp.*;
+import lime.tools.*;
+
+class Project extends HXProject {
+    public function new() {
+        super();
+        
+		app.main = "Main";
+		app.path = "Export";
+        meta.title = "OpenFL with HXP";
+        haxelibs.push(new Haxelib("openfl"));
+        sources.push("Source");
+        
+    }
+    
+}

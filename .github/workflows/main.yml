@@ -25,3 +25,41 @@ jobs:
             README.md
             run.n
           if-no-files-found: error
+
+  samples:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        haxe-version: [3.4.7, 4.0.5, 4.1.5, 4.2.5, 4.3.2]
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: ${{ matrix.haxe-version }}
+
+      - name: Set HAXEPATH
+        run: |
+          echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
+
+      - name: Install Haxe dependencies
+        run: |
+          haxelib install lime --quiet
+          haxelib install openfl --quiet
+          haxelib dev hxp ${{ github.workspace }}
+
+      - name: Build HxpHxmlSample sample
+        working-directory: samples/HxpHxmlSample
+        run: |
+          haxelib run hxp build
+
+      - name: Build HxpLimeSample sample
+        working-directory: samples/HxpLimeSample
+        run: |
+          haxelib run lime build neko
+
+      - name: Build HxpOpenFLSample sample
+        working-directory: samples/HxpOpenFLSample
+        run: |
+          haxelib run lime build neko

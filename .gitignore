@@ -15,3 +15,4 @@ package-lock.json
 node_modules
 !bin/**/node_modules
 .vscode/
+bin/
