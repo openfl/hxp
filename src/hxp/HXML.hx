@@ -410,7 +410,9 @@ abstract HXML(Array<String>)
 
 			for (line in lines)
 			{
-				value.push(StringTools.trim(line));
+				var str = StringTools.trim(line);
+				if (str.length == 0 || StringTools.startsWith(str, "#")) continue;
+				value.push(str);
 			}
 		}
 
