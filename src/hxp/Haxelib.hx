@@ -413,6 +413,8 @@ class Haxelib
 
 	public static function runCommand(path:String, args:Array<String>, safeExecute:Bool = true, ignoreErrors:Bool = false, print:Bool = false):Int
 	{
+		var command:String;
+
 		if (pathOverrides.exists("haxelib"))
 		{
 			var script = Path.combine(pathOverrides.get("haxelib"), "run.n");
@@ -422,26 +424,21 @@ class Haxelib
 				Log.error("Cannot find haxelib script: " + script);
 			}
 
-			return System.runCommand(path, "neko", [script].concat(args), safeExecute, ignoreErrors, print);
+			command = 'neko "$script"';
 		}
 		else
 		{
-			// var haxe = Sys.getEnv ("HAXEPATH");
-			var command = "haxelib";
-
-			// if (haxe != null) {
-
-			// 	command = Path.combine (haxe, command);
-
-			// }
-
-			return System.runCommand(path, command, args, safeExecute, ignoreErrors, print);
+			command = "haxelib";
 		}
+
+		return System.runCommand(path, command + " " + args.join(" "), safeExecute, ignoreErrors, print);
 	}
 
 	public static function runProcess(path:String, args:Array<String>, waitForOutput:Bool = true, safeExecute:Bool = true, ignoreErrors:Bool = false,
 			print:Bool = false, returnErrorValue:Bool = false):String
 	{
+		var command:String;
+
 		if (pathOverrides.exists("haxelib"))
 		{
 			var script = Path.combine(pathOverrides.get("haxelib"), "run.n");
@@ -451,21 +448,14 @@ class Haxelib
 				Log.error("Cannot find haxelib script: " + script);
 			}
 
-			return System.runProcess(path, "neko", [script].concat(args), waitForOutput, safeExecute, ignoreErrors, print, returnErrorValue);
+			command = 'neko "$script"';
 		}
 		else
 		{
-			// var haxe = Sys.getEnv ("HAXEPATH");
-			var command = "haxelib";
-
-			// if (haxe != null) {
-
-			// 	command = Path.combine (haxe, command);
-
-			// }
-
-			return System.runProcess(path, command, args, waitForOutput, safeExecute, ignoreErrors, print, returnErrorValue);
+			command = "haxelib";
 		}
+
+		return System.runProcess(path, command + " " + args.join(" "), waitForOutput, safeExecute, ignoreErrors, print, returnErrorValue);
 	}
 
 	public static function setOverridePath(haxelib:Haxelib, path:String):Void
