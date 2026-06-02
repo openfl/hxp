@@ -729,7 +729,9 @@ abstract HXML(Array<String>)
 	@:noCompletion private function set_debug(value:Bool):Bool
 	{
 		__trimLines(["-debug"]);
-		this.push("-debug");
+		if(value) {
+			this.push("-debug");
+		}
 		return value;
 	}
 
