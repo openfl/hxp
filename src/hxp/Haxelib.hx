@@ -343,6 +343,24 @@ class Haxelib
 		}
 		return paths.get(name);
 	}
+	
+	public static function getPathClassPath(path:String):String
+	{
+		path = Path.combine(path, "haxelib.json");
+
+		if (FileSystem.exists(path))
+		{
+			try
+			{
+				var json = Json.parse(File.getContent(path));
+				var classPathString:String = json.classPath;
+				return classPathString;
+			}
+			catch (e:Dynamic) {}
+		}
+
+		return null;
+	}
 
 	public static function getPathVersion(path:String):Version
 	{
