@@ -1225,6 +1225,10 @@ class System
 						}
 						else if (!safeExecute)
 						{
+							if (oldPath != "")
+							{
+								Sys.setCwd(oldPath);
+							}
 							throw error;
 						}
 						else
@@ -1232,13 +1236,9 @@ class System
 							Log.error(error);
 						}
 
-						if (returnErrorValue)
+						if (!returnErrorValue)
 						{
-							return output;
-						}
-						else
-						{
-							return null;
+							output = null;
 						}
 					}
 
