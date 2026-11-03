@@ -63,3 +63,16 @@ jobs:
         working-directory: samples/HxpOpenFLSample
         run: |
           haxelib run lime build neko
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v6
+
+      - uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: 4.3.2
+
+      - name: Missing dependency is reported by Haxelib.getPath
+        run: sh test/run.sh
