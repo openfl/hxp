@@ -128,7 +128,7 @@ class Haxelib
 				var cacheDryRun = System.dryRun;
 				System.dryRun = false;
 
-				output = Haxelib.runProcess(workingDirectory, ["path", name], true, true, true);
+				output = Haxelib.runProcess(workingDirectory, ["path", name], true, true, true, false, true);
 				if (output == null) output = "";
 
 				System.dryRun = cacheDryRun;
@@ -173,6 +173,8 @@ class Haxelib
 			{
 				if (result == "")
 				{
+					var notInstalled = ~/Library (\S+) (version \S+ )?is not installed/;
+
 					if (output.indexOf("does not have") > -1)
 					{
 						var directoryName = "";
@@ -196,6 +198,14 @@ class Haxelib
 						}
 
 						Log.error("haxelib \"" + haxelib.name + "\" does not have an \"ndll/" + directoryName + "\" directory");
+					}
+					else if (notInstalled.match(output) && notInstalled.matched(1) != haxelib.name)
+					{
+						Log.error("Could not find haxelib \""
+							+ notInstalled.matched(1)
+							+ "\" (dependency of \""
+							+ haxelib.name
+							+ "\"), does it need to be installed?");
 					}
 					else if (output.indexOf("haxelib install ") > -1 && output.indexOf("haxelib install " + haxelib.name) == -1)
 					{
