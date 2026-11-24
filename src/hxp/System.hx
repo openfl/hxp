@@ -733,7 +733,10 @@ class System
 		}
 		else
 		{
-			runCommand("", "/usr/bin/xdg-open", [url, "&"]);
+			// Run through the shell, so that xdg-open does not hold up the caller
+			// and its output (or the browser's) does not end up in the terminal
+			var quotedURL = "'" + StringTools.replace(url, "'", "'\\''") + "'";
+			runCommand("", "/usr/bin/xdg-open " + quotedURL + " > /dev/null 2>&1 &", null, true, true);
 		}
 	}
 
