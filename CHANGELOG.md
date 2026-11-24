@@ -1,3 +1,12 @@
+1.3.2 (11/24/2026)
+------------------
+
+* Fix `System.openURL()` on Linux, where xdg-open got `&` as an argument and its error stopped the caller
+* Fix `Haxelib.getPath()` reporting an installed library as missing instead of naming its missing dependency
+* Fix `System.runProcess()` leaving the working directory changed when the process fails
+* Fix `HXML.debug = false` still adding `-debug`
+* Skip empty lines and comments in `HXML.fromString()`
+
 1.3.1 (10/29/2025)
 ------------------
 
